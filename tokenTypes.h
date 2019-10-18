@@ -1,6 +1,9 @@
 #pragma once
 
+#include <any>
+#include <map>
 #include <sstream>
+#include <string>
 
 namespace cpplox {
 enum class ETokenType {
@@ -52,26 +55,38 @@ enum class ETokenType {
     END_OF_FILE
 };
 
-class Token {
+const std::map<ETokenType, std::string> tokenMap{
+    // Single-character tokens
+    {ETokenType::LEFT_PARENTHESIS, "left parenthesis"},
+    {ETokenType::RIGHT_PARENTHESIS, "right parenthesis"},
+};
 
-    Token(ETokenType tokenType, std::string lexeme, std::string literal,
-          int line)
+class Token {
+  public:
+    Token(ETokenType tokenType, std::string lexeme, std::any literal, int line)
         : eTokenType(tokenType), lexeme(lexeme), literal(literal), line(line) {
     }
 
     std::string toString() {
         std::stringstream stream;
-        stream << lexeme << " " << literal << "\n";
+        auto search = tokenMap.find(eTokenType);
+        if(search != tokenMap.end()){
+            stream << search->second;
+        }
+        stream << " " << lexeme << " ";
+        if (literal.type() == typeid(std::string)) {
+            stream << std::any_cast<std::string>(literal) << " ";
+        } else if (literal.type() == typeid(double)) {
+            stream << std::any_cast<double>(literal) << " ";
+        }
         return stream.str();
     }
+
   private:
     ETokenType eTokenType;
     std::string lexeme;
-    std::string literal;
+    std::any literal;
     int line;
-    
-
-
 };
 
 } // namespace cpplox

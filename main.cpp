@@ -5,33 +5,23 @@
 #include "Scanner.h"
 #include "tokenTypes.h"
 
-bool hadError = false;
 
 void run(const std::string& code) {
     
-    auto tokens = cpplox::scanTokens({});
+    auto tokens = cpplox::scanTokens(code);
 
     // print the tokens
     for (auto& token : tokens) {
-        std::cout << token << "\n";
+        std::cout << token.toString() << "\n";
     }
 }
 
-void report(int line, const std::string& where, const std::string& message) {
-    std::cout << "[line " << line << "] Error" << where << ": " << message << "\n";
-    hadError = true;
-}
-
-void error(int line, const std::string& message) {
-    report(line, "", message);
-}
-
-
-
 // dummy functions to make main run at this stage
 void runFile(const std::string& filePath) {
+    std::cout << "running file " << filePath << "\n";
     std::ifstream inputFileStream(filePath);
     std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
+    std::cout << "running code: " << code;
     run(code);
 };
 void runPrompt() {
