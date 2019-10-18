@@ -2,24 +2,14 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Scanner.h"
+#include "tokenTypes.h"
 
 bool hadError = false;
 
-class Scanner {
-  public:
-    Scanner(std::string sourceIn) : source(std::move(sourceIn)) {
-    }
-    std::vector<std::string> scanTokens() {
-        return {"token1", "token2"};
-    }
-
-  private:
-    std::string source;
-};
-
 void run(const std::string& code) {
-    Scanner scanner(code);
-    auto tokens = scanner.scanTokens();
+    
+    auto tokens = cpplox::scanTokens({});
 
     // print the tokens
     for (auto& token : tokens) {
