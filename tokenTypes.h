@@ -1,9 +1,9 @@
 #pragma once
 
-#include <any>
 #include <map>
 #include <sstream>
 #include <string>
+#include <variant>
 
 namespace cpplox {
 enum class ETokenType {
@@ -57,35 +57,79 @@ enum class ETokenType {
 
 const std::map<ETokenType, std::string> tokenMap{
     // Single-character tokens
-    {ETokenType::LEFT_PARENTHESIS, "left parenthesis"},
-    {ETokenType::RIGHT_PARENTHESIS, "right parenthesis"},
-};
+    {ETokenType::LEFT_PARENTHESIS, "Left Parenthesis"},
+    {ETokenType::RIGHT_PARENTHESIS, "Right Parenthesis"},
+    {ETokenType::LEFT_BRACE, "Left_brace"},
+    {ETokenType::RIGHT_BRACE, "Right_brace"},
+    {ETokenType::COMMA, "Comma"},
+    {ETokenType::DOT, "Dot"},
+    {ETokenType::MINUS, "Minus"},
+    {ETokenType::PLUS, "Plus"},
+    {ETokenType::SEMICOLON, "Semicolon"},
+    {ETokenType::SLASH, "Slash"},
+    {ETokenType::STAR, "Star"},
+    {ETokenType::BANG, "Bang"},
+    {ETokenType::BANG_EQUAL, "Bang_equal"},
+    {ETokenType::EQUAL, "Equal"},
+    {ETokenType::EQUAL_EQUAL, "Equal_equal"},
+    {ETokenType::GREATER, "Greater"},
+    {ETokenType::GREATER_EQUAL, "Greater_equal"},
+    {ETokenType::LESS, "Less"},
+    {ETokenType::LESS_EQUAL, "Less_equal"},
+    {ETokenType::IDENTIFIER, "Identifier"},
+    {ETokenType::STRING, "String"},
+    {ETokenType::NUMBER, "Number"},
+    {ETokenType::AND, "And"},
+    {ETokenType::CLASS, "Class"},
+    {ETokenType::ELSE, "Else"},
+    {ETokenType::FALSE, "False"},
+    {ETokenType::FUN, "Fun"},
+    {ETokenType::FOR, "For"},
+    {ETokenType::IF, "If"},
+    {ETokenType::NIL, "Nil"},
+    {ETokenType::OR, "Or"},
+    {ETokenType::PRINT, "Print"},
+    {ETokenType::RETURN, "Return"},
+    {ETokenType::SUPER, "Super"},
+    {ETokenType::THIS, "This"},
+    {ETokenType::TRUE, "True"},
+    {ETokenType::VAR, "Var"},
+    {ETokenType::WHILE, "While"},
+    {ETokenType::END_OF_FILE, "End_of_file"}};
+
+// equivalent to the use of the Java.Object in the crafting interpreters
+// tutorial. void* means a not a literal. we check for it by checking the active
+// index of the variant ie index() > 0
+using Object = std::variant<void*, double, std::string>;
 
 class Token {
   public:
-    Token(ETokenType tokenType, std::string lexeme, std::any literal, int line)
+    Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
         : eTokenType(tokenType), lexeme(lexeme), literal(literal), line(line) {
     }
 
     std::string toString() {
         std::stringstream stream;
         auto search = tokenMap.find(eTokenType);
-        if(search != tokenMap.end()){
+        if (search != tokenMap.end()) {
             stream << search->second;
         }
         stream << " " << lexeme << " ";
-        if (literal.type() == typeid(std::string)) {
-            stream << std::any_cast<std::string>(literal) << " ";
-        } else if (literal.type() == typeid(double)) {
-            stream << std::any_cast<double>(literal) << " ";
-        }
+        std::visit(
+            [&](auto&& arg) {
+                if (literal.index() > 0) { // not a void* so can print
+                    stream << arg;
+                }
+            },
+            literal);
+
         return stream.str();
     }
 
   private:
     ETokenType eTokenType;
     std::string lexeme;
-    std::any literal;
+    Object literal;
     int line;
 };
 

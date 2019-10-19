@@ -11,7 +11,7 @@ std::vector<Token> scanTokens(const std::string& code) {
 
     std::vector<Token> tokens;
 
-    auto addTokenLiteral = [&](ETokenType type, std::any literal) {
+    auto addTokenLiteral = [&](ETokenType type, Object literal) {
         std::string text = code.substr(start, current - start);
         tokens.push_back(Token(type, text, literal, line));
     };
