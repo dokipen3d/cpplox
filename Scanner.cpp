@@ -1,5 +1,5 @@
 #include "Scanner.h"
-#include "tokenTypes.h"
+#include "TokenTypes.h"
 #include <iostream>
 
 namespace cpplox {

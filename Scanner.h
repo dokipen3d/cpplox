@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "tokenTypes.h"
+#include "TokenTypes.h"
 
 inline bool hadError;
 

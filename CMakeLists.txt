@@ -4,5 +4,5 @@ project (cpplox)
 
 
 
-add_executable(cpplox Scanner.cpp main.cpp) 
+add_executable(cpplox Expression.cpp Scanner.cpp main.cpp) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)

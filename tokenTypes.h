@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <variant>
+#include "Expression.h"
 
 namespace cpplox {
 enum class ETokenType {
@@ -144,6 +145,8 @@ class Token {
     std::string lexeme;
     Object literal;
     int line;
+
+    friend struct visitor; // this is to allow the printing to access the lexeme member
 };
 
 } // namespace cpplox
