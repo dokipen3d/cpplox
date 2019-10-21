@@ -1,51 +1,68 @@
-#include <iostream>
 
+#include <variant>
+#include <iostream>
+#include <vector>
+
+struct Null   { };
 struct Binary;
 struct Literal;
 
-//template <typename returnType>
 
-class Visitor
-{
-  public:
-    virtual void visit(Binary& e) = 0;
-    virtual void visit(Literal& e) = 0;
+template <typename T> struct recursive_wrapper {
+  // construct from an existing object
+  recursive_wrapper(T t_) { t.emplace_back(std::move(t_)); }
+  // cast back to wrapped type
+  operator const T &()  { return t.front(); }
+  
+
+  // store the value
+  std::vector<T> t;
 };
 
+//using Expr = x3::variant<x3::forward_ast<Binary>, x3::forward_ast<Literal>>;
+using Expr = std::variant<recursive_wrapper<Binary>, recursive_wrapper<Literal>>;
 
-struct Expr {
-    virtual void accept( Visitor& visitor){};
-};
+struct Binary{
+    //Binary() = default;
+    //using Expr::Expr;
+    Binary(Expr A, Expr B) : values{A, B}{}
 
-struct Binary : Expr {
-    Binary(Expr A, Expr B) : A(A), B(B){}
-    void accept( Visitor& visitor) override {
-        visitor.visit(*this);
+    std::vector<Expr> values;
+
+    Expr asVariant(){
+        return *this;
     }
-    Expr A;
-    Expr B;
-};
 
-struct Literal : Expr {
-    void accept( Visitor& visitor) override {
-        visitor.visit(*this);
-    }
+} ;
+
+struct Literal{
+    //using Expr::Expr;
+    //Literal() : Expr(*this){}
+    Literal(){};
     int a;
-};
+} ;
 
-struct exprVisitor :  Visitor{
-    void  visit( Binary& p){
-        std::cout << "B\n";
-        p.A.accept(*this);
+struct visitor {
+    void operator()(const Binary& b) const {
+        std::cout << "bin\n";
     }
-    void visit( Literal& p){
-         std::cout << "C\n";
+     void operator()(const Literal& b) const {
+        std::cout << "lit\n";
     }
 
 };
 
 int main(){
-    auto pastry = Binary(Literal{}, Literal{});
-    exprVisitor pv;
-    pastry.accept(pv);
+    visitor v;
+    auto l1 = Literal{};
+    auto l2 = Literal{};
+    //auto expr = Binary(l1, l2);
+     auto expr = Binary(Literal{}, Literal{});
+
+    std::visit(v, expr.asVariant());
+
 }
+
+
+
+
