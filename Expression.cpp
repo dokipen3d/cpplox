@@ -1,4 +1,3 @@
-
 #include <variant>
 #include <iostream>
 #include <vector>
@@ -20,21 +19,12 @@ using Expr = std::variant<recursive_wrapper<Binary>, recursive_wrapper<Literal>>
 struct Binary{
 
     Binary(Expr A, Expr B) : values{A, B}{}
-
     std::vector<Expr> values;
-
-    Expr asVariant(){
-        return *this;
-    }
-
 } ;
 
 struct Literal{
     Literal(){};
     int a;
-    Expr asVariant(){
-        return *this;
-    }
 } ;
 
 struct visitor {
@@ -54,8 +44,7 @@ int main(){
     auto l1 = Literal{};
     auto l2 = Literal{};
     //auto expr = Binary(l1, l2);
-     auto expr = Binary(Literal{}, Literal{});
+    Expr expr = Binary(Literal{}, Literal{});
 
-    std::visit(v, expr.asVariant());
+    std::visit(v, expr);
 }
-
