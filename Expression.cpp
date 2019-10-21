@@ -5,6 +5,7 @@
 
 struct Binary;
 struct Literal;
+struct NoOpt{};
 
 template <typename T> struct recursive_wrapper {
   // construct from an existing object
@@ -15,7 +16,7 @@ template <typename T> struct recursive_wrapper {
   std::vector<T> t;
 };
 
-using Expr = std::variant<recursive_wrapper<Binary>, recursive_wrapper<Literal>>;
+using Expr = std::variant<recursive_wrapper<Binary>, recursive_wrapper<Literal>, NoOpt>;
 
 struct Binary{
 
@@ -40,25 +41,37 @@ F for_each_arg(F f, Args&&...args) {
 
 
 struct visitor {
-    template<typename... Args>
-    void parenthesize(Args&&... exprs) {
+    
+   
+    void parenthesize(const std::initializer_list<Expr> exprs) {
+
+        for (const auto&e : exprs){
+            std::visit(*this,  static_cast<Expr>(e));
+
+        }
+    }
 
 
-        for_each_arg([this]( auto e){
-            std::visit(*this, static_cast<Expr>(e) );
-        }, exprs...);
+    //     std::visit(*this, a );
+    //     std::visit(*this, b );
+
                       
-    } 
+    // } 
+    // void parenthesize(Expr a) {
+    //     parenthesize(a, NoOpt{});
+    // }
+    
     void operator()( const Binary& b)  {
         std::cout << "bin\n";
         //for (  Expr& e : b.values){
            // std::visit(*this, static_cast<Expr>(e) );
-           parenthesize( b.values[0],  b.values[1] );
+           parenthesize( {b.values[0],  b.values[1]} );
         //}
     }
      void operator()( const Literal& b)  {
         std::cout << "lit\n";
     }
+     void operator()( const NoOpt& n)  {}
 };
 
 int main(){
