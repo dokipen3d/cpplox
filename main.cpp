@@ -4,6 +4,7 @@
 #include <vector>
 #include "Scanner.h"
 #include "tokenTypes.h"
+#include "AstTypes.h"
 
 
 void run(const std::string& code) {
@@ -21,7 +22,6 @@ void runFile(const std::string& filePath) {
     std::cout << "running file " << filePath << "\n";
     std::ifstream inputFileStream(filePath);
     std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
-    std::cout << "running code: " << code;
     run(code);
 };
 void runPrompt() {

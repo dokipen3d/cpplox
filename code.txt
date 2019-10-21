@@ -1,1 +1,6 @@
-()()()()()()(){}{}{}{this is some code
+class test {
+    var myNum;
+    var string1;
+    fun myFunc(a,b);
+
+}

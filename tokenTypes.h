@@ -97,6 +97,17 @@ const std::map<ETokenType, std::string> tokenMap{
     {ETokenType::WHILE, "While"},
     {ETokenType::END_OF_FILE, "End_of_file"}};
 
+const std::map<std::string, ETokenType> keywordMap{
+
+    {"and", ETokenType::AND},       {"class", ETokenType::CLASS},
+    {"else", ETokenType::ELSE},     {"false", ETokenType::FALSE},
+    {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
+    {"if", ETokenType::IF},         {"nil", ETokenType::NIL},
+    {"or", ETokenType::OR},         {"print", ETokenType::PRINT},
+    {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
+    {"this", ETokenType::THIS},     {"true", ETokenType::TRUE},
+    {"var", ETokenType::VAR},       {"while", ETokenType::WHILE}};
+
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
@@ -104,6 +115,8 @@ using Object = std::variant<void*, double, std::string>;
 
 class Token {
   public:
+    Token() = default; // need this to make expression be able to hold Tokens as
+                       // members and use aggregate initialization
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
         : eTokenType(tokenType), lexeme(lexeme), literal(literal), line(line) {
     }
