@@ -5,6 +5,7 @@
 #include "Scanner.h"
 #include "TokenTypes.h"
 #include "Expression.h"
+#include "Error.h"
 
 
 void run(const std::string& code) {
@@ -37,7 +38,7 @@ void runPrompt() {
 
 int main(int argumentCount, char* argumentValues[]) {
 
-    cpplox::visit2();
+    //ddcpplox::visit2();
     
     if (argumentCount > 2) {
         std::cout << "Usage: cpplox [script] \n";

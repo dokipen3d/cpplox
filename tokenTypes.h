@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 #include <variant>
-#include "Expression.h"
 
 namespace cpplox {
 enum class ETokenType {
@@ -112,7 +111,7 @@ const std::map<std::string, ETokenType> keywordMap{
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using Object = std::variant<void*, double, std::string>;
+using Object = std::variant<void*, double, std::string, bool>;
 
 class Token {
   public:
@@ -140,13 +139,10 @@ class Token {
         return stream.str();
     }
 
-  private:
     ETokenType eTokenType;
-    std::string lexeme;
     Object literal;
+    std::string lexeme;
     int line;
-
-    friend struct visitor; // this is to allow the printing to access the lexeme member
 };
 
 } // namespace cpplox

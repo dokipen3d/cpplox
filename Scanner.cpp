@@ -1,18 +1,11 @@
 #include "Scanner.h"
 #include "TokenTypes.h"
 #include <iostream>
+#include "Error.h"
 
 namespace cpplox {
 ////////////////////////////////////////////////////////////////////////
-void report(int line, const std::string& where, const std::string& message) {
-    std::cout << "[line " << line << "] Error" << where << ": " << message
-              << "\n";
-    hadError = true;
-}
 
-void error(int line, const std::string& message) {
-    report(line, "", message);
-}
 ////////////////////////////////////////////////////////////////////////
 std::vector<Token> scanTokens(const std::string& source) {
     int start = 0;

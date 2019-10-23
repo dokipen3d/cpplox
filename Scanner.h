@@ -1,15 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include "TokenTypes.h"
-
-inline bool hadError;
+#include <string>
+#include <vector>
 
 namespace cpplox {
-    std::vector<Token> scanTokens(const std::string& source);
-
-    void report(int line, const std::string& where, const std::string& message);
+std::vector<Token> scanTokens(const std::string& source);
 }
-
-void error(int line, const std::string& message);
