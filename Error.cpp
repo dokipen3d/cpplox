@@ -1,7 +1,7 @@
 #include "Error.h"
 
 namespace cpplox {
-
+namespace Error {
 void report(int line, const std::string& where, const std::string& message) {
     std::cout << "[line " << line << "] Error" << where << ": " << message
               << "\n";
@@ -19,5 +19,5 @@ void error(Token token, std::string message) {
         report(token.line, " at '" + token.lexeme + "'", message);
     }
 }
-
+} // namespace Error
 } // namespace cpplox

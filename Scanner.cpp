@@ -1,7 +1,7 @@
 #include "Scanner.h"
+#include "Error.h"
 #include "TokenTypes.h"
 #include <iostream>
-#include "Error.h"
 
 namespace cpplox {
 ////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ std::vector<Token> scanTokens(const std::string& source) {
 
         // Unterminated string.
         if (isAtEnd()) {
-            error(line, "Unterminated string.");
+            Error::error(line, "Unterminated string.");
             return;
         }
 
@@ -80,7 +80,8 @@ std::vector<Token> scanTokens(const std::string& source) {
 
         // Trim the surrounding quotes.
         // c++ way of doing substr pos+offset
-        std::string value = source.substr(start + 1, current - start - 1);
+        std::string value = source.substr(
+            start + 1, current - start - 2); // dont know why we need to do -2
         // need to use different named lambda as we cant override the name
         addTokenLiteral(ETokenType::STRING, value);
     };
@@ -121,7 +122,7 @@ std::vector<Token> scanTokens(const std::string& source) {
 
         // See if the identifier is a reserved word.
         const std::string text = source.substr(start, current - start);
-        auto search  = keywordMap.find(text);
+        auto search = keywordMap.find(text);
         if (search != keywordMap.end()) {
             type = search->second;
         }
@@ -186,7 +187,7 @@ std::vector<Token> scanTokens(const std::string& source) {
             } else if (isAlpha(c)) {
                 identifier();
             } else {
-                error(line, "Unexpected character.");
+                Error::error(line, "Unexpected character.");
                 break;
             }
         }

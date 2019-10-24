@@ -10,12 +10,22 @@
 
 void run(const std::string& code) {
     
-    auto tokens = cpplox::scanTokens(code);
+    std::cout << "scanning tokens\n";
 
-    // print the tokens
-    for (auto& token : tokens) {
-        std::cout << token.toString() << "\n";
+    auto tokens = cpplox::scanTokens(code);
+    for (auto& t : tokens){
+            std::cout << t.lexeme << " ";
     }
+    std::cout << "\n";
+
+    std::cout << "parsing expressions\n";
+
+    cpplox::Expr expression = cpplox::parse(tokens);
+    if (hadError){
+        std::cout << "error\n";
+        return;
+    }
+    cpplox::print(expression);
 }
 
 // dummy functions to make main run at this stage

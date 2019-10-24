@@ -118,7 +118,7 @@ class Token {
     Token() = default; // need this to make expression be able to hold Tokens as
                        // members and use aggregate initialization
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
-        : eTokenType(tokenType), lexeme(lexeme), literal(literal), line(line) {
+        : eTokenType(tokenType),  literal(literal), lexeme(lexeme), line(line) {
     }
 
     std::string toString() {

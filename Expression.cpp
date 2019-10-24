@@ -1,5 +1,7 @@
 #include "Expression.h"
+#include "Error.h"
 #include <array>
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -7,57 +9,6 @@
 #include <vector>
 
 namespace cpplox {
-
-// foward declares for recursive variant
-struct Binary;
-struct Grouping;
-struct Literal;
-struct Unary;
-
-struct Literal {
-    Literal(Object val) : val(val) {
-    }
-    Object val;
-};
-
-// helper class for holding forward declared types in variant
-template <typename T> struct recursive_wrapper {
-    recursive_wrapper(T t_) { // construct from an existing object
-        t.emplace_back(std::move(t_));
-    }
-    operator const T&() { // cast back to wrapped type
-        return t.front();
-    }
-    std::vector<T> t; // store the value
-};
-
-using Expr =
-    std::variant<recursive_wrapper<Binary>, recursive_wrapper<Grouping>,
-                 recursive_wrapper<Literal>, recursive_wrapper<Unary>>;
-
-struct Binary {
-
-    Binary(Expr A, Token op, Expr B)
-        : expressions{std::move(A), std::move(B)}, op(std::move(op)) {
-    }
-
-    std::array<Expr, 2> expressions;
-    Token op;
-};
-
-struct Grouping {
-    Grouping(Expr expr) : expr(std::move(expr)) {
-    }
-    Expr expr;
-};
-
-struct Unary {
-    Unary(Token token, Expr expr)
-        : token(std::move(token)), expr(std::move(expr)) {
-    }
-    Token token;
-    Expr expr;
-};
 
 struct visitor {
 
@@ -79,7 +30,7 @@ struct visitor {
 
     void operator()(const Binary& binary) {
         parenthesize(binary.op.lexeme,
-                     {binary.expressions[0], binary.expressions[1]});
+                     {binary.expressionA, binary.expressionB});
         //}
     }
     void operator()(const Literal& literal) {
@@ -102,11 +53,16 @@ struct visitor {
     void operator()(const Unary& unary) {
         parenthesize(unary.token.lexeme, {unary.expr});
     }
+    void operator()(const std::monostate) {
+    }
 };
 
+void print(const Expr& expr) {
+    visitor v;
+    v.print(expr);
+}
 
-
-void parse(std::vector<Token>& tokens) {
+Expr parse(std::vector<Token>& tokens) {
 
     int current = 0;
 
@@ -141,18 +97,40 @@ void parse(std::vector<Token>& tokens) {
         return false;
     };
 
+    auto synchronize = [&]() {
+        advance();
+
+        while (!isAtEnd()) {
+            if (previous().eTokenType == ETokenType::SEMICOLON)
+                return;
+
+            switch (peek().eTokenType) {
+            case ETokenType::CLASS:
+            case ETokenType::FUN:
+            case ETokenType::VAR:
+            case ETokenType::FOR:
+            case ETokenType::IF:
+            case ETokenType::WHILE:
+            case ETokenType::PRINT:
+            case ETokenType::RETURN: return;
+            }
+
+            advance();
+        }
+    };
+
     auto consume = [&](ETokenType type, std::string message) -> Token {
         if (check(type))
             return advance();
 
-        // throw error(peek(), message);
+        Error::error(peek(), message);
+        throw std::runtime_error{"exception thrown"};
     };
 
-    std::function<Expr()> primary;
     std::function<Expr()> expression;
     std::function<Expr()> unary;
 
-    primary = [&]() -> Expr {
+    auto primary = [&]() -> Expr {
         if (match({ETokenType::FALSE}))
             return Literal(false);
         if (match({ETokenType::TRUE}))
@@ -233,22 +211,11 @@ void parse(std::vector<Token>& tokens) {
 
     expression = [&]() -> Expr { return equality(); };
 
-    // void visit2() {
-    //     visitor v;
-    //     // auto l1 = Literal{Object{"lit"}};
-    //     // auto l2 = Literal{Object{"li2"}};
-    //     // auto expr = Binary(l1, l2);
-    //     // Expr expr = Binary(Literal(Object{"lit3"}),
-    //     //                    Token{ETokenType::PLUS, "+", nullptr, 0},
-    //     //                    Literal(Object{"lit4"}));
-
-    //     Expr expr = Binary(Unary(Token(ETokenType::MINUS, "-", nullptr, 1),
-    //                              Literal(Object{"124"})),
-    //                        Token(ETokenType::STAR, "*", nullptr, 1),
-    //                        Grouping(Literal(Object{"45.67"})));
-
-    //     // std::visit(v, expr);
-    //     v.print(expr);
-    // }
+    try {
+        return expression();
+    } catch (const std::runtime_error& error) {
+        std::cout << "caught!\n";
+        return std::monostate{};
+    }
 }
 } // namespace cpplox
