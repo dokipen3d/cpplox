@@ -9,3 +9,25 @@ template <typename T> struct recursive_wrapper3 {
   operator const T&()  { return objRef; }
   const T& objRef;
 };
+
+
+// recursive wrapper with single vector for each type
+template <typename T> struct recursive_wrapper {
+  // construct from an existing object
+  recursive_wrapper(T t_){ 
+      t.emplace_back(std::move(t_));
+    index = t.size()-1;
+  }
+  // cast back to wrapped type
+  //operator const T &()  { return t.front(); }
+  operator const T &()  { return t[index]; }
+
+  // store the value
+  static std::vector<T> t;
+  int index;
+  //std::basic_string<T> t;
+
+};
+
+template <typename T>
+std::vector<T> recursive_wrapper<T>::t ;
