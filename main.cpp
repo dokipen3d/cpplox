@@ -4,6 +4,8 @@
 #include <vector>
 #include "Scanner.h"
 #include "TokenTypes.h"
+#include "Expr.hpp"
+
 #include "Expression.h"
 #include "Error.h"
 
@@ -19,13 +21,14 @@ void run(const std::string& code) {
     std::cout << "\n";
 
     std::cout << "parsing expressions\n";
-
-    cpplox::Expr expression = cpplox::parse(tokens);
+    cpplox::Parser parser(tokens);
+    
+    cpplox::Expr expression = parser.parse();
     if (hadError){
         std::cout << "error\n";
         return;
     }
-    cpplox::print(expression);
+    parser.print(expression);
 }
 
 // dummy functions to make main run at this stage
