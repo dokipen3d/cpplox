@@ -13,9 +13,9 @@ void run(const std::string& code) {
     std::cout << "scanning tokens\n";
 
     auto tokens = cpplox::scanTokens(code);
-    for (auto& t : tokens){
-            std::cout << t.lexeme << " ";
-    }
+    // for (auto& t : tokens){
+    //         std::cout << t.lexeme << " ";
+    // }
     std::cout << "\n";
 
     std::cout << "parsing expressions\n";

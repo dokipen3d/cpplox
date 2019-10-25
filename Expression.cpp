@@ -18,7 +18,7 @@ struct visitor {
         std::cout << ast.str();
     }
 
-    void parenthesize(const std::string name,
+    void parenthesize(const std::string& name,
                       const std::initializer_list<Expr> exprs) {
         ast << "(" << name;
         for (const auto& e : exprs) {
@@ -36,7 +36,6 @@ struct visitor {
     void operator()(const Literal& literal) {
         if (literal.val.index() == 0) {
             ast << "nil";
-            return;
         } else {
             std::visit(
                 [&](auto&& arg) {
@@ -53,7 +52,7 @@ struct visitor {
     void operator()(const Unary& unary) {
         parenthesize(unary.token.lexeme, {unary.expr});
     }
-    void operator()(const std::monostate) {
+    void operator()(const std::monostate neverCalled) {
     }
 };
 
@@ -68,21 +67,23 @@ Expr parse(std::vector<Token>& tokens) {
 
     auto peek = [&]() -> Token { return tokens[current]; };
 
+    auto previous = [&]() -> Token { return tokens[current - 1]; };
+
     auto isAtEnd = [&]() -> bool {
         return peek().eTokenType == ETokenType::END_OF_FILE;
     };
 
-    auto previous = [&]() -> Token { return tokens[current - 1]; };
-
     auto advance = [&]() -> Token {
-        if (!isAtEnd())
+        if (!isAtEnd()) {
             current++;
+        }
         return previous();
     };
 
     auto check = [&](ETokenType type) -> bool {
-        if (isAtEnd())
+        if (isAtEnd()) {
             return false;
+        }
         return peek().eTokenType == type;
     };
 
@@ -101,9 +102,9 @@ Expr parse(std::vector<Token>& tokens) {
         advance();
 
         while (!isAtEnd()) {
-            if (previous().eTokenType == ETokenType::SEMICOLON)
+            if (previous().eTokenType == ETokenType::SEMICOLON) {
                 return;
-
+            }
             switch (peek().eTokenType) {
             case ETokenType::CLASS:
             case ETokenType::FUN:
@@ -119,10 +120,10 @@ Expr parse(std::vector<Token>& tokens) {
         }
     };
 
-    auto consume = [&](ETokenType type, std::string message) -> Token {
-        if (check(type))
+    auto consume = [&](ETokenType type, const std::string& message) -> Token {
+        if (check(type)) {
             return advance();
-
+        }
         Error::error(peek(), message);
         throw std::runtime_error{"exception thrown"};
     };
@@ -148,6 +149,8 @@ Expr parse(std::vector<Token>& tokens) {
                     "Expect ')' after expression.");
             return Grouping(expr);
         }
+        Error::error(peek(), "Expect expression.");
+        throw std::runtime_error("Expect expression.");
     };
 
     unary = [&]() -> Expr {
@@ -209,10 +212,19 @@ Expr parse(std::vector<Token>& tokens) {
         return expr;
     };
 
-    expression = [&]() -> Expr { return equality(); };
+    expression = [&]() -> Expr {
+        return equality();
+    };
 
     try {
-        return expression();
+        Expr expr = expression();
+        // extra check to find if there is a trailing token that didnt get
+        // parsed
+        if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
+            Error::error(peek(), "Expect expression.");
+            throw std::runtime_error("Expect expression.");
+        }
+        return expr;
     } catch (const std::runtime_error& error) {
         std::cout << "caught!\n";
         return std::monostate{};
