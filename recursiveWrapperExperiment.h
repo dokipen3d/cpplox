@@ -45,7 +45,7 @@ struct Object : var{
 using var = std::variant<void*, int>;
 struct Object : var{
       using var::var;
-      //bool operator ==(const std::nullptr_t& other){ return this->index() == 0;}
+      // make explicit to prevent 0 or something else implicitly convert to nullptr?
     bool operator ==(const std::nullptr_t& other){ 
         return std::holds_alternative<void*>(*this);}
 
