@@ -38,3 +38,15 @@ struct Object : var{
       using var::var;
       bool operator ==(const std::nullptr_t& other){ return this->index() == 0;}
 };
+
+/// even better....
+
+
+using var = std::variant<void*, int>;
+struct Object : var{
+      using var::var;
+      //bool operator ==(const std::nullptr_t& other){ return this->index() == 0;}
+    bool operator ==(const std::nullptr_t& other){ 
+        return std::holds_alternative<void*>(*this);}
+
+};
