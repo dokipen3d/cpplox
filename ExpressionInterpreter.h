@@ -1,6 +1,6 @@
 #pragma once
 #include "Expr.hpp"
-
+#include "TimeIt.hpp"
 namespace cpplox {
 struct Interpreter {
     void interpret(Expr expression);
@@ -19,5 +19,6 @@ struct Interpreter {
     // version of the fuction for binary operators
     void checkNumberOperands(const Token& token, const Object& left, const Object& right);
     std::string stringify(const Object& object);
+    const TimeIt timeIt;
 };
 } // namespace cpplox

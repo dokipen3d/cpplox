@@ -16,6 +16,7 @@ namespace cpplox {
 void Interpreter::interpret(Expr expression) {
     try {
         Object value = evaluate(expression);
+        this->timeIt.time();
         std::cout << "value is: " << stringify(value) << "\n";
     } catch (const RuntimeError& error) {
         std::cout << "Caught Runtime error"

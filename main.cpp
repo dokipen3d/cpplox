@@ -1,20 +1,19 @@
+#include "Error.h"
+#include "Expr.hpp"
+#include "ExpressionInterpreter.h"
+#include "ExpressionParser.h"
+#include "Scanner.h"
+#include "TimeIt.hpp"
+#include "TokenTypes.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Scanner.h"
-#include "TokenTypes.h"
-#include "Expr.hpp"
-#include "ExpressionInterpreter.h"
-#include "ExpressionParser.h"
-#include "Error.h"
-
 
 cpplox::Interpreter interpreter;
 
-
 void run(const std::string& code) {
-    
+
     std::cout << "scanning tokens\n";
 
     auto tokens = cpplox::scanTokens(code);
@@ -25,21 +24,21 @@ void run(const std::string& code) {
 
     std::cout << "parsing expressions\n";
     cpplox::Parser parser(tokens);
-    
+
     cpplox::Expr expression = parser.parse();
-    if (hadError){
+    if (hadError) {
         std::cout << "error\n";
         return;
     }
 
-    //parser.print(expression);
+    // parser.print(expression);
     std::cout << "interpreting expression\n";
     try {
-    interpreter.interpret(expression);
-    }
-    catch(std::exception& error){
-            std::cout << error.what() << "\n";
 
+        interpreter.interpret(expression);
+
+    } catch (std::exception& error) {
+        std::cout << error.what() << "\n";
     }
 }
 
@@ -56,16 +55,16 @@ void runPrompt() {
     for (;;) {
         std::getline(std::cin, currentLine);
         run(currentLine);
-        // set error back in case there was an error as we don't want to kill session
+        // set error back in case there was an error as we don't want to kill
+        // session
         hadError = false;
     }
 };
 
-
 int main(int argumentCount, char* argumentValues[]) {
 
-    //ddcpplox::visit2();
-    
+    // ddcpplox::visit2();
+
     if (argumentCount > 2) {
         std::cout << "Usage: cpplox [script] \n";
         return 0;
@@ -74,7 +73,7 @@ int main(int argumentCount, char* argumentValues[]) {
         if (hadError) {
             return 1;
         }
-        if(hadRuntimeError){
+        if (hadRuntimeError) {
             return 1;
         }
     } else {
