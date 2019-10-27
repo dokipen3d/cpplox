@@ -118,12 +118,17 @@ struct Object : variantObject {
     const bool operator==(const std::nullptr_t& other) const {
         return std::holds_alternative<std::nullptr_t>(*this);
     }
-    
+    const bool operator!=(const std::nullptr_t& other) const {
+        return !(*this == other);
+    }
+
     template <typename T>
-    bool is() const{ // function needs to be const  to make it callable from a const ref
+    bool is() const { // function needs to be const  to make it callable from a
+                      // const ref
         return std::holds_alternative<T>(*this);
     }
 };
+
 class Token {
   public:
     Token() = default; // need this to make expression be able to hold Tokens as
@@ -141,11 +146,11 @@ class Token {
         stream << " " << lexeme << " ";
         std::visit(
             [&](auto&& arg) {
-                if (literal.index() > 0) { // not a void* so can print
+                if (!(literal == nullptr)) { // not a void* so can print
                     stream << arg;
                 }
             },
-            literal);
+            static_cast<variantObject>(literal));
 
         return stream.str();
     }

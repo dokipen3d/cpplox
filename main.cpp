@@ -37,7 +37,7 @@ void run(const std::string& code) {
     try {
     interpreter.interpret(expression);
     }
-    catch(...){
+    catch(std::runtime_error& error){
             std::cout << "blah\n";
 
     }
