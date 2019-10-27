@@ -1,5 +1,7 @@
 #include "ExpressionParser.h"
 #include "Error.h"
+#include "ExpressionPrinterVisitor.h"
+
 #include <array>
 #include <exception>
 #include <functional>
@@ -10,64 +12,13 @@
 
 namespace cpplox {
 
-struct visitor {
 
-    std::stringstream ast;
-    void print(Expr expression) {
-        std::visit(*this, static_cast<Expr>(expression));
-        std::cout << ast.str();
-    }
-
-    void parenthesize(const std::string& name, const Expr exprA,
-                      const Expr exprB) {
-        ast << "(" << name;
-
-        ast << " ";
-        std::visit(*this, static_cast<Expr>(exprA));
-        ast << " ";
-        std::visit(*this, static_cast<Expr>(exprB));
-
-        ast << ")";
-    }
-
-    void parenthesize(const std::string& name, const Expr expr) {
-        parenthesize(name, expr, NoOp{});
-    }
-
-    void operator()(const Binary& binary) {
-        parenthesize(binary.op.lexeme, binary.expressionA, binary.expressionB);
-        //}
-    }
-    void operator()(const Literal& literal) {
-        if (literal.val == nullptr) {
-            ast << "nil";
-        } else {
-            std::visit(
-                [&](auto&& arg) {
-                    // not a void* so can print
-                    ast << arg;
-                },
-                static_cast<variantObject>(literal.val));
-        }
-    }
-
-    void operator()(const Grouping& grouping) {
-        parenthesize("group", grouping.expr);
-    }
-    void operator()(const Unary& unary) {
-        parenthesize(unary.token.lexeme, unary.expr);
-    }
-    void operator()(const std::monostate neverCalled) {
-    }
-    void operator()(const NoOp neverCalled) {
-    }
-};
 
 Parser::Parser(std::vector<Token>& tokens) : tokens(tokens) {
 }
 
-auto Parser::print(const Expr& expr) -> void {
-    visitor v;
+void Parser::print(const Expr& expr) {
+    ExpressionPrinterVisitor v;
     v.print(expr);
 }
 
