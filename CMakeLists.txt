@@ -10,5 +10,5 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     endif()
 endif()
 
-add_executable(cpplox main.cpp Expression.cpp Error.cpp Scanner.cpp ) 
+add_executable(cpplox main.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)

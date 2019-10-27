@@ -5,9 +5,12 @@
 #include "Scanner.h"
 #include "TokenTypes.h"
 #include "Expr.hpp"
-
-#include "Expression.h"
+#include "ExpressionInterpreter.h"
+#include "ExpressionParser.h"
 #include "Error.h"
+
+
+cpplox::Interpreter interpreter;
 
 
 void run(const std::string& code) {
@@ -28,7 +31,16 @@ void run(const std::string& code) {
         std::cout << "error\n";
         return;
     }
-    parser.print(expression);
+
+    //parser.print(expression);
+    std::cout << "interpreting expression\n";
+    try {
+    interpreter.interpret(expression);
+    }
+    catch(...){
+            std::cout << "blah\n";
+
+    }
 }
 
 // dummy functions to make main run at this stage
@@ -49,6 +61,7 @@ void runPrompt() {
     }
 };
 
+
 int main(int argumentCount, char* argumentValues[]) {
 
     //ddcpplox::visit2();
@@ -59,6 +72,9 @@ int main(int argumentCount, char* argumentValues[]) {
     } else if (argumentCount == 2) {
         runFile(argumentValues[1]);
         if (hadError) {
+            return 1;
+        }
+        if(hadRuntimeError){
             return 1;
         }
     } else {

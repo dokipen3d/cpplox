@@ -111,14 +111,25 @@ const std::map<std::string, ETokenType> keywordMap{
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using Object = std::variant<void*, double, std::string, bool>;
+using variantObject = std::variant<std::nullptr_t, double, std::string, bool>;
+struct Object : variantObject {
+    using variantObject::variantObject;
 
+    const bool operator==(const std::nullptr_t& other) const {
+        return std::holds_alternative<std::nullptr_t>(*this);
+    }
+    
+    template <typename T>
+    bool is() const{ // function needs to be const  to make it callable from a const ref
+        return std::holds_alternative<T>(*this);
+    }
+};
 class Token {
   public:
     Token() = default; // need this to make expression be able to hold Tokens as
                        // members and use aggregate initialization
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
-        : eTokenType(tokenType),  literal(literal), lexeme(lexeme), line(line) {
+        : eTokenType(tokenType), literal(literal), lexeme(lexeme), line(line) {
     }
 
     std::string toString() {
@@ -138,6 +149,8 @@ class Token {
 
         return stream.str();
     }
+
+    friend struct Error;
 
     ETokenType eTokenType;
     Object literal;

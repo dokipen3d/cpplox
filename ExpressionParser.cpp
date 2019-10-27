@@ -1,4 +1,4 @@
-#include "Expression.h"
+#include "ExpressionParser.h"
 #include "Error.h"
 #include <array>
 #include <exception>
@@ -39,7 +39,7 @@ struct visitor {
         //}
     }
     void operator()(const Literal& literal) {
-        if (literal.val.index() == 0) {
+        if (literal.val == nullptr) {
             ast << "nil";
         } else {
             std::visit(
@@ -68,11 +68,23 @@ Parser::Parser(std::vector<Token>& tokens) : tokens(tokens) {
 
 auto Parser::print(const Expr& expr) -> void {
     visitor v;
-     v.print(expr);
+    v.print(expr);
 }
 
 auto Parser::parse() -> Expr {
-    return Literal{Object()};
+    try {
+        Expr expr = expression();
+        // extra check to find if there is a trailing token that didnt get
+        // parsed
+         if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
+             Error::error(peek(), "Expect expression. got " + tokens[current].toString());
+             throw std::runtime_error("Expect expression.");
+         }
+        return expr;
+    } catch (const std::runtime_error& error) {
+        std::cout << "caught!\n";
+        return std::monostate{};
+    }
 }
 
 auto Parser::peek() -> Token {
@@ -225,19 +237,5 @@ auto Parser::equality() -> Expr {
 auto Parser::expression() -> Expr {
     return equality();
 };
-
-// try {
-//     Expr expr = expression();
-//     // extra check to find if there is a trailing token that didnt get
-//     // parsed
-//     // if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
-//     //     Error::error(peek(), "Expect expression.");
-//     //     throw std::runtime_error("Expect expression.");
-//     // }
-//     return expr;
-// } catch (const std::runtime_error& error) {
-//     std::cout << "caught!\n";
-//     return std::monostate{};
-// }
 
 } // namespace cpplox

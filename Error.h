@@ -1,15 +1,17 @@
 #pragma once
 
+#include "RuntimeError.h"
 #include "TokenTypes.h"
-#include <iostream>
 #include <string>
 
-inline bool hadError;
+inline bool hadError = false;
+inline bool hadRuntimeError = false;
 
 namespace cpplox {
-namespace Error {
-void report(int line, const std::string& where, const std::string& message);
-void error(int line, const std::string& message);
-void error(Token token, std::string message);
-} // namespace Error
+struct Error {
+    static void report(int line, const std::string& where, const std::string& message);
+    static void error(int line, const std::string& message);
+    static void error(Token token, std::string message);
+    static void runtimeError(const RuntimeError& error);
+};
 } // namespace cpplox
