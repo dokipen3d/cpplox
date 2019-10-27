@@ -31,7 +31,7 @@ struct visitor {
     }
 
     void parenthesize(const std::string& name, const Expr expr) {
-        parenthesize(name, expr, std::monostate{});
+        parenthesize(name, expr, NoOp{});
     }
 
     void operator()(const Binary& binary) {
@@ -59,6 +59,8 @@ struct visitor {
     }
     void operator()(const std::monostate neverCalled) {
     }
+    void operator()(const NoOp neverCalled) {
+    }
 };
 
 Parser::Parser(std::vector<Token>& tokens) : tokens(tokens) {
@@ -74,10 +76,11 @@ auto Parser::parse() -> Expr {
         Expr expr = expression();
         // extra check to find if there is a trailing token that didnt get
         // parsed
-         if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
-             Error::error(peek(), "Expect expression. got " + tokens[current].toString());
-             throw std::runtime_error("Expect expression.");
-         }
+        if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
+            Error::error(peek(), "Expect expression. got " +
+                                     tokens[current].toString());
+            throw std::runtime_error("Expect expression.");
+        }
         return expr;
     } catch (const std::runtime_error& error) {
         std::cout << "caught!\n";

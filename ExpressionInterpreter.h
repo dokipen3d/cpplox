@@ -1,3 +1,4 @@
+#pragma once
 #include "Expr.hpp"
 
 namespace cpplox {
