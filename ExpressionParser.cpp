@@ -31,7 +31,7 @@ struct visitor {
     }
 
     void parenthesize(const std::string& name, const Expr expr) {
-        parenthesize(name, expr, NoOp{});
+        parenthesize(name, expr, std::monostate{});
     }
 
     void operator()(const Binary& binary) {
@@ -47,7 +47,7 @@ struct visitor {
                     // not a void* so can print
                     ast << arg;
                 },
-                literal.val);
+                static_cast<variantObject>(literal.val));
         }
     }
 
@@ -58,8 +58,6 @@ struct visitor {
         parenthesize(unary.token.lexeme, unary.expr);
     }
     void operator()(const std::monostate neverCalled) {
-    }
-    void operator()(const NoOp& neverCalled) {
     }
 };
 
