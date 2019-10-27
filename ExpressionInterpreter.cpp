@@ -3,6 +3,7 @@
 #include "Error.h"
 #include "Expr.hpp"
 #include "RuntimeError.h"
+#include "Utilities.hpp"
 
 #include <functional>
 #include <iostream>
@@ -17,7 +18,8 @@ void Interpreter::interpret(Expr expression) {
         Object value = evaluate(expression);
         std::cout << "value is: " << stringify(value) << "\n";
     } catch (const RuntimeError& error) {
-        std::cout << "Caught Runtime error" << "\n";
+        std::cout << "Caught Runtime error"
+                  << "\n";
 
         Error::runtimeError(error);
     }
@@ -93,6 +95,7 @@ Object Interpreter::operator()(const Grouping& grouping) {
     return evaluate(grouping.expr);
 }
 Object Interpreter::operator()(const Unary& unary) {
+    Object returnObject = nullptr;
     Object right = evaluate(unary.expr);
 
     switch (unary.token.eTokenType) {
@@ -103,14 +106,16 @@ Object Interpreter::operator()(const Unary& unary) {
         // type, an exception will get thrown. this is equivalent to the
         // cast in java failing and throwing
 
-        return -std::get<double>(right);
+        returnObject = -std::get<double>(right);
+        break;
     }
     case ETokenType::BANG: {
-        return !isTruthy(right);
+        returnObject = !isTruthy(right);
+        break;
     }
     }
     // unreachable
-    return nullptr;
+    return returnObject;
 }
 Object Interpreter::operator()(const std::monostate neverCalled) {
     return nullptr;
@@ -131,82 +136,44 @@ bool Interpreter::isTruthy(const Object& object) {
 }
 bool Interpreter::isEqual(const Object& a, const Object& b) {
     // nil is only equal to nil
-
-    // the first two functions are needed in java to prevent an
-    // exception being thrown on equals() being called on null. we might
-    // get away with this in c++ with std::variant
-
-    // this case tests if both are nil and hence both the same value
-    // if ((a == nullptr) && (b == nullptr)) {
-    //     return true;
-    // }
-    // // this is reached if only one if them is nil and hence they are
-    // not
-    // // equal
-    // if (a == nullptr) {
-    //     return false;
-    // }
-
-    // we get here if the objects are both values. we could do extra
-    // type checking here to see if they are string == double
     return a == b;
 }
 // we could rely on the bad_variant_access but this way we throw based on
 // type. might be slower. worth investigating in future.
-void Interpreter::checkNumberOperand(const Token& token, const Object& operand) {
+void Interpreter::checkNumberOperand(const Token& token,
+                                     const Object& operand) {
     if (operand.is<double>()) {
         return;
     }
     throw RuntimeError(token, "Operand must be a number.");
 }
 // version of the fuction for binary operators
-void Interpreter::checkNumberOperands(const Token& token, const Object& left, const Object& right) {
+void Interpreter::checkNumberOperands(const Token& token, const Object& left,
+                                      const Object& right) {
     if (left.is<double>() && right.is<double>()) {
         return;
     }
     throw RuntimeError(token, "Operands must be a number.");
 }
 std::string Interpreter::stringify(const Object& object) {
+    std::string text; // for rvo
     if (object == nullptr) {
-        return "nil";
+        text = "nil";
     }
 
     if (object.is<double>()) {
-        std::string text = std::to_string(std::get<double>(object));
-        auto dotPositionIter = text.find_last_not_of('.');
-        auto zerosPositionIter = text.find_last_not_of('0');
-        text.erase(text.find_last_not_of('0')+1, std::string::npos);
-        text.erase(text.find_last_not_of('.')+1, std::string::npos);
-
-        //std::cout << text[text.size()-1] << "\n";
-
-
-
-        // if (zerosPositionIter == dotPositionIter + 1) {
-        //     text.erase(zerosPositionIter, std::string::npos);
-        // }
-
-        // std::stringstream ss;
-        // ss << std::get<double>(object);
-        // endsWith() will be available in c++20
-        auto endsWith = [](const std::string& text,
-                           const std::string& ending) -> bool {
-            // compare(int pos1, int count1, string end)
-            return text.compare(text.length() - ending.length(),
-                                ending.length(), ending);
-        };
-
-        // if (endsWith(ss.str(), ".0")) {
-        //     text = text.substr(0, text.length() - 2);
-        // }
-        return text;
+        text = std::to_string(std::get<double>(object));
+        stripZerosFromString(text);
     }
     if (object.is<bool>()) {
-        return std::invoke([&object]() -> std::string {
-            return std::get<bool>(object) ? "true" : "false";
-        });
+        text = std::get<bool>(object) ? "true" : "false";
     }
+
     // must be a string.
-    return std::get<std::string>(object);
+    if (object.is<std::string>()) {
+        text = std::get<std::string>(object);
+    }
+    return text;
 }
+
 } // namespace cpplox
