@@ -31,3 +31,22 @@ template <typename T> struct recursive_wrapper {
 
 template <typename T>
 std::vector<T> recursive_wrapper<T>::t ;
+
+/////adding nullptr check to Object
+using var = std::variant<void*, int>;
+struct Object : var{
+      using var::var;
+      bool operator ==(const std::nullptr_t& other){ return this->index() == 0;}
+};
+
+/// even better....
+
+
+using var = std::variant<void*, int>;
+struct Object : var{
+      using var::var;
+      // make explicit to prevent 0 or something else implicitly convert to nullptr?
+    bool operator ==(const std::nullptr_t& other){ 
+        return std::holds_alternative<void*>(*this);}
+
+};
