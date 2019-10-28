@@ -3,8 +3,8 @@
 #include "TimeIt.hpp"
 namespace cpplox {
 struct Interpreter {
-    void interpret(Expr expression);
-    Object evaluate(Expr expression);
+    void interpret(const Expr& expression);
+    Object evaluate(const Expr& expression);
     Object operator()(const Binary& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);

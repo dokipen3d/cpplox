@@ -13,7 +13,7 @@
 
 namespace cpplox {
 
-void Interpreter::interpret(Expr expression) {
+void Interpreter::interpret(const Expr& expression) {
     try {
         Object value = evaluate(expression);
         this->timeIt.time();
@@ -26,7 +26,7 @@ void Interpreter::interpret(Expr expression) {
     }
 }
 
-Object Interpreter::evaluate(Expr expression) {
+Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, expression);
 }
 
