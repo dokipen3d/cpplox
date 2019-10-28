@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RuntimeError.h"
+#include "ExceptionError.h"
 #include "TokenTypes.h"
 #include <string>
 

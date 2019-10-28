@@ -1,10 +1,14 @@
 #pragma once
 #include "Expr.hpp"
+#include "Statement.hpp"
 #include "TimeIt.hpp"
 namespace cpplox {
 struct Interpreter {
-    void interpret(const Expr& expression);
+    void interpret(const std::vector<Statement>& statements);
+    void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
+    void operator()(const ExpressionStatement& expressionStatement);
+    void operator()(const PrintStatement& printStatement);
     Object operator()(const Binary& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);

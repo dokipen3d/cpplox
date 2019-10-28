@@ -1,5 +1,6 @@
 #include "Error.h"
 #include "Expr.hpp"
+#include "Statement.hpp"
 #include "ExpressionInterpreter.h"
 #include "ExpressionParser.h"
 #include "Scanner.h"
@@ -25,7 +26,7 @@ void run(const std::string& code) {
     std::cout << "parsing expressions\n";
     cpplox::Parser parser(tokens);
 
-    const cpplox::Expr expression = parser.parse();
+    const std::vector<cpplox::Statement> statements = parser.parse();
     if (hadError) {
         std::cout << "error\n";
         return;
@@ -35,7 +36,7 @@ void run(const std::string& code) {
     std::cout << "interpreting expression\n";
     try {
 
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
 
     } catch (std::exception& error) {
         std::cout << error.what() << "\n";

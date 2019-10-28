@@ -12,8 +12,6 @@
 
 namespace cpplox {
 
-
-
 Parser::Parser(std::vector<Token>& tokens) : tokens(tokens) {
 }
 
@@ -22,22 +20,21 @@ void Parser::print(const Expr& expr) {
     v.print(expr);
 }
 
-auto Parser::parse() -> Expr {
-    try {
-        Expr expr = expression();
-        // extra check to find if there is a trailing token that didnt get
-        // parsed
-        if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
-            Error::error(peek(), "Expect expression. got " +
-                                     tokens[current].toString());
-            throw std::runtime_error("Expect expression.");
-        }
-        return expr;
-    } catch (const std::runtime_error& error) {
-        std::cout << "caught!\n";
-        return std::monostate{};
+auto Parser::parse() -> std::vector<Statement> {
+    std::vector<Statement> statements;
+    // maybe we can prescan the tokens and reserve the statements
+    while (!isAtEnd()) {
+        statements.push_back(statement());
     }
+
+    return statements;
 }
+
+auto Parser::error(Token token, std::string message) -> ParseError {
+    Error::error(token, message);
+    return ParseError("parser error");
+}
+
 
 auto Parser::peek() -> Token {
     return tokens[current];
@@ -102,9 +99,27 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
     if (check(type)) {
         return advance();
     }
-    Error::error(peek(), message);
-    throw std::runtime_error{"exception thrown"};
+    throw Parser::error(peek(),"exception thrown");
 };
+
+auto Parser::statement() -> Statement {
+    if (match({ETokenType::PRINT})) {
+        return printStatement();
+    }
+    return expressionStatement();
+}
+
+auto Parser::printStatement() -> Statement {
+    Expr value = expression();
+    consume(ETokenType::SEMICOLON, "Expect ';' after value.");
+    return PrintStatement(value);
+}
+
+auto Parser::expressionStatement() -> Statement {
+    Expr expr = expression();
+    consume(ETokenType::SEMICOLON, "Expect ';' after expression.");
+    return ExpressionStatement(expr);
+}
 
 auto Parser::primary() -> Expr {
     if (match({ETokenType::FALSE}))

@@ -2,7 +2,7 @@
 
 #include "Error.h"
 #include "Expr.hpp"
-#include "RuntimeError.h"
+#include "ExceptionError.h"
 #include "Utilities.hpp"
 
 #include <functional>
@@ -13,11 +13,11 @@
 
 namespace cpplox {
 
-void Interpreter::interpret(const Expr& expression) {
+void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
-        const Object value = evaluate(expression);
-        this->timeIt.time();
-        std::cout << "value is: " << stringify(value) << "\n";
+        for (auto& statement : statements){
+            execute(statement);
+        }
     } catch (const RuntimeError& error) {
         std::cout << "Caught Runtime error"
                   << "\n";
@@ -26,8 +26,22 @@ void Interpreter::interpret(const Expr& expression) {
     }
 }
 
+void Interpreter::execute(const Statement& statementToExecute){
+    std::visit(*this, statementToExecute);
+}
+
 Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, expression);
+}
+
+void Interpreter::operator()(const ExpressionStatement& expressionStatement) {
+    evaluate(expressionStatement.expression);
+    return;
+}
+void Interpreter::operator()(const PrintStatement& printStatement) {
+    Object value = evaluate(printStatement.expression);
+    std::cout << stringify(value) << "\n";
+    return;
 }
 
 Object Interpreter::operator()(const Binary& binary) {
@@ -44,34 +58,34 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::GREATER_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        returnValue  = std::get<double>(left) >= std::get<double>(right);
+        returnValue = std::get<double>(left) >= std::get<double>(right);
         break;
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        returnValue  = std::get<double>(left) < std::get<double>(right);
+        returnValue = std::get<double>(left) < std::get<double>(right);
         break;
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        returnValue  = std::get<double>(left) <= std::get<double>(right);
+        returnValue = std::get<double>(left) <= std::get<double>(right);
         break;
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        returnValue  = std::get<double>(left) - std::get<double>(right);
+        returnValue = std::get<double>(left) - std::get<double>(right);
         break;
     }
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            returnValue  = std::get<double>(left) + std::get<double>(right);
+            returnValue = std::get<double>(left) + std::get<double>(right);
             break;
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            returnValue  = std::get<std::string>(left) +
-                std::get<std::string>(right);
+            returnValue =
+                std::get<std::string>(left) + std::get<std::string>(right);
             break;
         }
         // this case already has type checking built into which is why it
@@ -110,7 +124,7 @@ Object Interpreter::operator()(const Grouping& grouping) {
     return evaluate(grouping.expr);
 }
 Object Interpreter::operator()(const Unary& unary) {
-    Object returnObject = nullptr;
+    Object returnObject;
     Object right = evaluate(unary.expr);
 
     switch (unary.token.eTokenType) {
