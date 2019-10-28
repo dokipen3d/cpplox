@@ -114,6 +114,7 @@ const std::map<std::string, ETokenType> keywordMap{
 using variantObject = std::variant<void*, double, std::string, bool>;
 struct Object : variantObject {
     using variantObject::variantObject;
+    using variantObject::operator=;
 
     const bool operator==(const std::nullptr_t& other) const {
         return std::holds_alternative<void*>(*this);

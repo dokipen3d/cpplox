@@ -13,7 +13,7 @@ template <typename T> struct recursive_wrapper {
     }
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
-    operator const T&() {
+    operator const T&() const {
         return t[index];
     }
 

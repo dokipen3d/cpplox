@@ -25,7 +25,7 @@ void run(const std::string& code) {
     std::cout << "parsing expressions\n";
     cpplox::Parser parser(tokens);
 
-    cpplox::Expr expression = parser.parse();
+    const cpplox::Expr expression = parser.parse();
     if (hadError) {
         std::cout << "error\n";
         return;

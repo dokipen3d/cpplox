@@ -15,7 +15,7 @@ namespace cpplox {
 
 void Interpreter::interpret(const Expr& expression) {
     try {
-        Object value = evaluate(expression);
+        const Object value = evaluate(expression);
         this->timeIt.time();
         std::cout << "value is: " << stringify(value) << "\n";
     } catch (const RuntimeError& error) {
@@ -31,38 +31,48 @@ Object Interpreter::evaluate(const Expr& expression) {
 }
 
 Object Interpreter::operator()(const Binary& binary) {
+    Object returnValue;
+
     Object left = evaluate(binary.expressionA);
     Object right = evaluate(binary.expressionB);
 
     switch (binary.op.eTokenType) {
     case ETokenType::GREATER: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) > std::get<double>(right);
+        returnValue = std::get<double>(left) > std::get<double>(right);
+        break;
     }
     case ETokenType::GREATER_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) >= std::get<double>(right);
+        returnValue  = std::get<double>(left) >= std::get<double>(right);
+        break;
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) < std::get<double>(right);
+        returnValue  = std::get<double>(left) < std::get<double>(right);
+        break;
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) <= std::get<double>(right);
+        returnValue  = std::get<double>(left) <= std::get<double>(right);
+        break;
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) - std::get<double>(right);
+        returnValue  = std::get<double>(left) - std::get<double>(right);
+        break;
     }
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            return std::get<double>(left) + std::get<double>(right);
+            returnValue  = std::get<double>(left) + std::get<double>(right);
+            break;
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            return std::get<std::string>(left) + std::get<std::string>(right);
+            returnValue  = std::get<std::string>(left) +
+                std::get<std::string>(right);
+            break;
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -71,22 +81,26 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::SLASH: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) / std::get<double>(right);
+        returnValue = std::get<double>(left) / std::get<double>(right);
+        break;
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) * std::get<double>(right);
+        returnValue = std::get<double>(left) * std::get<double>(right);
+        break;
     }
     case ETokenType::BANG_EQUAL: {
-        return !isEqual(left, right);
+        returnValue = !isEqual(left, right);
+        break;
     }
     case ETokenType::EQUAL_EQUAL: {
-        return isEqual(left, right);
+        returnValue = isEqual(left, right);
+        break;
     }
     }
 
     // unreachable
-    return nullptr;
+    return returnValue;
 }
 Object Interpreter::operator()(const Literal& literal) {
     return literal.val;
