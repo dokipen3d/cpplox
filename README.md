@@ -32,3 +32,6 @@ Possible Optimizations
 
 possible future changes to language to make it more c++ like the way I want to see c++ in the future.
 - make var = init obsolete. make all init use the {} init syntax.
+
+benefits of recursive wrapper vs using pointers.
+- its a lot easier to serialize as the wrapper is now and index into a vector of expression nodes. granted its whole program vector right now but if we ever split it up into more granular mappings between vectors->statements, for example, it becomes easier to serialize individual components.
