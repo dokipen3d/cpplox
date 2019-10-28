@@ -12,9 +12,11 @@
 #include <string>
 #include <vector>
 
+enum class Mode { REPL, FILE };
+
 cpplox::Interpreter interpreter;
 
-void run(const std::string& code) {
+void run(const std::string& code, Mode mode) {
 
     std::cout << "scanning tokens\n";
 
@@ -33,8 +35,12 @@ void run(const std::string& code) {
                                  cpplox::ETokenType::SEMICOLON;
                       }) > 0) {
         statements = parser.parse();
-    } else { // we must have a single expression, so we parse expression and
-             // wrap it in a print statement expression
+    } else if (mode == Mode::FILE) { // there were no semi colons and it is file mode so we shouldnt allow that
+        hadError = true;
+        break;
+    } else if (mode == Mode::REPL) { // we must have a single expression, so we
+                                     // parse expression and
+                                     // wrap it in a print statement expression
         cpplox::Expr expression = parser.parseExpression();
         statements.emplace_back(cpplox::PrintStatement(expression));
     }
@@ -67,8 +73,8 @@ void runPrompt() {
     for (;;) {
         std::getline(std::cin, currentLine);
         run(currentLine);
-        // set error back in case there was an error as we don't want to kill
-        // session
+        // set error back in case there was an error as we don't want to
+        // kill session
         hadError = false;
     }
 };
