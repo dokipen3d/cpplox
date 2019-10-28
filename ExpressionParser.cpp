@@ -22,7 +22,9 @@ void Parser::print(const Expr& expr) {
 
 auto Parser::parse() -> std::vector<Statement> {
     std::vector<Statement> statements;
-    // maybe we can prescan the tokens and reserve the statements
+    // maybe we can prescan the tokens and reserve the statements. maybe even
+    // use unique_ptr<Statement[]> as per herb sutter's advice for dynamics but
+    // fixed size storage
     while (!isAtEnd()) {
         statements.push_back(statement());
     }
@@ -34,7 +36,6 @@ auto Parser::error(Token token, std::string message) -> ParseError {
     Error::error(token, message);
     return ParseError("parser error");
 }
-
 
 auto Parser::peek() -> Token {
     return tokens[current];
@@ -99,7 +100,7 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
     if (check(type)) {
         return advance();
     }
-    throw Parser::error(peek(),"exception thrown");
+    throw Parser::error(peek(), "exception thrown");
 };
 
 auto Parser::statement() -> Statement {

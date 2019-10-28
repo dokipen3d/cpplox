@@ -13,3 +13,16 @@ A c++ implementation of the lox interpreter outlined at craftinginterpreters.com
 https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchain
 or choose the LLVM Compiler Toolchain from the extensions in the UI
 - then invoke cmake with -T"llvm
+
+
+Some things that I learned along the way....
+
+- To make a variant recursive, you have to use allocation to be able to use incomplete types (that has the variant itself as a member). This way the storage of the members is on the heap and not inline in the types of the variant. This gets round the issue of types that contain the same types (which will contain the same type) and so on. You can't obviously have infinite sized types.
+
+- the storage for the recursive types is done using a vector in the recursuve wrapper. the naive implementation uses a single std vector for each wrapped type. What we can do instead is make the vector static, define it (so that its in a TU and inline so that all TUs that include the hpp have the same one defined for all THATS WHAT THE INLINE KEYWORD DOES). This makes a static vector for each type (T). This is whole program though so all expressions accross the whole program will use the same one. 
+TODOs will be to 1) somehow break that up into more vectors so that its one vec per statement or per TU or something. 2) Clear the vectors when the expressions are no longer needed. 
+Also we have dynamically allocated Statements which themselves refer to Expr, so they could potentially provide the storage for the expressions they contain. But there is no easy way for the Expr to know which vector they will be pushing back to. Unless instead of a static vector, there is a static function that tells the 'current' expression where to store its data.  maybe this is overkill.
+
+- const is hard thing to get right, especially when getting conversion functions and  constructors/assingment operators right in wrapper calling visit on a variant. see recursive_wrapper operator T() const and calling std visit in the interpreter. without a const T() const conversion, we cant call std visit with a const ref passing in the function. this i think is because we are extracting a ref to the actual expression object and it needs to be const to pass into a const ref function.
+
+
