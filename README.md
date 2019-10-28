@@ -26,3 +26,9 @@ Also we have dynamically allocated Statements which themselves refer to Expr, so
 - const is hard thing to get right, especially when getting conversion functions and  constructors/assingment operators right in wrapper calling visit on a variant. see recursive_wrapper operator T() const and calling std visit in the interpreter. without a const T() const conversion, we cant call std visit with a const ref passing in the function. this i think is because we are extracting a ref to the actual expression object and it needs to be const to pass into a const ref function.
 
 
+
+Possible Optimizations
+- When parsing, we know that we have variable declarations and how many. so we can make a flat_map based on that with the right amount of reserved memory. this will make adding the definitions to a map at interpreting time quicker. We will start with map/unordered map first though and measure the change.
+
+possible future changes to language to make it more c++ like the way I want to see c++ in the future.
+- make var = init obsolete. make all init use the {} init syntax.
