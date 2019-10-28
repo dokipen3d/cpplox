@@ -1,11 +1,12 @@
 #include "Error.h"
 #include "Expr.hpp"
-#include "Statement.hpp"
 #include "ExpressionInterpreter.h"
 #include "ExpressionParser.h"
 #include "Scanner.h"
+#include "Statement.hpp"
 #include "TimeIt.hpp"
 #include "TokenTypes.h"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -25,10 +26,20 @@ void run(const std::string& code) {
 
     std::cout << "parsing expressions\n";
     cpplox::Parser parser(tokens);
-
-    const std::vector<cpplox::Statement> statements = parser.parse();
+    std::vector<cpplox::Statement> statements;
+    if (std::count_if(std::cbegin(tokens), std::cend(tokens),
+                      [](const cpplox::Token& token) {
+                          return token.eTokenType ==
+                                 cpplox::ETokenType::SEMICOLON;
+                      }) > 0) {
+        statements = parser.parse();
+    } else { // we must have a single expression, so we parse expression and
+             // wrap it in a print statement expression
+        cpplox::Expr expression = parser.parseExpression();
+        statements.emplace_back(cpplox::PrintStatement(expression));
+    }
     if (hadError) {
-        std::cout << "error\n";
+        std::cout << "parse error\n";
         return;
     }
 

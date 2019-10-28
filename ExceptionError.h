@@ -16,7 +16,7 @@ class RuntimeError : std::runtime_error {
     friend struct Error;
 };
 
-class ParseError : std::runtime_error {
+class ParseError : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 

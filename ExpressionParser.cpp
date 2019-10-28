@@ -20,8 +20,28 @@ void Parser::print(const Expr& expr) {
     v.print(expr);
 }
 
+    // to be able to still evaluate expressions, we can count the number of ';'s
+    // in our tokens and if there are none, fall back to just straight eval
+auto Parser::parseExpression() -> Expr {
+    try {
+        Expr expr = expression();
+        // extra check to find if there is a trailing token that didnt get
+        // parsed
+        if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
+            Error::error(peek(), "Expect expression. got " +
+                                     tokens[current].toString());
+            throw cpplox::ParseError("Expect expression.");
+        }
+        return expr;
+    } catch (const cpplox::ParseError& error) {
+        std::cout << "caught! " << error.what() << "\n";
+        return std::monostate{};
+    }
+}
+
 auto Parser::parse() -> std::vector<Statement> {
     std::vector<Statement> statements;
+
     // maybe we can prescan the tokens and reserve the statements. maybe even
     // use unique_ptr<Statement[]> as per herb sutter's advice for dynamics but
     // fixed size storage
