@@ -34,15 +34,19 @@ void run(const std::string& code, Mode mode) {
                           return token.eTokenType ==
                                  cpplox::ETokenType::SEMICOLON;
                       }) > 0) {
-        statements = parser.parse();
-    } else if (mode == Mode::FILE) { // there were no semi colons and it is file mode so we shouldnt allow that
-        hadError = true;
-        break;
+        
+            statements = parser.parse();
+        
+
     } else if (mode == Mode::REPL) { // we must have a single expression, so we
                                      // parse expression and
                                      // wrap it in a print statement expression
+
         cpplox::Expr expression = parser.parseExpression();
         statements.emplace_back(cpplox::PrintStatement(expression));
+    } else if (mode == Mode::FILE) { // no semi colons in file mode
+        std::cout << "file mode but recieved expression\n";
+            hadError = true;
     }
     if (hadError) {
         std::cout << "parse error\n";
@@ -65,14 +69,14 @@ void runFile(const std::string& filePath) {
     std::cout << "running file " << filePath << "\n";
     std::ifstream inputFileStream(filePath);
     std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
-    run(code);
+    run(code, Mode::FILE);
 };
 void runPrompt() {
     std::cout << "Running prompt\n";
     std::string currentLine;
     for (;;) {
         std::getline(std::cin, currentLine);
-        run(currentLine);
+        run(currentLine, Mode::REPL);
         // set error back in case there was an error as we don't want to
         // kill session
         hadError = false;
