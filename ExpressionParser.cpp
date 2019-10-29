@@ -265,7 +265,9 @@ auto Parser::assignment() -> Expr {
             Token name = variable.name;
             return Assign(name, value);
         }
-
+        // We report an error if the left-hand side isn’t a valid assignment
+        // target, but we don’t throw it because the parser isn’t in a confused
+        // state where we need to go into panic mode and synchronize.
         error(equals, "Invalid assignment target.");
     }
     return expr;

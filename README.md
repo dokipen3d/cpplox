@@ -17,6 +17,8 @@ or choose the LLVM Compiler Toolchain from the extensions in the UI
 
 Some things that I learned along the way....
 
+static function means that only the current TU can use it. its not visible by other TUs at link time. (although can still be called through function pointers).
+
 calling std get with a const ref to a variant will return a const refT back. the return constness of the return type depends on the type of the variant passed in. kind sof makes sense. you dont want to return a non const ref to a const variant from std get. the wrapper function needs to return a const ref too.
 
 making a function const only makes sense for a template function that is part of a class. it means that it wont modify the class itself. a free template function doesnt need const because its not a member of anythin it can moidy. this is why we got  Error C2270: Modifiers not allowed on nonmember functions
