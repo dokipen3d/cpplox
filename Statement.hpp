@@ -22,10 +22,10 @@ struct PrintStatement {
 };
 
 struct VariableStatement {
-    VariableStatement(Token nameIn, Expr initializer)
-        : nameOfVariable(std::move(nameIn)), initializer(std::move(initializer)) {
+    VariableStatement(Token name, Expr initializer)
+        : name(std::move(name)), initializer(std::move(initializer)) {
         }
-    Token nameOfVariable;
+    Token name;
     Expr initializer;
 };
 

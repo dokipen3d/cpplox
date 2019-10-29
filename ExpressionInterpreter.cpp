@@ -45,12 +45,14 @@ void Interpreter::operator()(const PrintStatement& printStatement) {
 }
 
 void Interpreter::operator()(const VariableStatement& variableStatement) {
+    Object value = nullptr;
+    if(variableStatement.initializer != nullptr){
+        value = evaluate(variableStatement.initializer);
+    }
+
+    environment.define(variableStatement.name.lexeme, value);
     return;
 }
-
-void Interpreter::operator()(const VoidStatement neverCalled){}
-
-
 
 Object Interpreter::operator()(const Binary& binary) {
     Object returnValue;
@@ -129,7 +131,7 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable){
-    return Object{};
+    return environment.get(variable.name);
 }
 
 Object Interpreter::operator()(const Grouping& grouping) {
@@ -157,12 +159,6 @@ Object Interpreter::operator()(const Unary& unary) {
     }
     // unreachable
     return returnObject;
-}
-Object Interpreter::operator()(const std::monostate neverCalled) {
-    return nullptr;
-}
-Object Interpreter::operator()(const NoOp& neverCalled) {
-    return nullptr;
 }
 
 bool Interpreter::isTruthy(const Object& object) {

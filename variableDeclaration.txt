@@ -1,0 +1,2 @@
+print "one";
+var a = 12;

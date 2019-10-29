@@ -1,13 +1,14 @@
 #pragma once
 #include "TokenTypes.h"
 #include <exception>
+#include <type_traits>
 
 namespace cpplox {
 
 class RuntimeError : std::runtime_error {
   public:
     RuntimeError(Token token, std::string message)
-        : token(token), std::runtime_error(message) {
+        : token(std::move(token)), std::runtime_error(message) {
     }
 
   private:

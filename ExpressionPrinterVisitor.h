@@ -28,6 +28,8 @@ struct ExpressionPrinterVisitor {
     void operator()(const Variable& variable); 
     void operator()(const std::monostate neverCalled) {
     }
+    void operator()(const void* neverCalled) {
+    }
     void operator()(const NoOp& neverCalled) {
     }
 };

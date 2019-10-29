@@ -1,4 +1,5 @@
 #pragma once
+#include "Environment.h"
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
@@ -10,7 +11,7 @@ struct Interpreter {
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const VoidStatement neverCalled);
+    void operator()(const VoidStatement neverCalled){}
 
     Object operator()(const Binary& binary);
     Object operator()(const Literal& literal);
@@ -18,17 +19,26 @@ struct Interpreter {
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
 
-    Object operator()(const std::monostate neverCalled);
-    Object operator()(const NoOp& neverCalled);
+    Object operator()(const void* neverCalled) {
+        return nullptr;
+    }
+
+    Object operator()(const std::monostate neverCalled) {
+        return nullptr;
+    }
+    Object operator()(const NoOp& neverCalled) {
+        return nullptr;
+    }
+
     bool isTruthy(const Object& object);
     bool isEqual(const Object& a, const Object& b);
     // we could rely on the bad_variant_access but this way we throw based on
     // type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
     // version of the fuction for binary operators
-    void checkNumberOperands(const Token& token, const Object& left,
-                             const Object& right);
+    void checkNumberOperands(const Token& token, const Object& left, const Object& right);
     std::string stringify(const Object& object);
+    Environment environment;
     const TimeIt timeIt;
 };
 } // namespace cpplox

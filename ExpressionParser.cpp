@@ -35,7 +35,7 @@ auto Parser::parseExpression() -> Expr {
         return expr;
     } catch (const cpplox::ParseError& error) {
         std::cout << "caught! " << error.what() << "\n";
-        return std::monostate{};
+        return nullptr;
     }
 }
 

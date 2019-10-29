@@ -99,14 +99,12 @@ const std::map<ETokenType, std::string> tokenMap{
 
 const std::map<std::string, ETokenType> keywordMap{
 
-    {"and", ETokenType::AND},       {"class", ETokenType::CLASS},
-    {"else", ETokenType::ELSE},     {"false", ETokenType::FALSE},
-    {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
-    {"if", ETokenType::IF},         {"nil", ETokenType::NIL},
-    {"or", ETokenType::OR},         {"print", ETokenType::PRINT},
-    {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
-    {"this", ETokenType::THIS},     {"true", ETokenType::TRUE},
-    {"var", ETokenType::VAR},       {"while", ETokenType::WHILE}};
+    {"and", ETokenType::AND},     {"class", ETokenType::CLASS},   {"else", ETokenType::ELSE},
+    {"false", ETokenType::FALSE}, {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
+    {"if", ETokenType::IF},       {"nil", ETokenType::NIL},       {"or", ETokenType::OR},
+    {"print", ETokenType::PRINT}, {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
+    {"this", ETokenType::THIS},   {"true", ETokenType::TRUE},     {"var", ETokenType::VAR},
+    {"while", ETokenType::WHILE}};
 
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
@@ -163,5 +161,8 @@ class Token {
     std::string lexeme;
     int line;
 };
+
+static_assert(std::is_move_constructible_v<Token>, "token is not move contructible");
+static_assert(std::is_move_assignable_v<Token>, "token is not move contructible");
 
 } // namespace cpplox
