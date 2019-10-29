@@ -1,8 +1,8 @@
 #pragma once
+#include "Expr.hpp"
+#include <sstream>
 #include <string>
 #include <variant>
-#include <sstream>
-#include "Expr.hpp"
 
 // class Expr;
 // class Binary;
@@ -21,16 +21,13 @@ struct ExpressionPrinterVisitor {
                       const Expr& exprB);
     void parenthesize(const std::string& name, const Expr& expr);
 
+    void operator()(const Assign& assign);
     void operator()(const Binary& binary);
     void operator()(const Literal& literal);
     void operator()(const Grouping& grouping);
     void operator()(const Unary& unary);
-    void operator()(const Variable& variable); 
-    void operator()(const std::monostate neverCalled) {
-    }
+    void operator()(const Variable& variable);
     void operator()(const void* neverCalled) {
     }
-    void operator()(const NoOp& neverCalled) {
-    }
 };
-}
+} // namespace cpplox

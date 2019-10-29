@@ -1,6 +1,6 @@
 #include "ExpressionPrinterVisitor.h"
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace cpplox {
 
@@ -24,7 +24,10 @@ void ExpressionPrinterVisitor::parenthesize(const std::string& name,
 
 void ExpressionPrinterVisitor::parenthesize(const std::string& name,
                                             const Expr& expr) {
-    parenthesize(name, expr, NoOp{});
+    parenthesize(name, expr, nullptr);
+}
+
+void ExpressionPrinterVisitor::operator()(const Assign& assign) {
 }
 
 void ExpressionPrinterVisitor::operator()(const Binary& binary) {

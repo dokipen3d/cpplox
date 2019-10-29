@@ -17,6 +17,8 @@ or choose the LLVM Compiler Toolchain from the extensions in the UI
 
 Some things that I learned along the way....
 
+- i first tried inheriting from variant to add conversion functions and comparison operators. this worked for complete types but the variant with the recursive wrapper didnt work due to some issue with the gcc implementation using std::variant size and that not being able to use incomplete types. i learned that I could have free comparison operators! no need to inherit, just define them. it does make the code a bit unweildy as they leak out from the definition of the class designed to keep things together.
+
 - To make a variant recursive, you have to use allocation to be able to use incomplete types (that has the variant itself as a member). This way the storage of the members is on the heap and not inline in the types of the variant. This gets round the issue of types that contain the same types (which will contain the same type) and so on. You can't obviously have infinite sized types.
 
 - the storage for the recursive types is done using a vector in the recursuve wrapper. the naive implementation uses a single std vector for each wrapped type. What we can do instead is make the vector static, define it (so that its in a TU and inline so that all TUs that include the hpp have the same one defined for all THATS WHAT THE INLINE KEYWORD DOES). This makes a static vector for each type (T). This is whole program though so all expressions accross the whole program will use the same one. 

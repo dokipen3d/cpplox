@@ -7,29 +7,26 @@
 
 namespace cpplox {
 // foward declares for recursive variant
+struct Assign;
 struct Binary;
 struct Grouping;
 struct Variable;
 struct Unary;
-struct NoOp {};
 
-struct Literal {
-    Literal(Object val) : val(val) {
-    }
-    Object val;
-};
+struct Literal;
 
-using Expr = std::variant<recursive_wrapper<Binary>, recursive_wrapper<Grouping>, Literal,
-                          recursive_wrapper<Unary>, recursive_wrapper<Variable>, void*,
-                          std::monostate, NoOp>;
+using Expr =
+    std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
+                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
+                 recursive_wrapper<Unary>, recursive_wrapper<Variable>, void*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
-const inline bool
-operator==(const Expr& other,
-           std::nullptr_t ptr) { // needs to be inline because its a free function that it included
-                                 // in multiple translation units. needs to be marked inline so
-                                 // linker knows its the same one
+const inline bool operator==(
+    const Expr& other,
+    std::nullptr_t ptr) { // needs to be inline because its a free function that
+                          // it included in multiple translation units. needs to
+                          // be marked inline so linker knows its the same one
     return std::holds_alternative<void*>(other);
 }
 
@@ -37,29 +34,40 @@ const inline bool operator!=(const Expr& other, std::nullptr_t ptr) {
     return !(other == ptr);
 }
 /////////////////////////////////////////////////////////////////////
+struct Literal {
+    Literal(Object val) : val(val) {
+    }
+    Object val;
+};
+
+struct Assign {
+    Assign(Token name, Expr value)
+        : name(std::move(name)), value(std::move(value)) {
+    }
+    Token name;
+    Expr value;
+};
 
 struct Grouping {
-    //, NoOp dummy
     explicit Grouping(Expr expr) : expr(std::move(expr)) {
     }
-    // Token t;
     Expr expr;
-    // int t;
 };
 
 struct Binary {
     Binary(Expr A, Token op, Expr B)
-        : expressionA{std::move(A)}, expressionB{std::move(B)}, op(std::move(op)) {
+        : expressionA{std::move(A)}, expressionB{std::move(B)},
+          op(std::move(op)) {
     }
 
     Expr expressionA;
     Expr expressionB;
-
     Token op;
 };
 
 struct Unary {
-    Unary(Token token, Expr expr) : token(std::move(token)), expr(std::move(expr)) {
+    Unary(Token token, Expr expr)
+        : token(std::move(token)), expr(std::move(expr)) {
     }
     Token token;
     Expr expr;
@@ -70,5 +78,8 @@ struct Variable {
     }
     Token name;
 };
+
+static_assert(std::is_move_constructible_v<Expr>, "Expr is not move contructible");
+static_assert(std::is_move_assignable_v<Expr>, "Expr is not move contructible");
 
 } // namespace cpplox

@@ -13,6 +13,7 @@ struct Interpreter {
     void operator()(const VariableStatement& variableStatement);
     void operator()(const VoidStatement neverCalled){}
 
+    Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);
@@ -20,13 +21,6 @@ struct Interpreter {
     Object operator()(const Variable& variable);
 
     Object operator()(const void* neverCalled) {
-        return nullptr;
-    }
-
-    Object operator()(const std::monostate neverCalled) {
-        return nullptr;
-    }
-    Object operator()(const NoOp& neverCalled) {
         return nullptr;
     }
 

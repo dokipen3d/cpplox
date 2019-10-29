@@ -1,8 +1,8 @@
 #include "ExpressionInterpreter.h"
 
 #include "Error.h"
-#include "Expr.hpp"
 #include "ExceptionError.h"
+#include "Expr.hpp"
 #include "Utilities.hpp"
 
 #include <functional>
@@ -15,7 +15,7 @@ namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
-        for (auto& statement : statements){
+        for (auto& statement : statements) {
             execute(statement);
         }
     } catch (const RuntimeError& error) {
@@ -26,7 +26,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
     }
 }
 
-void Interpreter::execute(const Statement& statementToExecute){
+void Interpreter::execute(const Statement& statementToExecute) {
     std::visit(*this, statementToExecute);
 }
 
@@ -46,7 +46,7 @@ void Interpreter::operator()(const PrintStatement& printStatement) {
 
 void Interpreter::operator()(const VariableStatement& variableStatement) {
     Object value = nullptr;
-    if(variableStatement.initializer != nullptr){
+    if (variableStatement.initializer != nullptr) {
         value = evaluate(variableStatement.initializer);
     }
 
@@ -126,11 +126,16 @@ Object Interpreter::operator()(const Binary& binary) {
     // unreachable
     return returnValue;
 }
+
+Object Interpreter::operator()(const Assign& assign) {
+    return nullptr;
+}
+
 Object Interpreter::operator()(const Literal& literal) {
     return literal.val;
 }
 
-Object Interpreter::operator()(const Variable& variable){
+Object Interpreter::operator()(const Variable& variable) {
     return environment.get(variable.name);
 }
 

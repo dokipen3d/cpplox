@@ -138,7 +138,7 @@ auto Parser::declaration() -> Statement {
 auto Parser::varDeclaration() -> Statement {
     Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
 
-    Expr initializer = NoOp{};
+    Expr initializer = nullptr;
     if (match({ETokenType ::EQUAL})){
         initializer = expression();
     }
