@@ -17,6 +17,10 @@ or choose the LLVM Compiler Toolchain from the extensions in the UI
 
 Some things that I learned along the way....
 
+calling std get with a const ref to a variant will return a const refT back. the return constness of the return type depends on the type of the variant passed in. kind sof makes sense. you dont want to return a non const ref to a const variant from std get. the wrapper function needs to return a const ref too.
+
+making a function const only makes sense for a template function that is part of a class. it means that it wont modify the class itself. a free template function doesnt need const because its not a member of anythin it can moidy. this is why we got  Error C2270: Modifiers not allowed on nonmember functions
+
 - i first tried inheriting from variant to add conversion functions and comparison operators. this worked for complete types but the variant with the recursive wrapper didnt work due to some issue with the gcc implementation using std::variant size and that not being able to use incomplete types. i learned that I could have free comparison operators! no need to inherit, just define them. it does make the code a bit unweildy as they leak out from the definition of the class designed to keep things together.
 
 - To make a variant recursive, you have to use allocation to be able to use incomplete types (that has the variant itself as a member). This way the storage of the members is on the heap and not inline in the types of the variant. This gets round the issue of types that contain the same types (which will contain the same type) and so on. You can't obviously have infinite sized types.

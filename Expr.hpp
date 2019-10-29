@@ -12,13 +12,12 @@ struct Binary;
 struct Grouping;
 struct Variable;
 struct Unary;
-
 struct Literal;
 
-using Expr =
-    std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
-                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
-                 recursive_wrapper<Unary>, recursive_wrapper<Variable>, void*>;
+using Expr = std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
+                          recursive_wrapper<Grouping>,
+                          recursive_wrapper<Literal>, recursive_wrapper<Unary>,
+                          recursive_wrapper<Variable>, void*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -33,9 +32,22 @@ const inline bool operator==(
 const inline bool operator!=(const Expr& other, std::nullptr_t ptr) {
     return !(other == ptr);
 }
+
+template <typename T>
+bool is(const Expr& expr) { // function needs to be const  to make it callable
+                            // from a const ref
+    return std::holds_alternative<recursive_wrapper<T>>(expr);
+}
+
+template <typename T>
+inline const T& expr_get(const Expr& expr) { // function needs to be const  to make it callable
+                            // from a const ref
+    return std::get<recursive_wrapper<T>>(expr);
+}
+
 /////////////////////////////////////////////////////////////////////
 struct Literal {
-    Literal(Object val) : val(val) {
+    explicit Literal(Object val) : val(val) {
     }
     Object val;
 };
@@ -79,7 +91,8 @@ struct Variable {
     Token name;
 };
 
-static_assert(std::is_move_constructible_v<Expr>, "Expr is not move contructible");
+static_assert(std::is_move_constructible_v<Expr>,
+              "Expr is not move contructible");
 static_assert(std::is_move_assignable_v<Expr>, "Expr is not move contructible");
 
 } // namespace cpplox

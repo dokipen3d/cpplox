@@ -44,6 +44,8 @@ class Parser {
     Expr comparison();
     Expr equality();
     Expr expression();
+    Expr assignment();
+
     std::vector<Token>& tokens;
 };
 

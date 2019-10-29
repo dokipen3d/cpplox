@@ -139,7 +139,7 @@ auto Parser::varDeclaration() -> Statement {
     Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
 
     Expr initializer = nullptr;
-    if (match({ETokenType ::EQUAL})){
+    if (match({ETokenType ::EQUAL})) {
         initializer = expression();
     }
 
@@ -178,7 +178,7 @@ auto Parser::primary() -> Expr {
         return Literal(previous().literal);
     }
 
-    if(match({ETokenType::IDENTIFIER})){
+    if (match({ETokenType::IDENTIFIER})) {
         return Variable(previous());
     }
 
@@ -250,7 +250,25 @@ auto Parser::equality() -> Expr {
 };
 
 auto Parser::expression() -> Expr {
-    return equality();
+    return assignment();
+};
+
+auto Parser::assignment() -> Expr {
+    Expr expr = equality();
+
+    if (match({ETokenType::EQUAL})) {
+        Token equals = previous();
+        Expr value = assignment();
+
+        if (is<Variable>(expr)) {
+            const Variable& variable = expr_get<Variable>(expr);
+            Token name = variable.name;
+            return Assign(name, value);
+        }
+
+        error(equals, "Invalid assignment target.");
+    }
+    return expr;
 };
 
 } // namespace cpplox

@@ -128,7 +128,11 @@ Object Interpreter::operator()(const Binary& binary) {
 }
 
 Object Interpreter::operator()(const Assign& assign) {
-    return nullptr;
+
+    Object value = evaluate(assign.value);
+    environment.assign(assign.name, value);
+
+    return value;
 }
 
 Object Interpreter::operator()(const Literal& literal) {

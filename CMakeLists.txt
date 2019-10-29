@@ -7,8 +7,6 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
     if (_cpp_latest_flag_supported)
         add_compile_options("/std:c++latest")
-        add_compile_options("/O2")
-        add_compile_options("/Zi")
     endif()
 endif()
 
