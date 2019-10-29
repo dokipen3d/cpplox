@@ -31,6 +31,35 @@ y>>' (or there is no acceptable conversion) [C:\Users\dokipen\Documents\Projects
 
 i was trying to assign to a const vector. just say that!
 
+delliott@agusta211b: /usr/home/delliott/Documents/Projects/cpplox/build                                                                                                                        {13} > make
+Scanning dependencies of target cpplox
+[ 14%] Building CXX object CMakeFiles/cpplox.dir/ExpressionInterpreter.cpp.o
+In file included from /usr/home/delliott/Documents/Projects/cpplox/TokenTypes.h:6:0,
+                 from /usr/home/delliott/Documents/Projects/cpplox/Expr.hpp:4,
+                 from /usr/home/delliott/Documents/Projects/cpplox/ExpressionInterpreter.h:2,
+                 from /usr/home/delliott/Documents/Projects/cpplox/ExpressionInterpreter.cpp:1:
+/usr/include/c++/7/variant: In instantiation of ‘static constexpr auto std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...)>, std::tuple<_Args2 ...>, std::integer_sequence<long unsigned int, __indices ...> >::_S_apply() [with _Result_type = void; _Visitor = cpplox::Interpreter&; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}; long unsigned int ...__indices = {3}]’:
+/usr/include/c++/7/variant:671:61:   required from ‘static constexpr void std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_S_apply_single_alt(_Tp&) [with long unsigned int __index = 3; _Tp = std::__detail::__variant::_Multi_array<void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&)>; _Result_type = void; _Visitor = cpplox::Interpreter&; long unsigned int ...__dimensions = {4}; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}; long unsigned int ...__indices = {}]’
+/usr/include/c++/7/variant:659:39:   required from ‘static constexpr void std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_S_apply_all_alts(std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_Array_type&, std::index_sequence<__indices ...>) [with long unsigned int ...__var_indices = {0, 1, 2, 3}; _Result_type = void; _Visitor = cpplox::Interpreter&; long unsigned int ...__dimensions = {4}; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}; long unsigned int ...__indices = {}; std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_Array_type = std::__detail::__variant::_Multi_array<void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&), 4>; std::index_sequence<__indices ...> = std::integer_sequence<long unsigned int, 0, 1, 2, 3>]’
+/usr/include/c++/7/variant:649:19:   required from ‘static constexpr std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_Array_type std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_S_apply() [with _Result_type = void; _Visitor = cpplox::Interpreter&; long unsigned int ...__dimensions = {4}; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}; long unsigned int ...__indices = {}; std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<_Result_type (*)(_Visitor, _Variants ...), __dimensions ...>, std::tuple<_Variants ...>, std::integer_sequence<long unsigned int, __indices ...> >::_Array_type = std::__detail::__variant::_Multi_array<void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&), 4>]’
+/usr/include/c++/7/variant:708:38:   required from ‘static constexpr std::__detail::__variant::__gen_vtable<_Result_type, _Visitor, _Variants>::_Array_type std::__detail::__variant::__gen_vtable<_Result_type, _Visitor, _Variants>::_S_apply() [with _Result_type = void; _Visitor = cpplox::Interpreter&; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}; std::__detail::__variant::__gen_vtable<_Result_type, _Visitor, _Variants>::_Array_type = std::__detail::__variant::_Multi_array<void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&), 4>; typename std::remove_reference<_Variants>::type = <type error>]’
+/usr/include/c++/7/variant:711:49:   required from ‘constexpr const std::__detail::__variant::_Multi_array<void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&), 4> std::__detail::__variant::__gen_vtable<void, cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&>::_S_vtable’
+/usr/include/c++/7/variant:711:29:   required from ‘struct std::__detail::__variant::__gen_vtable<void, cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&>’
+/usr/include/c++/7/variant:1255:23:   required from ‘constexpr decltype(auto) std::visit(_Visitor&&, _Variants&& ...) [with _Visitor = cpplox::Interpreter&; _Variants = {const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&}]’
+/usr/home/delliott/Documents/Projects/cpplox/ExpressionInterpreter.cpp:30:41:   required from here
+/usr/include/c++/7/variant:693:43: error: invalid conversion from ‘std::__success_type<cpplox::Object>::type (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&) {aka cpplox::Object (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&)}’ to ‘void (*)(cpplox::Interpreter&, const std::variant<cpplox::ExpressionStatement, cpplox::PrintStatement, cpplox::VariableStatement, std::monostate>&)’ [-fpermissive]
+       { return _Array_type{&__visit_invoke}; }
+                                           ^
+CMakeFiles/cpplox.dir/build.make:88: recipe for target 'CMakeFiles/cpplox.dir/ExpressionInterpreter.cpp.o' failed
+make[2]: *** [CMakeFiles/cpplox.dir/ExpressionInterpreter.cpp.o] Error 1
+CMakeFiles/Makefile2:75: recipe for target 'CMakeFiles/cpplox.dir/all' failed
+make[1]: *** [CMakeFiles/cpplox.dir/all] Error 2
+Makefile:83: recipe for target 'all' failed
+make: *** [all] Error 2
+
+hadnt made a visitor function for monostate
+
+
 Possible Optimizations
 - When parsing, we know that we have variable declarations and how many. so we can make a flat_map based on that with the right amount of reserved memory. this will make adding the definitions to a map at interpreting time quicker. We will start with map/unordered map first though and measure the change.
 
@@ -39,3 +68,13 @@ possible future changes to language to make it more c++ like the way I want to s
 
 benefits of recursive wrapper vs using pointers.
 - its a lot easier to serialize as the wrapper is now and index into a vector of expression nodes. granted its whole program vector right now but if we ever split it up into more granular mappings between vectors->statements, for example, it becomes easier to serialize individual components.
+
+
+drawbacks? 
+variant has to have all types known up front so no extending by user (unless you expose a template to ingest new types). actually I quite like the explicit grouping of types, especially for a grammer like this as it removes any chance for missing something. 
+
+style things I liked....
+- trailing return types so headers have all functions lined up. you can sort by bool, void and auto then sort the autos by the right hand side.
+- wish there was a clang format for aligning trainign return types on the right 
+
+cant have a combined visitor that can visit multiple variants that share monostate as you cant override the function for both   

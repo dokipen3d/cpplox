@@ -20,8 +20,8 @@ void Parser::print(const Expr& expr) {
     v.print(expr);
 }
 
-    // to be able to still evaluate expressions, we can count the number of ';'s
-    // in our tokens and if there are none, fall back to just straight eval
+// to be able to still evaluate expressions, we can count the number of ';'s
+// in our tokens and if there are none, fall back to just straight eval
 auto Parser::parseExpression() -> Expr {
     try {
         Expr expr = expression();
@@ -46,7 +46,7 @@ auto Parser::parse() -> std::vector<Statement> {
     // use unique_ptr<Statement[]> as per herb sutter's advice for dynamics but
     // fixed size storage
     while (!isAtEnd()) {
-        statements.push_back(statement());
+        statements.push_back(declaration());
     }
 
     return statements;
@@ -123,6 +123,30 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
     throw Parser::error(peek(), "exception thrown");
 };
 
+auto Parser::declaration() -> Statement {
+    try {
+        if (match({ETokenType::VAR})) {
+            return varDeclaration();
+        }
+        return statement();
+    } catch (const ParseError& error) {
+        synchronize();
+        return VoidStatement{};
+    }
+}
+
+auto Parser::varDeclaration() -> Statement {
+    Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
+
+    Expr initializer = NoOp{};
+    if (match({ETokenType ::EQUAL})){
+        initializer = expression();
+    }
+
+    consume(ETokenType::SEMICOLON, "Expect ';' after variable declaration");
+    return VariableStatement(name, initializer);
+}
+
 auto Parser::statement() -> Statement {
     if (match({ETokenType::PRINT})) {
         return printStatement();
@@ -154,13 +178,16 @@ auto Parser::primary() -> Expr {
         return Literal(previous().literal);
     }
 
+    if(match({ETokenType::IDENTIFIER})){
+        return Variable(previous());
+    }
+
     if (match({ETokenType::LEFT_PARENTHESIS})) {
         Expr expr = expression();
-        consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after expression.");
+        (ETokenType::RIGHT_PARENTHESIS, "Expect ')' after expression.");
         return Grouping(expr);
     }
-    Error::error(peek(), "Expect expression.");
-    throw std::runtime_error("Expect expression.");
+    throw Parser::error(peek(), "Expect expression.");
 };
 
 auto Parser::unary() -> Expr {

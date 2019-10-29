@@ -47,6 +47,10 @@ void ExpressionPrinterVisitor::operator()(const Literal& literal) {
 void ExpressionPrinterVisitor::operator()(const Grouping& grouping) {
     parenthesize("group", grouping.expr);
 }
+
+void ExpressionPrinterVisitor::operator()(const Variable& variable) {
+    // stub
+}
 void ExpressionPrinterVisitor::operator()(const Unary& unary) {
     parenthesize(unary.token.lexeme, unary.expr);
 }

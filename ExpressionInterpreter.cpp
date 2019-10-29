@@ -44,6 +44,14 @@ void Interpreter::operator()(const PrintStatement& printStatement) {
     return;
 }
 
+void Interpreter::operator()(const VariableStatement& variableStatement) {
+    return;
+}
+
+void Interpreter::operator()(const VoidStatement neverCalled){}
+
+
+
 Object Interpreter::operator()(const Binary& binary) {
     Object returnValue;
 
@@ -118,6 +126,10 @@ Object Interpreter::operator()(const Binary& binary) {
 }
 Object Interpreter::operator()(const Literal& literal) {
     return literal.val;
+}
+
+Object Interpreter::operator()(const Variable& variable){
+    return Object{};
 }
 
 Object Interpreter::operator()(const Grouping& grouping) {

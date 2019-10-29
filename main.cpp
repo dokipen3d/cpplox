@@ -29,31 +29,14 @@ void run(const std::string& code, Mode mode) {
     std::cout << "parsing expressions\n";
     cpplox::Parser parser(tokens);
     std::vector<cpplox::Statement> statements;
-    if (std::count_if(std::cbegin(tokens), std::cend(tokens),
-                      [](const cpplox::Token& token) {
-                          return token.eTokenType ==
-                                 cpplox::ETokenType::SEMICOLON;
-                      }) > 0) {
-        
-            statements = parser.parse();
-        
 
-    } else if (mode == Mode::REPL) { // we must have a single expression, so we
-                                     // parse expression and
-                                     // wrap it in a print statement expression
+    statements = parser.parse();
 
-        cpplox::Expr expression = parser.parseExpression();
-        statements.emplace_back(cpplox::PrintStatement(expression));
-    } else if (mode == Mode::FILE) { // no semi colons in file mode
-        std::cout << "file mode but recieved expression\n";
-            hadError = true;
-    }
     if (hadError) {
         std::cout << "parse error\n";
         return;
     }
-
-    // parser.print(expression);
+    
     std::cout << "interpreting expression\n";
     try {
 

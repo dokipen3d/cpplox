@@ -19,18 +19,23 @@ class Parser {
     bool check(ETokenType type);
     bool match(std::initializer_list<ETokenType> types);
 
-    auto parse()  -> std::vector<Statement>;
+    // clang-format off                                                         Return Types
+    auto parse() -> /*------------------------------------------------------->*/std::vector<Statement>;
 
-    auto peek() -> Token;
-    auto previous() -> Token;
-    auto advance() -> Token;
-    auto consume(ETokenType type, const std::string& message) -> Token;
+    auto peek() -> /*-------------------------------------------------------->*/Token;
+    auto previous() -> /*---------------------------------------------------->*/Token;
+    auto advance() -> /*----------------------------------------------------->*/Token;
+    auto consume(ETokenType type, const std::string& message) -> /*--------->*/ Token;
 
-    auto statement() -> Statement;
-    auto printStatement() -> Statement;
-    auto expressionStatement() -> Statement;
-    auto error(Token token, std::string message) -> ParseError;
+    auto declaration() -> /*------------------------------------------------->*/Statement;
+    auto varDeclaration() -> /*---------------------------------------------->*/Statement;
+    auto statement() -> /*--------------------------------------------------->*/Statement;
+    auto printStatement() -> /*---------------------------------------------->*/Statement;
+    auto expressionStatement() -> /*----------------------------------------->*/Statement;
 
+    auto error(Token token, std::string message) -> /*----------------------->*/ParseError;
+
+    // clang-format on
     Expr parseExpression();
     Expr primary();
     Expr unary();

@@ -9,7 +9,7 @@ namespace cpplox {
 // foward declares for recursive variant
 struct Binary;
 struct Grouping;
-// struct Literal;
+struct Variable;
 struct Unary;
 struct NoOp {};
 
@@ -21,7 +21,7 @@ struct Literal {
 
 using Expr =
     std::variant<recursive_wrapper<Binary>, recursive_wrapper<Grouping>,
-                 Literal, recursive_wrapper<Unary>, std::monostate, NoOp>;
+                 Literal, recursive_wrapper<Unary>, recursive_wrapper<Variable>, std::monostate, NoOp>;
 
 struct Grouping {
     //, NoOp dummy
@@ -51,6 +51,15 @@ struct Unary {
     Token token;
     Expr expr;
 };
+
+struct Variable {
+    Variable(Token name)
+        : name(std::move(name)) {
+    }
+    Token name;
+};
+
+
 
 } // namespace cpplox
 

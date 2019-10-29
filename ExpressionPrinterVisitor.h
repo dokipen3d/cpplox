@@ -25,6 +25,7 @@ struct ExpressionPrinterVisitor {
     void operator()(const Literal& literal);
     void operator()(const Grouping& grouping);
     void operator()(const Unary& unary);
+    void operator()(const Variable& variable); 
     void operator()(const std::monostate neverCalled) {
     }
     void operator()(const NoOp& neverCalled) {

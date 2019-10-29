@@ -133,7 +133,7 @@ struct Object : variantObject {
 class Token {
   public:
     Token() = default; // need this to make expression be able to hold Tokens as
-                       // members and use aggregate initialization
+                       // members
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
         : eTokenType(tokenType), literal(literal), lexeme(lexeme), line(line) {
     }
