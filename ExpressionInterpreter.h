@@ -4,9 +4,11 @@
 #include "Statement.hpp"
 #include "TimeIt.hpp"
 #include <vector>
+#include <memory>
 
 namespace cpplox {
 struct Interpreter {
+    Interpreter::Interpreter() : environment(std::make_shared<Environment>()){}
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
@@ -16,7 +18,7 @@ struct Interpreter {
     void operator()(const VoidStatement neverCalled) {
     }
     void operator()(const BlockStatement& blockStatement);
-    void executeBlock(const std::vector<Statement>& statements, Environment environement);
+    void executeBlock(const std::vector<Statement>& statements,  const std::shared_ptr<Environment>& environement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -37,7 +39,7 @@ struct Interpreter {
     // version of the fuction for binary operators
     void checkNumberOperands(const Token& token, const Object& left, const Object& right);
     std::string stringify(const Object& object);
-    Environment environment; //this maybe overriden temporarily by blocks and then set back
+    std::shared_ptr<Environment> environment; //this maybe overriden temporarily by blocks and then set back
     const TimeIt timeIt;
 };
 } // namespace cpplox

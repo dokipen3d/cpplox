@@ -6,15 +6,19 @@
 #include <unordered_map>
 #include <iostream>
 #include <type_traits>
+#include <memory>
 
 namespace cpplox {
 struct Environment {
-    Environment() = default;
+    //Environment() = default;
     // address of a ref is the same as taking the address of the object it refers to
-    Environment(Environment& environment) : enclosing(&environment) {
+    explicit Environment(const std::shared_ptr<Environment>& environment = nullptr) : enclosing(environment.get()) {
         std::cout << "calling cnstr\n";
     }
-    Environment* enclosing = nullptr;
+    // Environment(const Environment&) = delete;
+    // Environment(Environment&&) = delete;
+
+    Environment* enclosing;
     // ~Environment() {
     //     if (enclosing != nullptr) {
     //         // set back env when this goes goes out of scope. should be execption safe. it might
@@ -58,6 +62,8 @@ struct Environment {
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");
 // static_assert(std::is_copy_assignable_v<Environment>, "");
+//static_assert(std::is_move_assignable_v<Environment>, "");
+
 
 
 
