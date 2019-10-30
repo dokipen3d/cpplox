@@ -18,7 +18,7 @@ struct Interpreter {
     void operator()(const VoidStatement neverCalled) {
     }
     void operator()(const BlockStatement& blockStatement);
-    void executeBlock(const std::vector<Statement>& statements,  const std::shared_ptr<Environment>& environement);
+    void executeBlock(const std::vector<Statement>& statements);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);

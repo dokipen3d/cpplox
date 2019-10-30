@@ -55,25 +55,26 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
-    
-    executeBlock(blockStatement.statements,
-                 std::make_shared<Environment>(environment)); // pass in current env as parent
+
+    executeBlock(blockStatement.statements); // pass in current env as parent
     return;
 }
 
-void Interpreter::executeBlock(const std::vector<Statement>& statements, const std::shared_ptr<Environment>& environmentIn) {
+void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
+    auto newEnv = std::make_shared<Environment>(environment);
+    Environment env(environment);
     std::shared_ptr<Environment> previous = this->environment;
     // set the main env to the one passed in. this way when we
     // execute the statements (which might be themselves
     // blocks, they can access the env just set)
-    this->environment = environmentIn;
+    this->environment = newEnv;
 
     for (auto& statement : statements) {
         execute(statement);
     }
-    // destructor of the environment argument will reset the top level interpreter env to its
-    // current parent
+    // destructor of the environment argument will reset the top level
+    // interpreter env to its current parent
     this->environment = previous;
 }
 
@@ -117,7 +118,8 @@ Object Interpreter::operator()(const Binary& binary) {
             break;
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            returnValue = std::get<std::string>(left) + std::get<std::string>(right);
+            returnValue =
+                std::get<std::string>(left) + std::get<std::string>(right);
             break;
         }
         // this case already has type checking built into which is why it
@@ -207,14 +209,16 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
 }
 // we could rely on the bad_variant_access but this way we throw based on
 // type. might be slower. worth investigating in future.
-void Interpreter::checkNumberOperand(const Token& token, const Object& operand) {
+void Interpreter::checkNumberOperand(const Token& token,
+                                     const Object& operand) {
     if (operand.is<double>()) {
         return;
     }
     throw RuntimeError(token, "Operand must be a number.");
 }
 // version of the fuction for binary operators
-void Interpreter::checkNumberOperands(const Token& token, const Object& left, const Object& right) {
+void Interpreter::checkNumberOperands(const Token& token, const Object& left,
+                                      const Object& right) {
     if (left.is<double>() && right.is<double>()) {
         return;
     }
