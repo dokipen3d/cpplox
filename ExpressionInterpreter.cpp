@@ -63,8 +63,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
     auto newEnv = std::make_shared<Environment>(environment);
-    Environment env(environment);
-    std::shared_ptr<Environment> previous = this->environment;
+    //std::shared_ptr<Environment> previous = this->environment;
     // set the main env to the one passed in. this way when we
     // execute the statements (which might be themselves
     // blocks, they can access the env just set)
@@ -75,7 +74,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
     }
     // destructor of the environment argument will reset the top level
     // interpreter env to its current parent
-    this->environment = previous;
+    this->environment = newEnv->enclosing;
 }
 
 Object Interpreter::operator()(const Binary& binary) {

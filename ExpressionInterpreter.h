@@ -8,7 +8,7 @@
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter::Interpreter() : environment(std::make_shared<Environment>()){}
+    Interpreter() : environment(std::make_shared<Environment>()){}
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
