@@ -64,8 +64,17 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
     // auto newEnv = std::make_shared<Environment>(environment);
     // std::shared_ptr<Environment> previous = this->environment;
-    auto newEnv = environmentStack.emplace_back(environmentStack, environmentStack.size()-1);
-    int id = environmentStack.size() - 1;
+    int nextId = 0;
+    if(!environmentSpareStack.empty()){
+        nextId = environmentSpareStack.back();
+        environmentSpareStack.pop_back();
+
+    }
+    else {
+        nextId = environmentStack.size()-1;
+    }
+    auto newEnv = environmentStack.emplace_back(environmentStack, nextId );
+    int id = nextId;
 
     int previous = currentEnvironmentIndex;
     currentEnvironmentIndex = id;
@@ -77,6 +86,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
     }
 
     currentEnvironmentIndex = previous;
+    environmentSpareStack.push_back(id);
 }
 
 Object Interpreter::operator()(const Binary& binary) {

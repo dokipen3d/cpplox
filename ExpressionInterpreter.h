@@ -46,6 +46,8 @@ struct Interpreter {
         environment; // this maybe overriden temporarily by blocks and then set
                      // back
     std::vector<Environment> environmentStack;
+    std::vector<int> environmentSpareStack;
+
     int currentEnvironmentIndex = 0;
     const TimeIt timeIt;
 };
