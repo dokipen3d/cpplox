@@ -50,7 +50,7 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
         value = evaluate(variableStatement.initializer);
     }
 
-    environmentStack[currentEnvironmentIndex].define(variableStatement.name.lexeme, value);
+    environment->define(variableStatement.name.lexeme, value);
     return;
 }
 
@@ -62,21 +62,20 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 
 void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
-    // auto newEnv = std::make_shared<Environment>(environment);
-    // std::shared_ptr<Environment> previous = this->environment;
-    auto newEnv = environmentStack.emplace_back(environmentStack, environmentStack.size()-1);
-    int id = environmentStack.size() - 1;
-
-    int previous = currentEnvironmentIndex;
-    currentEnvironmentIndex = id;
-
-    // this->environment = newEnv;
+    auto newEnv = std::make_shared<Environment>(environment);
+    Environment env(environment);
+    std::shared_ptr<Environment> previous = this->environment;
+    // set the main env to the one passed in. this way when we
+    // execute the statements (which might be themselves
+    // blocks, they can access the env just set)
+    this->environment = newEnv;
 
     for (auto& statement : statements) {
         execute(statement);
     }
-
-    currentEnvironmentIndex = previous;
+    // destructor of the environment argument will reset the top level
+    // interpreter env to its current parent
+    this->environment = previous;
 }
 
 Object Interpreter::operator()(const Binary& binary) {
@@ -154,7 +153,7 @@ Object Interpreter::operator()(const Binary& binary) {
 
 Object Interpreter::operator()(const Assign& assign) {
     Object value = evaluate(assign.value);
-    environmentStack[currentEnvironmentIndex].assign(assign.name, value);
+    environment->assign(assign.name, value);
 
     return value;
 }
@@ -164,7 +163,7 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable) {
-    return environmentStack[currentEnvironmentIndex].get(variable.name);
+    return environment->get(variable.name);
 }
 
 Object Interpreter::operator()(const Grouping& grouping) {
