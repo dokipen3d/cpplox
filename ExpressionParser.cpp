@@ -28,8 +28,7 @@ auto Parser::parseExpression() -> Expr {
         // extra check to find if there is a trailing token that didnt get
         // parsed
         if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
-            Error::error(peek(), "Expect expression. got " +
-                                     tokens[current].toString());
+            Error::error(peek(), "Expect expression. got " + tokens[current].toString());
             throw cpplox::ParseError("Expect expression.");
         }
         return expr;
@@ -151,7 +150,20 @@ auto Parser::statement() -> Statement {
     if (match({ETokenType::PRINT})) {
         return printStatement();
     }
+    if (match({ETokenType::LEFT_BRACE})) {
+        return BlockStatement(block());
+    }
     return expressionStatement();
+}
+
+auto Parser::block() -> std::vector<Statement> {
+    std::vector<Statement> statements;
+    while (!check(ETokenType::RIGHT_BRACE) && !isAtEnd()) {
+        statements.push_back(declaration());
+    }
+
+    consume(ETokenType::RIGHT_BRACE, "Expect '}' after block.");
+    return statements;
 }
 
 auto Parser::printStatement() -> Statement {
@@ -227,8 +239,8 @@ auto Parser::addition() -> Expr {
 auto Parser::comparison() -> Expr {
     Expr expr = addition();
 
-    while (match({ETokenType::GREATER, ETokenType::GREATER_EQUAL,
-                  ETokenType::LESS, ETokenType::LESS_EQUAL})) {
+    while (match({ETokenType::GREATER, ETokenType::GREATER_EQUAL, ETokenType::LESS,
+                  ETokenType::LESS_EQUAL})) {
         Token _operator = previous();
         Expr right = addition();
         expr = Binary(expr, _operator, right);

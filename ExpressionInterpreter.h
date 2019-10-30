@@ -3,6 +3,8 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
+#include <vector>
+
 namespace cpplox {
 struct Interpreter {
     void interpret(const std::vector<Statement>& statements);
@@ -11,7 +13,10 @@ struct Interpreter {
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const VoidStatement neverCalled){}
+    void operator()(const VoidStatement neverCalled) {
+    }
+    void operator()(const BlockStatement& blockStatement);
+    void executeBlock(const std::vector<Statement>& statements, Environment environement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -32,7 +37,7 @@ struct Interpreter {
     // version of the fuction for binary operators
     void checkNumberOperands(const Token& token, const Object& left, const Object& right);
     std::string stringify(const Object& object);
-    Environment environment;
+    Environment environment; //this maybe overriden temporarily by blocks and then set back
     const TimeIt timeIt;
 };
 } // namespace cpplox

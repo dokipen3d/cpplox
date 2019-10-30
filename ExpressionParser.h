@@ -32,6 +32,8 @@ class Parser {
     auto statement() -> /*--------------------------------------------------->*/Statement;
     auto printStatement() -> /*---------------------------------------------->*/Statement;
     auto expressionStatement() -> /*----------------------------------------->*/Statement;
+    auto block() -> /*------------------------------------------------------->*/std::vector<Statement>;
+
 
     auto error(Token token, std::string message) -> /*----------------------->*/ParseError;
 

@@ -4,35 +4,62 @@
 #include "TokenTypes.h"
 #include <string>
 #include <unordered_map>
+#include <iostream>
+#include <type_traits>
 
 namespace cpplox {
 struct Environment {
+    Environment() = default;
+    // address of a ref is the same as taking the address of the object it refers to
+    Environment(Environment& environment) : enclosing(&environment) {
+        std::cout << "calling cnstr\n";
+    }
+    Environment* enclosing = nullptr;
+    // ~Environment() {
+    //     if (enclosing != nullptr) {
+    //         // set back env when this goes goes out of scope. should be execption safe. it might
+    //         // have been changed bhy other blocks with their own environements
+    //         *enclosing = *this;
+    //     }
+    // }
+    //Environment(const Environment&)=default;
 
-    Object& get(const Token& name) {
+    const Object& get(const Token& name) const {
         if (auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
             return search->second;
+        } else if (enclosing != nullptr) {
+            //std::cout << "couldnt find so getting " << name.lexeme << "\n"; // if not in current scope, check parent
+            return enclosing->get(name);
         } else {
-
-            throw RuntimeError(name,
-                               "Undefined variable '" + name.lexeme + "'.");
+            throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
         }
     }
 
     void define(std::string name, Object value) {
-        values.insert_or_assign(std::move(name), std::move(value));
+        values.insert_or_assign(name, value);
     }
 
     void assign(Token name, Object value) {
         if (auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
-            values.insert_or_assign(name.lexeme, std::move(value));
+            values.insert_or_assign(name.lexeme, value);
             return;
+        } else if (enclosing != nullptr) {
+            enclosing->assign(name, value);
+            return;
+        } else {
+            throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
         }
-
-        throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
     std::unordered_map<std::string, Object> values;
 };
+
+// static_assert(std::is_copy_constructible_v<Environment>, "");
+// static_assert(std::is_copy_assignable_v<Environment>, "");
+
+
+
+
 } // namespace cpplox
