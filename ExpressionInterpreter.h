@@ -3,12 +3,14 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter::Interpreter() : environment(std::make_shared<Environment>()){}
+    Interpreter::Interpreter()  {
+        environmentStack.emplace_back(environmentStack, -1);
+    }
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
@@ -37,9 +39,14 @@ struct Interpreter {
     // type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
     // version of the fuction for binary operators
-    void checkNumberOperands(const Token& token, const Object& left, const Object& right);
+    void checkNumberOperands(const Token& token, const Object& left,
+                             const Object& right);
     std::string stringify(const Object& object);
-    std::shared_ptr<Environment> environment; //this maybe overriden temporarily by blocks and then set back
+    std::shared_ptr<Environment>
+        environment; // this maybe overriden temporarily by blocks and then set
+                     // back
+    std::vector<Environment> environmentStack;
+    int currentEnvironmentIndex = 0;
     const TimeIt timeIt;
 };
 } // namespace cpplox

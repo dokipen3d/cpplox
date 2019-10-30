@@ -7,18 +7,18 @@
 #include <iostream>
 #include <type_traits>
 #include <memory>
-
+#include <vector>
 namespace cpplox {
 struct Environment {
     //Environment() = default;
     // address of a ref is the same as taking the address of the object it refers to
-    explicit Environment(const std::shared_ptr<Environment>& environment = nullptr) : enclosing(environment.get()) {
+    explicit Environment(std::vector<Environment>& stack, int parent) : stack(stack), parent(parent) {
         std::cout << "calling cnstr\n";
     }
     // Environment(const Environment&) = delete;
     // Environment(Environment&&) = delete;
-
-    Environment* enclosing;
+    std::vector<Environment>& stack;
+    int parent = -1;
     // ~Environment() {
     //     if (enclosing != nullptr) {
     //         // set back env when this goes goes out of scope. should be execption safe. it might
@@ -32,9 +32,9 @@ struct Environment {
         if (auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
             return search->second;
-        } else if (enclosing != nullptr) {
+        } else if (parent != -1) {
             //std::cout << "couldnt find so getting " << name.lexeme << "\n"; // if not in current scope, check parent
-            return enclosing->get(name);
+            return stack[parent].get(name);
         } else {
             throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
         }
@@ -49,8 +49,8 @@ struct Environment {
             search != values.end()) { // if init version of contains()
             values.insert_or_assign(name.lexeme, value);
             return;
-        } else if (enclosing != nullptr) {
-            enclosing->assign(name, value);
+        } else if (parent != -1) {
+            stack[parent].assign(name, value);
             return;
         } else {
             throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
