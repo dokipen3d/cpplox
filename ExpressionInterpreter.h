@@ -8,7 +8,7 @@
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter() : environment(std::make_shared<Environment>()){}
+    Interpreter() : environment(std::make_unique<Environment>()){}
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
@@ -39,7 +39,7 @@ struct Interpreter {
     // version of the fuction for binary operators
     void checkNumberOperands(const Token& token, const Object& left, const Object& right);
     std::string stringify(const Object& object);
-    std::shared_ptr<Environment> environment; //this maybe overriden temporarily by blocks and then set back
+    std::unique_ptr<Environment> environment; //this maybe overriden temporarily by blocks and then set back
     const TimeIt timeIt;
 };
 } // namespace cpplox

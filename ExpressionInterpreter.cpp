@@ -62,19 +62,21 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 
 void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
-    auto newEnv = std::make_shared<Environment>(environment);
-    //std::shared_ptr<Environment> previous = this->environment;
-    // set the main env to the one passed in. this way when we
-    // execute the statements (which might be themselves
-    // blocks, they can access the env just set)
-    this->environment = newEnv;
+    // this stack will take ownership
+    auto previous = std::move(environment);
 
+    // main root will get a new one which stores a raw to prev itself. prev will
+    // not be moved as it remains on this stack. so pointer should still stay valid.
+    this->environment = std::make_unique<Environment>(previous.get());
+
+    // these will go and possibly make env be moved/chagned but thats okay, they
+    // will be taken over by lower stacks
     for (auto& statement : statements) {
         execute(statement);
     }
     // destructor of the environment argument will reset the top level
     // interpreter env to its current parent
-    this->environment = newEnv->enclosing;
+    this->environment =std::move(previous);
 }
 
 Object Interpreter::operator()(const Binary& binary) {
