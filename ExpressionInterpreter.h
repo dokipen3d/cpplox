@@ -3,20 +3,24 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter() : environment(std::make_unique<Environment>()){}
+    Interpreter() : environment(std::make_unique<Environment>()) {
+    }
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
     void operator()(const ExpressionStatement& expressionStatement);
+    void operator()(const IfStatement& expressionStatement);
+
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const VoidStatement) {
-    }
+    void operator()(const VoidType*) {}
+
+
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements);
 
@@ -37,9 +41,12 @@ struct Interpreter {
     // type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
     // version of the fuction for binary operators
-    void checkNumberOperands(const Token& token, const Object& left, const Object& right);
+    void checkNumberOperands(const Token& token, const Object& left,
+                             const Object& right);
     std::string stringify(const Object& object);
-    std::unique_ptr<Environment> environment; //this maybe overriden temporarily by blocks and then set back
+    std::unique_ptr<Environment>
+        environment; // this maybe overriden temporarily by blocks and then set
+                     // back
     const TimeIt timeIt;
 };
 } // namespace cpplox

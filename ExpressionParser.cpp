@@ -28,7 +28,8 @@ auto Parser::parseExpression() -> Expr {
         // extra check to find if there is a trailing token that didnt get
         // parsed
         if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
-            Error::error(peek(), "Expect expression. got " + tokens[current].toString());
+            Error::error(peek(), "Expect expression. got " +
+                                     tokens[current].toString());
             throw cpplox::ParseError("Expect expression.");
         }
         return expr;
@@ -119,7 +120,7 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
     if (check(type)) {
         return advance();
     }
-    throw Parser::error(peek(), "exception thrown");
+    throw Parser::error(peek(), message);
 };
 
 auto Parser::declaration() -> Statement {
@@ -130,7 +131,7 @@ auto Parser::declaration() -> Statement {
         return statement();
     } catch (const ParseError& error) {
         synchronize();
-        return VoidStatement{};
+        return nullptr;
     }
 }
 
@@ -147,6 +148,10 @@ auto Parser::varDeclaration() -> Statement {
 }
 
 auto Parser::statement() -> Statement {
+    if (match({ETokenType::IF})) {
+        return ifStatement();
+    }
+
     if (match({ETokenType::PRINT})) {
         return printStatement();
     }
@@ -156,6 +161,19 @@ auto Parser::statement() -> Statement {
     return expressionStatement();
 }
 
+auto Parser::ifStatement() -> Statement {
+    consume(ETokenType::LEFT_PARENTHESIS, "Expect '(' after 'if'.");
+    Expr condition = expression();
+    consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after if condition.");
+
+    Statement thenBranch = statement();
+    Statement elseBranch = nullptr;
+    if (match({ETokenType::ELSE})) {
+        elseBranch = statement();
+    }
+
+    return IfStatement(condition, thenBranch, elseBranch);
+}
 auto Parser::block() -> std::vector<Statement> {
     std::vector<Statement> statements;
     while (!check(ETokenType::RIGHT_BRACE) && !isAtEnd()) {
@@ -239,8 +257,8 @@ auto Parser::addition() -> Expr {
 auto Parser::comparison() -> Expr {
     Expr expr = addition();
 
-    while (match({ETokenType::GREATER, ETokenType::GREATER_EQUAL, ETokenType::LESS,
-                  ETokenType::LESS_EQUAL})) {
+    while (match({ETokenType::GREATER, ETokenType::GREATER_EQUAL,
+                  ETokenType::LESS, ETokenType::LESS_EQUAL})) {
         Token _operator = previous();
         Expr right = addition();
         expr = Binary(expr, _operator, right);

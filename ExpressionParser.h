@@ -19,7 +19,7 @@ class Parser {
     bool check(ETokenType type);
     bool match(std::initializer_list<ETokenType> types);
 
-    // clang-format off                                                         Return Types
+    // clang-format off
     auto parse() -> /*------------------------------------------------------->*/std::vector<Statement>;
 
     auto peek() -> /*-------------------------------------------------------->*/Token;
@@ -30,6 +30,8 @@ class Parser {
     auto declaration() -> /*------------------------------------------------->*/Statement;
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
     auto statement() -> /*--------------------------------------------------->*/Statement;
+        auto ifStatement() -> /*--------------------------------------------------->*/Statement;
+
     auto printStatement() -> /*---------------------------------------------->*/Statement;
     auto expressionStatement() -> /*----------------------------------------->*/Statement;
     auto block() -> /*------------------------------------------------------->*/std::vector<Statement>;

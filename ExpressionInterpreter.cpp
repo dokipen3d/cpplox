@@ -38,6 +38,15 @@ void Interpreter::operator()(const ExpressionStatement& expressionStatement) {
     evaluate(expressionStatement.expression);
     return;
 }
+
+void Interpreter::operator()(const IfStatement& ifStatement) {
+    if (isTruthy(evaluate(ifStatement.condition))) {
+      execute(ifStatement.thenBranch);              
+    } else if (ifStatement.elseBranch != nullptr) {    
+      execute(ifStatement.elseBranch);              
+    }   
+}
+
 void Interpreter::operator()(const PrintStatement& printStatement) {
     Object value = evaluate(printStatement.expression);
     std::cout << stringify(value) << "\n";
@@ -66,7 +75,8 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
     auto previous = std::move(environment);
 
     // main root will get a new one which stores a raw to prev itself. prev will
-    // not be moved as it remains on this stack. so pointer should still stay valid.
+    // not be moved as it remains on this stack. so pointer should still stay
+    // valid.
     this->environment = std::make_unique<Environment>(previous.get());
 
     // these will go and possibly make env be moved/chagned but thats okay, they
@@ -76,7 +86,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
     }
     // destructor of the environment argument will reset the top level
     // interpreter env to its current parent
-    this->environment =std::move(previous);
+    this->environment = std::move(previous);
 }
 
 Object Interpreter::operator()(const Binary& binary) {
