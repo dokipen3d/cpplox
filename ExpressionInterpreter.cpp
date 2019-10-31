@@ -64,8 +64,9 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
     // auto newEnv = std::make_shared<Environment>(environment);
     // std::shared_ptr<Environment> previous = this->environment;
-    auto newEnv = environmentStack.emplace_back(environmentStack, environmentStack.size()-1);
-    int id = environmentStack.size() - 1;
+    int Size = environmentStack.size() - 1;
+    environmentStack.emplace_back(environmentStack, Size);
+    int id = Size+1;
 
     int previous = currentEnvironmentIndex;
     currentEnvironmentIndex = id;

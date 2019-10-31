@@ -1,0 +1,6144 @@
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+    {
+      var d = 4;
+      {
+        var e = 5;
+        {
+          var f = 6;
+        } 
+      }
+    }
+  }
+  print a;
+  print b;
+  print c;
+  {
+    var extra = "test";
+    print extra;
+  }
+}
+print a;
+print b;
+print c;

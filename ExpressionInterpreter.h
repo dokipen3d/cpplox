@@ -8,7 +8,8 @@
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter::Interpreter()  {
+    Interpreter()  {
+        environmentStack.reserve(10);
         environmentStack.emplace_back(environmentStack, -1);
     }
     void interpret(const std::vector<Statement>& statements);
