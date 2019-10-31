@@ -27,7 +27,7 @@ void ExpressionPrinterVisitor::parenthesize(const std::string& name,
     parenthesize(name, expr, nullptr);
 }
 
-void ExpressionPrinterVisitor::operator()(const Assign& assign) {
+void ExpressionPrinterVisitor::operator()(const Assign&) {
 }
 
 void ExpressionPrinterVisitor::operator()(const Binary& binary) {
@@ -51,7 +51,7 @@ void ExpressionPrinterVisitor::operator()(const Grouping& grouping) {
     parenthesize("group", grouping.expr);
 }
 
-void ExpressionPrinterVisitor::operator()(const Variable& variable) {
+void ExpressionPrinterVisitor::operator()(const Variable&) {
     // stub
 }
 void ExpressionPrinterVisitor::operator()(const Unary& unary) {

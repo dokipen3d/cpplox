@@ -114,10 +114,10 @@ struct Object : variantObject {
     using variantObject::variantObject;
     using variantObject::operator=;
 
-    const bool operator==(const std::nullptr_t& other) const {
+    bool operator==(const std::nullptr_t&) const {
         return std::holds_alternative<void*>(*this);
     }
-    const bool operator!=(const std::nullptr_t& other) const {
+    bool operator!=(const std::nullptr_t& other) const {
         return !(*this == other);
     }
 

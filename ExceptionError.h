@@ -8,7 +8,7 @@ namespace cpplox {
 class RuntimeError : std::runtime_error {
   public:
     RuntimeError(Token token, std::string message)
-        : token(std::move(token)), std::runtime_error(message) {
+        : std::runtime_error(message), token(std::move(token)) {
     }
 
   private:

@@ -15,7 +15,7 @@ struct Interpreter {
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const VoidStatement neverCalled) {
+    void operator()(const VoidStatement) {
     }
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements);
@@ -27,7 +27,7 @@ struct Interpreter {
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
 
-    Object operator()(const void* neverCalled) {
+    Object operator()(const void*) {
         return nullptr;
     }
 

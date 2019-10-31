@@ -12,11 +12,10 @@
 #include <string>
 #include <vector>
 
-enum class Mode { REPL, FILE };
 
 cpplox::Interpreter interpreter;
 
-void run(const std::string& code, Mode mode) {
+void run(const std::string& code) {
 
     std::cout << "scanning tokens\n";
 
@@ -52,14 +51,14 @@ void runFile(const std::string& filePath) {
     std::cout << "running file " << filePath << "\n";
     std::ifstream inputFileStream(filePath);
     std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
-    run(code, Mode::FILE);
+    run(code);
 };
 void runPrompt() {
     std::cout << "Running prompt\n";
     std::string currentLine;
     for (;;) {
         std::getline(std::cin, currentLine);
-        run(currentLine, Mode::REPL);
+        run(currentLine);
         // set error back in case there was an error as we don't want to
         // kill session
         hadError = false;

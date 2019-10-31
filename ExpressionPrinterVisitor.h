@@ -27,7 +27,7 @@ struct ExpressionPrinterVisitor {
     void operator()(const Grouping& grouping);
     void operator()(const Unary& unary);
     void operator()(const Variable& variable);
-    void operator()(const void* neverCalled) {
+    void operator()(const void*) {
     }
 };
 } // namespace cpplox

@@ -21,15 +21,15 @@ using Expr = std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
-const inline bool operator==(
+inline bool operator==(
     const Expr& other,
-    std::nullptr_t ptr) { // needs to be inline because its a free function that
+    std::nullptr_t) { // needs to be inline because its a free function that
                           // it included in multiple translation units. needs to
                           // be marked inline so linker knows its the same one
     return std::holds_alternative<void*>(other);
 }
 
-const inline bool operator!=(const Expr& other, std::nullptr_t ptr) {
+inline bool operator!=(const Expr& other, std::nullptr_t ptr) {
     return !(other == ptr);
 }
 
