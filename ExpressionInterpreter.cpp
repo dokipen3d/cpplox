@@ -68,16 +68,15 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
     if(!environmentSpareStack.empty()){
         nextId = environmentSpareStack.back();
         environmentSpareStack.pop_back();
-
     }
     else {
         nextId = environmentStack.size()-1;
     }
     auto newEnv = environmentStack.emplace_back(environmentStack, nextId );
-    int id = nextId;
+    
 
     int previous = currentEnvironmentIndex;
-    currentEnvironmentIndex = id;
+    currentEnvironmentIndex = nextId;
 
     // this->environment = newEnv;
 
