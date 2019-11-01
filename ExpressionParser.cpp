@@ -217,7 +217,8 @@ auto Parser::primary() -> Expr {
         return Literal(nullptr);
 
     if (match({ETokenType::NUMBER, ETokenType::STRING})) {
-        return Literal(previous().literal);
+        auto lit = Literal(previous().literal);
+        return lit;
     }
 
     if (match({ETokenType::IDENTIFIER})) {

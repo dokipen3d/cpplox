@@ -48,7 +48,7 @@ void Interpreter::operator()(const IfStatement& ifStatement) {
 }
 
 void Interpreter::operator()(const WhileStatement& whileStatement) {
-    while(isTruthy(evaluate(whileStatement.condition))) {
+    while (isTruthy(evaluate(whileStatement.condition))) {
         execute(whileStatement.body);
     }
 }
@@ -216,15 +216,16 @@ Object Interpreter::operator()(const Logical& logical) {
     if (logical.op.eTokenType == ETokenType::OR) {
         if (isTruthy(left)) {
             return left;
-        } else {
-            if (!isTruthy(left)) {
-                return left;
-            }
         }
-
-        return evaluate(logical.right);
+    } else {
+        if (!isTruthy(left)) {
+            return left;
+        }
     }
-}
+
+    return evaluate(logical.right);
+
+} 
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {

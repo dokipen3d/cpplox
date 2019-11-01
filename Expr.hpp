@@ -70,7 +70,7 @@ struct Grouping {
 };
 
 struct Binary {
-    Binary(Expr left, Token op, Expr B)
+    Binary(Expr left, Token op, Expr right)
         : left{std::move(left)}, right{std::move(right)}, op(std::move(op)) {
     }
 

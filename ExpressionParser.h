@@ -10,7 +10,7 @@ namespace cpplox {
 
 class Parser {
   public:
-    int current = 0;
+    size_t current = 0;
     Parser(std::vector<Token>& tokens);
     void print(const Expr& expr);
     void synchronize();
