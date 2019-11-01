@@ -9,6 +9,7 @@ struct VoidType {};
 // recursive block
 struct BlockStatement;
 struct IfStatement;
+struct WhileStatement;
 
 struct ExpressionStatement {
     explicit ExpressionStatement(Expr expression)
@@ -35,7 +36,7 @@ struct VariableStatement {
 using Statement =
     std::variant<ExpressionStatement, PrintStatement, VariableStatement,
                  recursive_wrapper<BlockStatement>,
-                 recursive_wrapper<IfStatement>, VoidType*>;
+                 recursive_wrapper<IfStatement>, recursive_wrapper<WhileStatement>, VoidType*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -60,11 +61,19 @@ struct BlockStatement {
 
 struct IfStatement {
     IfStatement(Expr condition, Statement thenBranch, Statement elseBranch)
-        : condition(condition), thenBranch(thenBranch), elseBranch(elseBranch) {
+        : condition(std::move(condition)), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch)) {
     }
     Expr condition;
     Statement thenBranch;
     Statement elseBranch;
+};
+
+struct WhileStatement {
+    WhileStatement(Expr condition, Statement body)
+        : condition(std::move(condition)), body(std::move(body)) {
+    }
+    Expr condition;
+    Statement body;
 };
 
 } // namespace cpplox

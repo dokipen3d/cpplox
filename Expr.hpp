@@ -93,8 +93,14 @@ struct Variable {
     Token name;
 };
 
-struct Logical : Binary {
-    using Binary::Binary;
+struct Logical {
+     Logical(Expr left, Token op, Expr B)
+        : left{std::move(left)}, right{std::move(right)}, op(std::move(op)) {
+    }
+
+    Expr left;
+    Expr right;
+    Token op;
 };
 
 static_assert(std::is_move_constructible_v<Expr>,

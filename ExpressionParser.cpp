@@ -123,6 +123,32 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
     throw Parser::error(peek(), message);
 };
 
+auto Parser::statement() -> Statement {
+    if (match({ETokenType::IF})) {
+        return ifStatement();
+    }
+
+    if (match({ETokenType::PRINT})) {
+        return printStatement();
+    }
+    if (match({ETokenType::WHILE})) {
+        return whileStatement();
+    }
+    if (match({ETokenType::LEFT_BRACE})) {
+        return BlockStatement(block());
+    }
+    return expressionStatement();
+}
+
+auto Parser::whileStatement() -> Statement {
+    consume(ETokenType::LEFT_PARENTHESIS, "Expect '(' after 'while'");
+    Expr condition = expression();
+    consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after 'while'");
+    Statement body = statement();
+
+    return WhileStatement(condition, body);
+}
+
 auto Parser::declaration() -> Statement {
     try {
         if (match({ETokenType::VAR})) {
@@ -145,20 +171,6 @@ auto Parser::varDeclaration() -> Statement {
 
     consume(ETokenType::SEMICOLON, "Expect ';' after variable declaration");
     return VariableStatement(name, initializer);
-}
-
-auto Parser::statement() -> Statement {
-    if (match({ETokenType::IF})) {
-        return ifStatement();
-    }
-
-    if (match({ETokenType::PRINT})) {
-        return printStatement();
-    }
-    if (match({ETokenType::LEFT_BRACE})) {
-        return BlockStatement(block());
-    }
-    return expressionStatement();
 }
 
 auto Parser::ifStatement() -> Statement {
@@ -283,8 +295,32 @@ auto Parser::expression() -> Expr {
     return assignment();
 };
 
-auto Parser::assignment() -> Expr {
+auto Parser::logicalAnd() -> Expr {
     Expr expr = equality();
+
+    while (match({ETokenType::AND})) {
+        Token oPerator = previous();
+        Expr right = equality();
+        expr = Logical(expr, oPerator, right);
+    }
+
+    return expr;
+}
+
+auto Parser::logicalOr() -> Expr {
+    Expr expr = logicalAnd();
+
+    while (match({ETokenType::OR})) {
+        Token oPerator = previous();
+        Expr right = logicalAnd();
+        expr = Logical(expr, oPerator, right);
+    }
+
+    return expr;
+}
+
+auto Parser::assignment() -> Expr {
+    Expr expr = logicalOr();
 
     if (match({ETokenType::EQUAL})) {
         Token equals = previous();

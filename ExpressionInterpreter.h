@@ -14,7 +14,9 @@ struct Interpreter {
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
     void operator()(const ExpressionStatement& expressionStatement);
-    void operator()(const IfStatement& expressionStatement);
+    void operator()(const IfStatement& ifStatement);
+    void operator()(const WhileStatement& whileStatement);
+
 
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
@@ -30,7 +32,7 @@ struct Interpreter {
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
-    Object operator()(const Logical& variable){}
+    Object operator()(const Logical& variable);
 
 
     Object operator()(const void*) {

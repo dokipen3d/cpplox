@@ -30,7 +30,8 @@ class Parser {
     auto declaration() -> /*------------------------------------------------->*/Statement;
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
     auto statement() -> /*--------------------------------------------------->*/Statement;
-        auto ifStatement() -> /*--------------------------------------------------->*/Statement;
+    auto whileStatement() -> /*--------------------------------------------------->*/Statement;
+    auto ifStatement() -> /*--------------------------------------------------->*/Statement;
 
     auto printStatement() -> /*---------------------------------------------->*/Statement;
     auto expressionStatement() -> /*----------------------------------------->*/Statement;
@@ -49,6 +50,8 @@ class Parser {
     Expr equality();
     Expr expression();
     Expr assignment();
+    Expr logicalOr();
+    Expr logicalAnd();
 
     std::vector<Token>& tokens;
 };

@@ -41,10 +41,16 @@ void Interpreter::operator()(const ExpressionStatement& expressionStatement) {
 
 void Interpreter::operator()(const IfStatement& ifStatement) {
     if (isTruthy(evaluate(ifStatement.condition))) {
-      execute(ifStatement.thenBranch);              
-    } else if (ifStatement.elseBranch != nullptr) {    
-      execute(ifStatement.elseBranch);              
-    }   
+        execute(ifStatement.thenBranch);
+    } else if (ifStatement.elseBranch != nullptr) {
+        execute(ifStatement.elseBranch);
+    }
+}
+
+void Interpreter::operator()(const WhileStatement& whileStatement) {
+    while(isTruthy(evaluate(whileStatement.condition))) {
+        execute(whileStatement.body);
+    }
 }
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
@@ -202,6 +208,22 @@ Object Interpreter::operator()(const Unary& unary) {
     }
     // unreachable
     return returnObject;
+}
+
+Object Interpreter::operator()(const Logical& logical) {
+    Object left = evaluate(logical.left);
+
+    if (logical.op.eTokenType == ETokenType::OR) {
+        if (isTruthy(left)) {
+            return left;
+        } else {
+            if (!isTruthy(left)) {
+                return left;
+            }
+        }
+
+        return evaluate(logical.right);
+    }
 }
 
 bool Interpreter::isTruthy(const Object& object) {
