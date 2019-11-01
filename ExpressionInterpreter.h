@@ -30,6 +30,8 @@ struct Interpreter {
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
+    Object operator()(const Logical& variable){}
+
 
     Object operator()(const void*) {
         return nullptr;

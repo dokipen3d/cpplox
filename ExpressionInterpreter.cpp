@@ -92,8 +92,8 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 Object Interpreter::operator()(const Binary& binary) {
     Object returnValue;
 
-    Object left = evaluate(binary.expressionA);
-    Object right = evaluate(binary.expressionB);
+    Object left = evaluate(binary.left);
+    Object right = evaluate(binary.right);
 
     switch (binary.op.eTokenType) {
     case ETokenType::GREATER: {

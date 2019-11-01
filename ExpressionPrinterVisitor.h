@@ -27,6 +27,8 @@ struct ExpressionPrinterVisitor {
     void operator()(const Grouping& grouping);
     void operator()(const Unary& unary);
     void operator()(const Variable& variable);
+    void operator()(const Logical& variable){}
+
     void operator()(const void*) {
     }
 };

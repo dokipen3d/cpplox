@@ -13,19 +13,21 @@ struct Grouping;
 struct Variable;
 struct Unary;
 struct Literal;
+struct Logical;
 
-using Expr = std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
-                          recursive_wrapper<Grouping>,
-                          recursive_wrapper<Literal>, recursive_wrapper<Unary>,
-                          recursive_wrapper<Variable>, void*>;
+using Expr =
+    std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
+                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
+                 recursive_wrapper<Unary>, recursive_wrapper<Variable>,
+                 recursive_wrapper<Logical>, void*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
 inline bool operator==(
     const Expr& other,
     std::nullptr_t) { // needs to be inline because its a free function that
-                          // it included in multiple translation units. needs to
-                          // be marked inline so linker knows its the same one
+                      // it included in multiple translation units. needs to
+                      // be marked inline so linker knows its the same one
     return std::holds_alternative<void*>(other);
 }
 
@@ -40,8 +42,9 @@ bool is(const Expr& expr) { // function needs to be const  to make it callable
 }
 
 template <typename T>
-inline const T& expr_get(const Expr& expr) { // function needs to be const  to make it callable
-                            // from a const ref
+inline const T&
+expr_get(const Expr& expr) { // function needs to be const  to make it callable
+                             // from a const ref
     return std::get<recursive_wrapper<T>>(expr);
 }
 
@@ -67,13 +70,12 @@ struct Grouping {
 };
 
 struct Binary {
-    Binary(Expr A, Token op, Expr B)
-        : expressionA{std::move(A)}, expressionB{std::move(B)},
-          op(std::move(op)) {
+    Binary(Expr left, Token op, Expr B)
+        : left{std::move(left)}, right{std::move(right)}, op(std::move(op)) {
     }
 
-    Expr expressionA;
-    Expr expressionB;
+    Expr left;
+    Expr right;
     Token op;
 };
 
@@ -89,6 +91,10 @@ struct Variable {
     Variable(Token name) : name(std::move(name)) {
     }
     Token name;
+};
+
+struct Logical : Binary {
+    using Binary::Binary;
 };
 
 static_assert(std::is_move_constructible_v<Expr>,

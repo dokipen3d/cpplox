@@ -31,7 +31,7 @@ void ExpressionPrinterVisitor::operator()(const Assign&) {
 }
 
 void ExpressionPrinterVisitor::operator()(const Binary& binary) {
-    parenthesize(binary.op.lexeme, binary.expressionA, binary.expressionB);
+    parenthesize(binary.op.lexeme, binary.left, binary.right);
     //}
 }
 void ExpressionPrinterVisitor::operator()(const Literal& literal) {
