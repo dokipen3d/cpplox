@@ -50,28 +50,28 @@ expr_get(const Expr& expr) { // function needs to be const  to make it callable
 
 /////////////////////////////////////////////////////////////////////
 struct Literal {
-    explicit Literal(Object val) : val(val) {
+    explicit Literal(Object val) : val(std::move(val)) {
     }
     Object val;
 };
 
 struct Assign {
     Assign(Token name, Expr value)
-        : name(std::move(name)), value(std::move(value)) {
+        : name(std::move(name)), value(value) {
     }
     Token name;
     Expr value;
 };
 
 struct Grouping {
-    explicit Grouping(Expr expr) : expr(std::move(expr)) {
+    explicit Grouping(Expr expr) : expr(expr) {
     }
     Expr expr;
 };
 
 struct Binary {
     Binary(Expr left, Token op, Expr right)
-        : left{std::move(left)}, right{std::move(right)}, op(std::move(op)) {
+        : left{left}, right{right}, op(std::move(op)) {
     }
 
     Expr left;
@@ -81,21 +81,21 @@ struct Binary {
 
 struct Unary {
     Unary(Token token, Expr expr)
-        : token(std::move(token)), expr(std::move(expr)) {
+        : token(std::move(token)), expr(expr) {
     }
     Token token;
     Expr expr;
 };
 
 struct Variable {
-    Variable(Token name) : name(std::move(name)) {
+    explicit Variable(Token name) : name(std::move(name)) {
     }
     Token name;
 };
 
 struct Logical {
-     Logical(Expr left, Token op, Expr B)
-        : left{std::move(left)}, right{std::move(right)}, op(std::move(op)) {
+     Logical(Expr left, Token op, Expr right)
+        : left{left}, right{right}, op(std::move(op)) {
     }
 
     Expr left;

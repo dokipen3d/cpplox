@@ -227,7 +227,7 @@ auto Parser::primary() -> Expr {
 
     if (match({ETokenType::LEFT_PARENTHESIS})) {
         Expr expr = expression();
-        (ETokenType::RIGHT_PARENTHESIS, "Expect ')' after expression.");
+        consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after expression.");
         return Grouping(expr);
     }
     throw Parser::error(peek(), "Expect expression.");

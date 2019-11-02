@@ -83,4 +83,7 @@ int main(int argumentCount, char* argumentValues[]) {
     } else {
         runPrompt();
     }
+
+        std::cout << "done!" << std::endl;
+
 }

@@ -13,21 +13,21 @@ struct WhileStatement;
 
 struct ExpressionStatement {
     explicit ExpressionStatement(Expr expression)
-        : expression(std::move(expression)) {
+        : expression(expression) {
     }
     Expr expression;
 };
 
 struct PrintStatement {
     explicit PrintStatement(Expr expression)
-        : expression(std::move(expression)) {
+        : expression(expression) {
     }
     Expr expression;
 };
 
 struct VariableStatement {
     VariableStatement(Token name, Expr initializer)
-        : name(std::move(name)), initializer(std::move(initializer)) {
+        : name(std::move(name)), initializer(initializer) {
     }
     Token name;
     Expr initializer;
@@ -53,7 +53,7 @@ inline bool operator!=(const Statement& other, std::nullptr_t ptr) {
 }
 
 struct BlockStatement {
-    BlockStatement(std::vector<Statement> statements)
+    explicit BlockStatement(std::vector<Statement> statements)
         : statements(std::move(statements)) {
     }
     std::vector<Statement> statements;
@@ -61,7 +61,7 @@ struct BlockStatement {
 
 struct IfStatement {
     IfStatement(Expr condition, Statement thenBranch, Statement elseBranch)
-        : condition(std::move(condition)), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch)) {
+        : condition(condition), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch)) {
     }
     Expr condition;
     Statement thenBranch;
@@ -70,7 +70,7 @@ struct IfStatement {
 
 struct WhileStatement {
     WhileStatement(Expr condition, Statement body)
-        : condition(std::move(condition)), body(std::move(body)) {
+        : condition(condition), body(std::move(body)) {
     }
     Expr condition;
     Statement body;

@@ -14,6 +14,10 @@ https://marketplace.visualstudio.com/items?itemName=LLVMExtensions.llvm-toolchai
 or choose the LLVM Compiler Toolchain from the extensions in the UI
 - then invoke cmake with -T"llvm
 
+for running clang tidy on windows, follow these instructions....
+https://bitsmaker.gitlab.io/post/clang-tidy-from-vs2015/
+
+basically means installing ninja (putting the exe in the path), calling the varsall.bat then generating the ninja files with the compile commands json. then you can use clang tidy with the json file and -p argument.
 
 Some things that I learned along the way....
 

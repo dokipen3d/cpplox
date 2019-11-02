@@ -55,7 +55,7 @@ enum class ETokenType {
     END_OF_FILE
 };
 
-const std::map<ETokenType, std::string> tokenMap{
+inline const std::map<ETokenType, std::string> tokenMap{
     // Single-character tokens
     {ETokenType::LEFT_PARENTHESIS, "Left Parenthesis"},
     {ETokenType::RIGHT_PARENTHESIS, "Right Parenthesis"},
@@ -97,7 +97,7 @@ const std::map<ETokenType, std::string> tokenMap{
     {ETokenType::WHILE, "While"},
     {ETokenType::END_OF_FILE, "End_of_file"}};
 
-const std::map<std::string, ETokenType> keywordMap{
+inline const std::map<std::string, ETokenType> keywordMap{
 
     {"and", ETokenType::AND},     {"class", ETokenType::CLASS},   {"else", ETokenType::ELSE},
     {"false", ETokenType::FALSE}, {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
@@ -133,7 +133,7 @@ class Token {
     Token() = default; // need this to make expression be able to hold Tokens as
                        // members
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
-        : eTokenType(tokenType), literal(literal), lexeme(lexeme), line(line) {
+        : eTokenType(tokenType), literal(std::move(literal)), lexeme(std::move(lexeme)), line(line) {
     }
 
     std::string toString() {
