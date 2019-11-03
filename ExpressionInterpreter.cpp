@@ -48,9 +48,11 @@ void Interpreter::operator()(const IfStatement& ifStatement) {
 }
 
 void Interpreter::operator()(const WhileStatement& whileStatement) {
+    enableEnvironmentSwitching = false;
     while (isTruthy(evaluate(whileStatement.condition))) {
         execute(whileStatement.body);
     }
+    enableEnvironmentSwitching = true;
 }
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
@@ -77,22 +79,30 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 
 void Interpreter::executeBlock(const std::vector<Statement>& statements) {
 
-    // this stack will take ownership
-    auto previous = std::move(environment);
+    if (enableEnvironmentSwitching) {
+        // this stack will take ownership
+        auto previous = std::move(environment);
 
-    // main root will get a new one which stores a raw to prev itself. prev will
-    // not be moved as it remains on this stack. so pointer should still stay
-    // valid.
-    this->environment = std::make_unique<Environment>(previous.get());
+        // main root will get a new one which stores a raw to prev itself. prev
+        // will not be moved as it remains on this stack. so pointer should
+        // still stay valid.
+        this->environment = std::make_unique<Environment>(previous.get());
 
-    // these will go and possibly make env be moved/chagned but thats okay, they
-    // will be taken over by lower stacks
-    for (auto& statement : statements) {
-        execute(statement);
+        // these will go and possibly make env be moved/chagned but thats okay,
+        // they will be taken over by lower stacks
+        for (auto& statement : statements) {
+            execute(statement);
+        }
+        // destructor of the environment argument will reset the top level
+        // interpreter env to its current parent
+        this->environment = std::move(previous);
+    } else {
+        enableEnvironmentSwitching = true;
+        for (auto& statement : statements) {
+            execute(statement);
+        }
+        enableEnvironmentSwitching = false;
     }
-    // destructor of the environment argument will reset the top level
-    // interpreter env to its current parent
-    this->environment = std::move(previous);
 }
 
 Object Interpreter::operator()(const Binary& binary) {
@@ -224,8 +234,7 @@ Object Interpreter::operator()(const Logical& logical) {
     }
 
     return evaluate(logical.right);
-
-} 
+}
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {

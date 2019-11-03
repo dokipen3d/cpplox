@@ -17,11 +17,10 @@ struct Interpreter {
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);
 
-
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const VoidType*) {}
-
+    void operator()(const VoidType*) {
+    }
 
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements);
@@ -33,7 +32,6 @@ struct Interpreter {
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
     Object operator()(const Logical& logical);
-
 
     Object operator()(const void*) {
         return nullptr;
@@ -52,5 +50,8 @@ struct Interpreter {
         environment; // this maybe overriden temporarily by blocks and then set
                      // back
     const TimeIt timeIt;
+    bool enableEnvironmentSwitching =
+        true; // when looping, we dont need to push and pop environments so we
+               // disable
 };
 } // namespace cpplox
