@@ -124,6 +124,9 @@ auto Parser::consume(ETokenType type, const std::string& message) -> Token {
 };
 
 auto Parser::statement() -> Statement {
+    if (match({ETokenType::FOR})) {
+        return forStatement();
+    }
     if (match({ETokenType::IF})) {
         return ifStatement();
     }
@@ -138,6 +141,52 @@ auto Parser::statement() -> Statement {
         return BlockStatement(block());
     }
     return expressionStatement();
+}
+
+auto Parser::forStatement() -> Statement {
+    consume(ETokenType::LEFT_PARENTHESIS, "Expect '(' after 'for'.");
+    Statement initializer = nullptr;
+    if(match({ETokenType::SEMICOLON})) {
+        initializer = nullptr;
+    } else if(match({ETokenType::VAR})) {
+        initializer = varDeclaration();
+    } else {
+        initializer = expressionStatement();
+    }
+
+    Expr condition = nullptr;
+    if(!check(ETokenType::SEMICOLON)) {
+        condition = expression();
+    }
+    consume(ETokenType::SEMICOLON, "Expect ';' after loop condition.");
+
+    Expr increment = nullptr;
+    if(!check(ETokenType::RIGHT_PARENTHESIS)) {
+        increment = expression();
+    }
+    consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after for clauses.");
+
+    Statement body = statement();
+
+    //insert the increment into a new block statment
+    if(increment != nullptr) {
+        body = BlockStatement({body, ExpressionStatement{increment}});
+    }
+
+    //if there is no condition specified then we want to make the while loop continue indefinetly
+    if(condition == nullptr) {
+        condition = Literal(true);
+    }
+
+    body = WhileStatement(condition, body);
+
+    if(initializer != nullptr) {
+        body = BlockStatement({initializer, body});
+    }
+
+
+    return body;
+
 }
 
 auto Parser::whileStatement() -> Statement {
