@@ -16,6 +16,9 @@ template <typename T> struct recursive_wrapper {
     operator const T&() const {
         return t[index];
     }
+    operator T&() {
+        return t[index];
+    }
     //if we ever need a non const ref back
     // operator T&() {
     //     return t[index];

@@ -52,6 +52,21 @@ inline bool operator!=(const Statement& other, std::nullptr_t ptr) {
     return !(other == ptr);
 }
 
+//helper for hold_alternative to unwrap the wrapper
+template <typename T>
+bool is(const Statement& statement) { // function needs to be const  to make it callable
+                            // from a const ref
+    return std::holds_alternative<recursive_wrapper<T>>(statement);
+}
+
+template <typename T>
+T& getAs( Statement& statement)  { // function needs to be const  to make it callable
+                            // from a const ref
+    return std::get<recursive_wrapper<T>>(statement);
+}
+//////////////////////////////////////////////////////////////////////////
+
+
 struct BlockStatement {
     explicit BlockStatement(std::vector<Statement> statements)
         : statements(std::move(statements)) {
