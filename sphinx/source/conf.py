@@ -176,3 +176,7 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+
+
+# to remove the view page source link
+html_show_sourcelink = False
