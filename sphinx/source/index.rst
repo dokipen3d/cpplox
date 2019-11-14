@@ -10,11 +10,5 @@ Welcome to Crafting a Interpreter in C++'s documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   codetest
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
