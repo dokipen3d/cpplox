@@ -181,3 +181,9 @@ epub_exclude_files = ['search.html']
 
 # to remove the view page source link
 html_show_sourcelink = False
+
+pygments_style = "native"
+
+
+html_title = "Root"
+html_short_title = "Root"
