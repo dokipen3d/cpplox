@@ -69,7 +69,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "monokai"
+#pygments_style = "native"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -79,6 +79,7 @@ pygments_style = "monokai"
 #
 html_theme = 'sphinx_rtd_theme'
 html_style = 'css/custom.css'
+html_css_files = ['css/pygments.css']
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

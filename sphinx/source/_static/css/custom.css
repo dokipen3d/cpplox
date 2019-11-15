@@ -5,6 +5,19 @@
     max-width: 1064px !important;
 }
 
+.wy-side-nav-search  {
+    width: 275px;
+}
+
+.wy-nav-side {
+    width: 275px;
+}
+
+.wy-nav-content-wrap {
+    margin-left: 275px;
+}
+
+
 .hlist ul li {
 
     list-style: none !important;
@@ -22,6 +35,11 @@ td:last-child {
 .highlight-cpp pre {
     font-size: 14px !important;
 }
+
+.highlight pre {
+    font-size: 14px !important;
+}
+
 
 @media screen and (max-width:1064px) {
     td {
@@ -45,3 +63,5 @@ code in a hlist italic and smaller **/
     font-size: 14px;
     line-height: initial;
 }
+
+@import 'pygments.css';
