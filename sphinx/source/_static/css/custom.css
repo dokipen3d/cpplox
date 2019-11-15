@@ -1,8 +1,11 @@
 @import 'theme.css';
+/*
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono&display=swap');
 
-
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+*/
 .wy-nav-content {
-    max-width: 1064px !important;
+    max-width: 980px !important;
 }
 /*
 .wy-side-nav-search  {
