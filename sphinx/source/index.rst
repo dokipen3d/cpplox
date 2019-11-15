@@ -20,6 +20,26 @@ can be seen a seen as a companion piece to it to show how a similar implementati
 using c++.  
 
 
+.. hlist::
+
+   
+    * .. code-block:: cpp
+     
+        
+         #include <vector>
+         
+         int main(){
+         
+             std::vector<int> myvec{1,2,3,4,5,6,7,8,9};
+         }
+
+    *  text
+
+
+
+
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
