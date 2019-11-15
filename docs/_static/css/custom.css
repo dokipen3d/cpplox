@@ -1,15 +1,47 @@
 @import 'theme.css';
 
 
-
+.wy-nav-content {
+    max-width: 1064px !important;
+}
 
 .hlist ul li {
 
     list-style: none !important;
-
-
+    margin-left: 0px !important;
 }
 
 td {
-    vertical-align: middle;
+    vertical-align: middle;  
+}
+
+td:last-child { 
+    padding-left: 16px;
+}
+
+.highlight-cpp pre {
+    font-size: 14px !important;
+}
+
+@media screen and (max-width:1064px) {
+    td {
+        display: block;
+    }
+
+    tbody {
+        display: table;
+    }
+
+    td:last-child { 
+        padding-left: 4px;
+    }
+}
+
+/** this makes the text to the side of 
+code in a hlist italic and smaller **/
+
+.hlist .simple p {
+    font-style: italic;
+    font-size: 14px;
+    line-height: initial;
 }

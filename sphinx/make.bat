@@ -8,7 +8,9 @@ if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
 set SOURCEDIR=source
-set BUILDDIR=../docs
+set BUILDDIR=build
+
+xcopy /y /s ".\build\html\*" "..\docs\"
 
 if "%1" == "" goto help
 
