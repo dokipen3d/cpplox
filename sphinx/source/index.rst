@@ -45,7 +45,7 @@ using c++.
                                     5,6,7,8,9};
          }
 
-    * this is an example of some code that we will want to talk about it
+    * this is an example of some code that we will want to talk about itd
 
 ..  https://github.com/mgrachev/jekyll-syntax-railscasts
 

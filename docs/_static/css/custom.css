@@ -4,9 +4,13 @@
 
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
 */
+
+
+/*
 .wy-nav-content {
     max-width: 980px !important;
 }
+*/
 /*
 .wy-side-nav-search  {
     width: 275px;
@@ -56,6 +60,15 @@ td:last-child {
     td:last-child { 
         padding-left: 4px;
     }
+
+    .highlight-cpp pre {
+        font-size: 10px !important;
+    }
+    
+    .highlight pre {
+        font-size: 10px !important;
+    }
+    
 }
 
 /** this makes the text to the side of 
