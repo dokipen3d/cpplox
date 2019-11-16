@@ -56,6 +56,15 @@ td:last-child {
     td:last-child { 
         padding-left: 4px;
     }
+
+    .highlight-cpp pre {
+        font-size: 10px !important;
+    }
+    
+    .highlight pre {
+        font-size: 10px !important;
+    }
+    
 }
 
 /** this makes the text to the side of 
