@@ -25,6 +25,17 @@
 }
 */
 
+
+
+/* to hide sidebar */
+.wy-nav-side {
+    display: none;
+}
+  
+.wy-nav-content-wrap {
+    margin-left: 0;
+}
+
 .hlist ul li {
 
     list-style: none !important;
@@ -72,6 +83,17 @@ td:last-child {
 
 
 
+}
+
+@media screen and (max-width:864px) {
+
+    .highlight-cpp pre {
+        font-size: 1.6vw !important;
+    }
+    
+    .highlight pre {
+        font-size: 1.6vw !important;
+    }
 }
 
 @media screen and (max-width:768px) {
