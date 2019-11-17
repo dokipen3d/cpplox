@@ -29,6 +29,7 @@
 
     list-style: none !important;
     margin-left: 0px !important;
+    width: max-content !important;
 }
 
 td {
@@ -37,6 +38,7 @@ td {
 
 td:last-child { 
     padding-left: 16px;
+    width: auto;
 }
 
 .highlight-cpp pre {
@@ -48,7 +50,7 @@ td:last-child {
 }
 
 
-@media screen and (max-width:24em) {
+@media screen and (max-width:1068px) {
     /*
     td:first-child {
        width: 100%;
@@ -62,22 +64,12 @@ td:last-child {
     */
 
     td {
-        display: flex;
+        display: block;
     }
 
     td:last-child { 
         padding-left: 4px;
-        display: block;
     }
-
-    .highlight-cpp pre {
-        font-size: 10px !important;
-    }
-    
-    .highlight pre {
-        font-size: 10px !important;
-    }
-    
 }
 
 /** this makes the text to the side of 
