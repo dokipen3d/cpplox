@@ -29,7 +29,7 @@
 
     list-style: none !important;
     margin-left: 0px !important;
-    width: max-content !important;
+    /*width: max-content !important;*/
 }
 
 td {
@@ -38,7 +38,6 @@ td {
 
 td:last-child { 
     padding-left: 16px;
-    width: auto;
 }
 
 .highlight-cpp pre {
@@ -69,7 +68,16 @@ td:last-child {
 
     td:last-child { 
         padding-left: 4px;
+    }    
+
+    .highlight-cpp pre {
+        font-size: 2.5vw !important;
     }
+    
+    .highlight pre {
+        font-size: 2.5vw !important;
+    }
+
 }
 
 /** this makes the text to the side of 
