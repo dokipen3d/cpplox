@@ -48,17 +48,26 @@ td:last-child {
 }
 
 
-@media screen and (max-width:1064px) {
-    td {
-        display: block;
-    }
-
-    tbody {
-        display: table;
+@media screen and (max-width:30em) {
+    /*
+    td:first-child {
+       width: 100%;
+       display: block;
+       table-layout: auto;
     }
 
     td:last-child { 
         padding-left: 4px;
+    }
+    */
+
+    td {
+        display: flex;
+    }
+
+    td:last-child { 
+        padding-left: 4px;
+        display: block;
     }
 
     .highlight-cpp pre {
