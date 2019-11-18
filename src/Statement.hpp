@@ -33,7 +33,7 @@ struct VariableStatement {
     Expr initializer;
 };
 
-using StatementVar =
+using Statement =
     std::variant<ExpressionStatement, PrintStatement, VariableStatement,
                  recursive_wrapper<BlockStatement>,
                  recursive_wrapper<IfStatement>, recursive_wrapper<WhileStatement>, VoidType*>;
