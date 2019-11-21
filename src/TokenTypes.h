@@ -5,6 +5,8 @@
 #include <string>
 #include <variant>
 
+#include "Utilities.hpp"
+
 namespace cpplox {
 enum class ETokenType {
     // Single-character tokens
@@ -99,41 +101,94 @@ inline const std::map<ETokenType, std::string> tokenMap{
 
 inline const std::map<std::string, ETokenType> keywordMap{
 
-    {"and", ETokenType::AND},     {"class", ETokenType::CLASS},   {"else", ETokenType::ELSE},
-    {"false", ETokenType::FALSE}, {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
-    {"if", ETokenType::IF},       {"nil", ETokenType::NIL},       {"or", ETokenType::OR},
-    {"print", ETokenType::PRINT}, {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
-    {"this", ETokenType::THIS},   {"true", ETokenType::TRUE},     {"var", ETokenType::VAR},
-    {"while", ETokenType::WHILE}};
+    {"and", ETokenType::AND},       {"class", ETokenType::CLASS},
+    {"else", ETokenType::ELSE},     {"false", ETokenType::FALSE},
+    {"for", ETokenType::FOR},       {"fun", ETokenType::FUN},
+    {"if", ETokenType::IF},         {"nil", ETokenType::NIL},
+    {"or", ETokenType::OR},         {"print", ETokenType::PRINT},
+    {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
+    {"this", ETokenType::THIS},     {"true", ETokenType::TRUE},
+    {"var", ETokenType::VAR},       {"while", ETokenType::WHILE}};
+
+// forward declares
+struct NativeFunction;
 
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using variantObject = std::variant<void*, double, std::string, bool>;
-struct Object : variantObject {
-    using variantObject::variantObject;
-    using variantObject::operator=;
+using Object = std::variant<void*, double, std::string, bool,
+                            recursive_wrapper<NativeFunction>>;
 
-    bool operator==(const std::nullptr_t&) const {
-        return std::holds_alternative<void*>(*this);
-    }
-    bool operator!=(const std::nullptr_t& other) const {
-        return !(*this == other);
-    }
+// helper functions to make variant comparable to nullptr
+//////////////////////////////////////////////////////////////////////////
+inline bool operator==(
+    const Object& other,
+    std::nullptr_t) { // needs to be inline because its a free function that
+                      // it included in multiple translation units. needs to
+                      // be marked inline so linker knows its the same one
+    return std::holds_alternative<void*>(other);
+}
 
-    template <typename T>
-    bool is() const { // function needs to be const  to make it callable from a
-                      // const ref
-        return std::holds_alternative<T>(*this);
-    }
+inline bool operator==(
+    const Object& a,
+    const Object& b) { // needs to be inline because its a free function that
+                      // it included in multiple translation units. needs to
+                      // be marked inline so linker knows its the same one
+    if(std::holds_alternative<recursive_wrapper<NativeFunction>>(a) || 
+        std::holds_alternative<recursive_wrapper<NativeFunction>>(b)) {
+            return false;
+        }
+    else {
+        return a == b;
+    };
+}
+
+inline bool operator!=(const Object& other, std::nullptr_t ptr) {
+    return !(other == ptr);
+}
+
+template <typename T>
+bool is(const Object& object) { // function needs to be const  to make it
+                                // callable from a const ref
+    return std::holds_alternative<T>(object);
+}
+
+template <typename T>
+inline const T&
+getRecursiveObject(const Object& object) { // function needs to be const  to make it
+                                 // callable from a const ref
+    return std::get<recursive_wrapper<T>>(object);
+}
+
+
+
+
+struct Interpreter;
+
+struct NativeFunction {
+    NativeFunction() = default;
+    Object call(const Interpreter& interpreter,
+                const std::vector<Object> arguments) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 };
+
+struct FunctionObject {
+    FunctionObject() = default;
+    Object call(const Interpreter& interpreter,
+                const std::vector<Object> arguments);
+    friend std::ostream& operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
+};
+
+
 
 class Token {
   public:
     Token() = default; // need this to make expression be able to hold Tokens as
                        // members
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
-        : eTokenType(tokenType), literal(std::move(literal)), lexeme(std::move(lexeme)), line(line) {
+        : eTokenType(tokenType), literal(std::move(literal)),
+          lexeme(std::move(lexeme)), line(line) {
     }
 
     std::string toString() {
@@ -149,7 +204,7 @@ class Token {
                     stream << arg;
                 }
             },
-            static_cast<variantObject>(literal));
+            static_cast<Object>(literal));
 
         return stream.str();
     }
@@ -162,7 +217,10 @@ class Token {
     int line;
 };
 
-static_assert(std::is_move_constructible_v<Token>, "token is not move contructible");
-static_assert(std::is_move_assignable_v<Token>, "token is not move contructible");
+static_assert(std::is_move_constructible_v<Token>,
+              "token is not move contructible");
+static_assert(std::is_move_assignable_v<Token>,
+              "token is not move contructible");
+
 
 } // namespace cpplox

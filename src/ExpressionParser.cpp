@@ -325,10 +325,10 @@ auto Parser::finishCall(Expr callee) -> Expr {
                 error(peek(), "Cannot have more than 255 arguments.");
             }
             arguments.push_back(expression());
-        }   while (match({ETokenType::COMMA});
+        }   while (match({ETokenType::COMMA}));
     }
 
-    Token paren = consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after arguments.");
+    Token paren = consume(ETokenType::RIGHT_PARENTHESIS, "Expect \) after arguments." );
 
     return Call(callee, paren, arguments);
 }

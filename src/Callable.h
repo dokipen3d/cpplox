@@ -1,12 +1,11 @@
+#pragma once
+
 #include <vector>
-#include "TokenTypes.h"
+#include <iostream>
 #include "ExpressionInterpreter.h"
+#include "TokenTypes.h"
 
 namespace cpplox {
  
-
-struct Callable {
-    virtual Object call(const Interpreter& interpreter, const std::vector<Object> arguments) = 0;
-};
 
 }

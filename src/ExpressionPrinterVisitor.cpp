@@ -43,7 +43,7 @@ void ExpressionPrinterVisitor::operator()(const Literal& literal) {
                 // not a void* so can print
                 ast << arg;
             },
-            static_cast<variantObject>(literal.val));
+            static_cast<Object>(literal.val));
     }
 }
 

@@ -140,11 +140,11 @@ Object Interpreter::operator()(const Binary& binary) {
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
-        if (left.is<double>() && right.is<double>()) {
+        if (is<double>(left) && is<double>(right)) {
             returnValue = std::get<double>(left) + std::get<double>(right);
             break;
         }
-        if (left.is<std::string>() && right.is<std::string>()) {
+        if (is<std::string>(left) && is<std::string>(right)) {
             returnValue =
                 std::get<std::string>(left) + std::get<std::string>(right);
             break;
@@ -244,16 +244,19 @@ Object Interpreter::operator()(const Call& call) {
         arguments.push_back(evaluate(argument));
     }
 
-    Callable function = static_cast<Callable>(callee);
-
-    return function.call(this, arguments);
+    // check if is a callable
+    if (is<recursive_wrapper<NativeFunction>>(callee)) {
+        return getRecursiveObject<NativeFunction>(callee).call(*this, arguments);
+    } else {
+        throw RuntimeError(call.paren, "Can only call functions and classes");
+    }
 }
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {
         return false;
     }
-    if (object.is<bool>()) {
+    if (is<bool>(object)) {
         return std::get<bool>(object);
     }
     // fallback case, should be unreachablea
@@ -267,7 +270,7 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
 // type. might be slower. worth investigating in future.
 void Interpreter::checkNumberOperand(const Token& token,
                                      const Object& operand) {
-    if (operand.is<double>()) {
+    if (is<double>(operand)) {
         return;
     }
     throw RuntimeError(token, "Operand must be a number.");
@@ -275,7 +278,7 @@ void Interpreter::checkNumberOperand(const Token& token,
 // version of the fuction for binary operators
 void Interpreter::checkNumberOperands(const Token& token, const Object& left,
                                       const Object& right) {
-    if (left.is<double>() && right.is<double>()) {
+    if (is<double>(left) && is<double>(right)) {
         return;
     }
     throw RuntimeError(token, "Operands must be a number.");
@@ -286,16 +289,16 @@ std::string Interpreter::stringify(const Object& object) {
         text = "nil";
     }
 
-    if (object.is<double>()) {
+    if (is<double>(object)) {
         text = std::to_string(std::get<double>(object));
         stripZerosFromString(text);
     }
-    if (object.is<bool>()) {
+    if (is<bool>(object)) {
         text = std::get<bool>(object) ? "true" : "false";
     }
 
     // must be a string.
-    if (object.is<std::string>()) {
+    if (is<std::string>(object)) {
         text = std::get<std::string>(object);
     }
     return text;
