@@ -32,6 +32,8 @@ struct Interpreter {
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
     Object operator()(const Logical& logical);
+    Object operator()(const Call& call);
+
 
     Object operator()(const void*) {
         return nullptr;

@@ -14,12 +14,14 @@ struct Variable;
 struct Unary;
 struct Literal;
 struct Logical;
+struct Call;
 
 using Expr =
     std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
                  recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
                  recursive_wrapper<Unary>, recursive_wrapper<Variable>,
-                 recursive_wrapper<Logical>, void*>;
+                 recursive_wrapper<Logical>, 
+                 recursive_wrapper<Call>, void*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -101,6 +103,17 @@ struct Logical {
     Expr left;
     Expr right;
     Token op;
+};
+
+
+struct Call {
+     Call(Expr callee, Token paren, std::vector<Expr> arguments)
+        : callee{callee}, paren{paren}, arguments(std::move(arguments)) {
+    }
+
+    Expr callee;
+    Token paren;
+    std::vector<Expr> arguments;
 };
 
 static_assert(std::is_move_constructible_v<Expr>,

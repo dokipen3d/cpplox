@@ -54,6 +54,9 @@ class Parser {
     Expr assignment();
     Expr logicalOr();
     Expr logicalAnd();
+    Expr call();
+    Expr finishCall();
+
 
     std::vector<Token>& tokens;
 };

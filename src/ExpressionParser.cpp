@@ -299,8 +299,40 @@ auto Parser::unary() -> Expr {
         return Unary(_operator, right);
     }
 
-    return primary();
+    return call();
 };
+
+auto Parser::call() -> Expr {
+    Expr expr = primary();
+
+    while(true) {
+        if(match({ETokenType::LEFT_PARENTHESIS})){
+            expr = finishCall(expr);
+        } else {
+            break;
+        }
+    }
+
+    return expr;
+}
+
+
+auto Parser::finishCall(Expr callee) -> Expr {
+    std::vector<Expr> arguments;
+    if(!check(ETokenType::RIGHT_PARENTHESIS)){
+        do {
+            if(arguments.size() >= 255) {
+                error(peek(), "Cannot have more than 255 arguments.");
+            }
+            arguments.push_back(expression());
+        }   while (match({ETokenType::COMMA});
+    }
+
+    Token paren = consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after arguments.");
+
+    return Call(callee, paren, arguments);
+}
+
 
 auto Parser::multiplication() -> Expr {
     Expr expr = unary();

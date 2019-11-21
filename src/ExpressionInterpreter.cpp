@@ -1,5 +1,5 @@
 #include "ExpressionInterpreter.h"
-
+#include "Callable.h"
 #include "Error.h"
 #include "ExceptionError.h"
 #include "Expr.hpp"
@@ -234,6 +234,19 @@ Object Interpreter::operator()(const Logical& logical) {
     }
 
     return evaluate(logical.right);
+}
+
+Object Interpreter::operator()(const Call& call) {
+    Object callee = evaluate(call.callee);
+
+    std::vector<Object> arguments;
+    for (auto& argument : call.arguments) {
+        arguments.push_back(evaluate(argument));
+    }
+
+    Callable function = static_cast<Callable>(callee);
+
+    return function.call(this, arguments);
 }
 
 bool Interpreter::isTruthy(const Object& object) {
