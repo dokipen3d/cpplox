@@ -16,7 +16,7 @@ struct Literal;
 struct Logical;
 struct Call;
 
-using Expr =
+using ExprVariant =
     std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
                  recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
                  recursive_wrapper<Unary>, recursive_wrapper<Variable>,
@@ -25,20 +25,25 @@ using Expr =
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
+
+struct Expr : ExprVariant {
+
+using ExprVariant::ExprVariant;
+using ExprVariant::operator=;
+
 inline bool operator==(
-    const Expr& other,
-    std::nullptr_t) { // needs to be inline because its a free function that
+    std::nullptr_t) const  { // needs to be inline because its a free function that
                       // it included in multiple translation units. needs to
                       // be marked inline so linker knows its the same one
-    return std::holds_alternative<void*>(other);
+    return std::holds_alternative<void*>(*this);
 }
 
-inline bool operator!=(const Expr& other, std::nullptr_t ptr) {
-    return !(other == ptr);
+inline bool operator!=(std::nullptr_t ptr) const {
+    return !(*this == ptr);
 }
 
 template <typename T>
-bool is(const Expr& expr) { // function needs to be const  to make it callable
+bool is(const Expr& expr) const { // function needs to be const  to make it callable
                             // from a const ref
     return std::holds_alternative<recursive_wrapper<T>>(expr);
 }
@@ -49,6 +54,8 @@ expr_get(const Expr& expr) { // function needs to be const  to make it callable
                              // from a const ref
     return std::get<recursive_wrapper<T>>(expr);
 }
+
+};
 
 /////////////////////////////////////////////////////////////////////
 struct Literal {
@@ -121,3 +128,13 @@ static_assert(std::is_move_constructible_v<Expr>,
 static_assert(std::is_move_assignable_v<Expr>, "Expr is not move contructible");
 
 } // namespace cpplox
+
+//these are needed for gcc to be able to visit exprs
+
+template<>
+struct std::variant_size<cpplox::Expr> : std::variant_size<cpplox::ExprVariant> {
+};
+
+template<std::size_t I>
+struct std::variant_alternative<I,cpplox::Expr> :  std::variant_alternative<I,cpplox::ExprVariant> {
+};
