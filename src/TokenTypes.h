@@ -10,8 +10,8 @@
 namespace cpplox {
 enum class ETokenType {
     // Single-character tokens
-    LEFT_PARENTHES,
-    RIGHT_PARENTHES,
+    LEFT_PARENTHESIS,
+    RIGHT_PARENTHESIS,
     LEFT_BRACE,
     RIGHT_BRACE,
     COMMA,
@@ -50,7 +50,7 @@ enum class ETokenType {
     PRINT,
     RETURN,
     SUPER,
-    TH,
+    THIS,
     TRUE,
     VAR,
     WHILE,
@@ -59,8 +59,8 @@ enum class ETokenType {
 
 inline const std::map<ETokenType, std::string> tokenMap{
     // Single-character tokens
-    {ETokenType::LEFT_PARENTHES, "Left Parenthes"},
-    {ETokenType::RIGHT_PARENTHES, "Right Parenthes"},
+    {ETokenType::LEFT_PARENTHESIS, "Left Parenthesis"},
+    {ETokenType::RIGHT_PARENTHESIS, "Right Parenthesis"},
     {ETokenType::LEFT_BRACE, "Left_brace"},
     {ETokenType::RIGHT_BRACE, "Right_brace"},
     {ETokenType::COMMA, "Comma"},
@@ -93,7 +93,7 @@ inline const std::map<ETokenType, std::string> tokenMap{
     {ETokenType::PRINT, "Print"},
     {ETokenType::RETURN, "Return"},
     {ETokenType::SUPER, "Super"},
-    {ETokenType::TH, "Th"},
+    {ETokenType::THIS, "This"},
     {ETokenType::TRUE, "True"},
     {ETokenType::VAR, "Var"},
     {ETokenType::WHILE, "While"},
@@ -107,7 +107,7 @@ inline const std::map<std::string, ETokenType> keywordMap{
     {"if", ETokenType::IF},         {"nil", ETokenType::NIL},
     {"or", ETokenType::OR},         {"print", ETokenType::PRINT},
     {"return", ETokenType::RETURN}, {"super", ETokenType::SUPER},
-    {"th", ETokenType::TH},     {"true", ETokenType::TRUE},
+    {"this", ETokenType::THIS},     {"true", ETokenType::TRUE},
     {"var", ETokenType::VAR},       {"while", ETokenType::WHILE}};
 
 // forward declares
@@ -158,9 +158,9 @@ inline bool is() const { // function needs to be const  to make it
 
 template <typename T>
 inline const T&
-getRecursiveObject(const Object& object) { // function needs to be const  to make it
+getRecursiveObject() { // function needs to be const  to make it
                                  // callable from a const ref
-    return std::get<recursive_wrapper<T>>(object);
+    return std::get<recursive_wrapper<T>>(*this);
 }
 
 

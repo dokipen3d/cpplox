@@ -418,8 +418,8 @@ auto Parser::assignment() -> Expr {
         Token equals = previous();
         Expr value = assignment();
 
-        if (is<Variable>(expr)) {
-            const Variable& variable = expr_get<Variable>(expr);
+        if (expr.is<Variable>()) {
+            const Variable& variable = expr.expr_get<Variable>();
             Token name = variable.name;
             return Assign(name, value);
         }

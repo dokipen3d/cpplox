@@ -43,16 +43,16 @@ inline bool operator!=(std::nullptr_t ptr) const {
 }
 
 template <typename T>
-bool is(const Expr& expr) const { // function needs to be const  to make it callable
+bool is() const { // function needs to be const  to make it callable
                             // from a const ref
-    return std::holds_alternative<recursive_wrapper<T>>(expr);
+    return std::holds_alternative<recursive_wrapper<T>>(*this);
 }
 
 template <typename T>
 inline const T&
-expr_get(const Expr& expr) { // function needs to be const  to make it callable
+expr_get() { // function needs to be const  to make it callable
                              // from a const ref
-    return std::get<recursive_wrapper<T>>(expr);
+    return std::get<recursive_wrapper<T>>(*this);
 }
 
 };

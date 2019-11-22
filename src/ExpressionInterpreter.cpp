@@ -243,9 +243,12 @@ Object Interpreter::operator()(const Call& call) {
         arguments.push_back(evaluate(argument));
     }
 
-    Callable function = static_cast<Callable>(callee);
-
-    return function.call(this, arguments);
+    // check if is a callable
+    if (callee.is<recursive_wrapper<NativeFunction>>()) {
+        return callee.getRecursiveObject<NativeFunction>().call(*this, arguments);
+    } else {
+        throw RuntimeError(call.paren, "Can only call functions and classes");
+    }
 }
 
 bool Interpreter::isTruthy(const Object& object) {
