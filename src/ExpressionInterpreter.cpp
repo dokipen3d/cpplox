@@ -30,7 +30,7 @@ void Interpreter::execute(const Statement& statementToExecute) {
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return std::visit(*this, expression);
+    return std::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 void Interpreter::operator()(const ExpressionStatement& expressionStatement) {

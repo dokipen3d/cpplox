@@ -5,7 +5,7 @@
 namespace cpplox {
 
 void ExpressionPrinterVisitor::print(const Expr& expression) {
-    std::visit(*this, static_cast<Expr>(expression));
+    std::visit(*this, static_cast<ExprVariant>(expression));
     std::cout << ast.str();
 }
 
@@ -15,9 +15,9 @@ void ExpressionPrinterVisitor::parenthesize(const std::string& name,
     ast << "(" << name;
 
     ast << " ";
-    std::visit(*this, static_cast<Expr>(exprA));
+    std::visit(*this, static_cast<ExprVariant>(exprA));
     ast << " ";
-    std::visit(*this, static_cast<Expr>(exprB));
+    std::visit(*this, static_cast<ExprVariant>(exprB));
 
     ast << ")";
 }
@@ -43,7 +43,7 @@ void ExpressionPrinterVisitor::operator()(const Literal& literal) {
                 // not a void* so can print
                 ast << arg;
             },
-            static_cast<Object>(literal.val));
+            static_cast<ObjectVariant>(literal.val));
     }
 }
 
