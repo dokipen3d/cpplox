@@ -1,6 +1,12 @@
 # cpplox
 A c++ implementation of the lox interpreter outlined at craftinginterpreters.com
 
+This aims to be 
+- modern. this means...
+- c++17
+- using variant for visitation 
+- a little bit of metaprogramming
+
 
 1) create a build folder
 2) run 'cmake ..' (by default, it build in debug mode but optionally you can run 'cmake -DCMAKE_BUILD_TYPE=Release' or if on windows, release is specified as a build option shown in step 3 below )

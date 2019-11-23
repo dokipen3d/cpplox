@@ -117,53 +117,59 @@ struct NativeFunction;
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant = std::variant<void*, double, std::string, bool,
-                            recursive_wrapper<NativeFunction>>;
-
+                                   recursive_wrapper<NativeFunction>>;
 
 struct Object : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
-// helper functions to make variant comparable to nullptr
-//////////////////////////////////////////////////////////////////////////
-inline bool operator==(
-    std::nullptr_t) const { // needs to be inline because its a free function that
-                      // it included in multiple translation units. needs to
-                      // be marked inline so linker knows its the same one
-    return std::holds_alternative<void*>(*this);
-}
+    // helper functions to make variant comparable to nullptr
+    //////////////////////////////////////////////////////////////////////////
+    inline bool operator==(std::nullptr_t)
+        const { // needs to be inline because its a free function that
+                // it included in multiple translation units. needs to
+                // be marked inline so linker knows its the same one
+        return std::holds_alternative<void*>(*this);
+    }
 
-inline bool operator==(
-    const Object& other) const { // needs to be inline because its a free function that
-                      // it included in multiple translation units. needs to
-                      // be marked inline so linker knows its the same one
-    if(std::holds_alternative<recursive_wrapper<NativeFunction>>(*this) || 
-        std::holds_alternative<recursive_wrapper<NativeFunction>>(other)) {
+    inline bool operator==(const Object& other)
+        const { // needs to be inline because its a free function that
+                // it included in multiple translation units. needs to
+                // be marked inline so linker knows its the same one
+        if (std::holds_alternative<recursive_wrapper<NativeFunction>>(*this) ||
+            std::holds_alternative<recursive_wrapper<NativeFunction>>(other)) {
             return false;
-        }
-    else {
-        return *this == other;
-    };
-}
+        } else {
+            return *this == other;
+        };
+    }
 
-inline bool operator!=(std::nullptr_t ptr) const {
-    return !(*this == ptr);
-}
+    inline bool operator!=(std::nullptr_t ptr) const {
+        return !(*this == ptr);
+    }
 
-template <typename T>
-inline bool is() const { // function needs to be const  to make it
-                                // callable from a const ref
-    return std::holds_alternative<T>(*this);
-}
+    template <typename T>
+    inline bool is() const { // function needs to be const  to make it
+        // callable from a const ref
+        using actualTypeToGet =
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
+                               recursive_wrapper<T>, T>;
+        return std::holds_alternative<actualTypeToGet>(*this);
+    }
 
-template <typename T>
-inline const T&
-getRecursiveObject() { // function needs to be const  to make it
-                                 // callable from a const ref
-    return std::get<recursive_wrapper<T>>(*this);
-}
-
-
+    template <typename T>
+    inline const T& getRecursiveObject() { // function needs to be const  to
+                                           // make it callable from a const ref
+        return std::get<recursive_wrapper<T>>(*this);
+    }
+    template <typename T>
+    inline const T& get() { // function needs to be const  to
+                            // make it callable from a const ref
+        using actualTypeToGet =
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
+                               recursive_wrapper<T>, T>;
+        return std::get<actualTypeToGet>(*this);
+    }
 };
 
 struct Interpreter;
@@ -173,17 +179,17 @@ struct NativeFunction {
     Object call(const Interpreter& interpreter,
                 const std::vector<Object> arguments) const;
 
-    friend std::ostream& operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
+    friend std::ostream&
+    operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 };
 
 struct FunctionObject {
     FunctionObject() = default;
     Object call(const Interpreter& interpreter,
                 const std::vector<Object> arguments);
-    friend std::ostream& operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
+    friend std::ostream&
+    operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 };
-
-
 
 class Token {
   public:
@@ -222,16 +228,14 @@ class Token {
 
 static_assert(std::is_move_constructible_v<Token>,
               "token  not move contructible");
-static_assert(std::is_move_assignable_v<Token>,
-              "token  not move contructible");
-
+static_assert(std::is_move_assignable_v<Token>, "token  not move contructible");
 
 } // namespace cpplox
 
-template<>
-struct std::variant_size<cpplox::Object> : std::variant_size<cpplox::ObjectVariant> {
-};
+template <>
+struct std::variant_size<cpplox::Object>
+    : std::variant_size<cpplox::ObjectVariant> {};
 
-template<std::size_t I>
-struct std::variant_alternative<I,cpplox::Object> :  std::variant_alternative<I,cpplox::ObjectVariant> {
-};
+template <std::size_t I>
+struct std::variant_alternative<I, cpplox::Object>
+    : std::variant_alternative<I, cpplox::ObjectVariant> {};

@@ -244,8 +244,8 @@ Object Interpreter::operator()(const Call& call) {
     }
 
     // check if is a callable
-    if (callee.is<recursive_wrapper<NativeFunction>>()) {
-        return callee.getRecursiveObject<NativeFunction>().call(*this, arguments);
+    if (callee.is<NativeFunction>()) {
+        return callee.get<NativeFunction>().call(*this, arguments);
     } else {
         throw RuntimeError(call.paren, "Can only call functions and classes");
     }
