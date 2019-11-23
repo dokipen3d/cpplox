@@ -57,4 +57,8 @@ struct has_type<T, std::variant<U, Ts...>> : has_type<T, std::variant<Ts...>> {}
 template <typename T, typename... Ts>
 struct has_type<T, std::variant<T, Ts...>> : std::true_type {};
 
+template <typename T, typename VariantPlaceholder>
+inline constexpr bool has_type_v = has_type<T, VariantPlaceholder>::value;
+
+
 } // namespace cpplox
