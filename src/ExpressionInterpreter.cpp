@@ -245,7 +245,25 @@ Object Interpreter::operator()(const Call& call) {
 
     // check if is a callable
     if (callee.is<NativeFunction>()) {
-        return callee.get<NativeFunction>().call(*this, arguments);
+        std::cout << "is native function! \n";
+        const NativeFunction& func = callee.get<NativeFunction>();
+        std::cout << "got native function! \n";
+
+        // if (arguments.size() != func.arity()) {
+        //     std::stringstream stream;
+        //     stream << "Expected " << func.arity() << " arguments but got "
+        //            << arguments.size() << ".";
+        //     throw RuntimeError(call.paren, stream.str());
+        // }
+        std::cout << "calling \n";
+        std::cout << func.test << "\n";
+
+        const Object ret = func.m_func(*this, arguments);
+        std::cout << stringify(ret) << "\n";
+        std::cout << "called \n";
+
+        return ret;
+
     } else {
         throw RuntimeError(call.paren, "Can only call functions and classes");
     }

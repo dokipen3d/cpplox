@@ -11,6 +11,9 @@ template <typename T> struct recursive_wrapper {
         t.push_back(std::move(t_));
         index = t.size() - 1;
     }
+    ~recursive_wrapper() {
+        std::cout << "rc destroy\n";
+	}
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
     operator const T&() const {
@@ -26,7 +29,7 @@ template <typename T> struct recursive_wrapper {
 
     // store the value
     static std::vector<T> t;
-    size_t index;
+    size_t index = -1;
     // std::basic_string<T> t;
 };
 

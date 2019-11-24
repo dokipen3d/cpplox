@@ -3,13 +3,42 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
+#include <chrono>
 #include <memory>
 #include <vector>
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter() : environment(std::make_unique<Environment>()) {
+    Interpreter()
+        : globals(std::make_unique<Environment>()),
+          environment(std::make_unique<Environment>(globals.get())) {
+        // should move this to cpp file....
+        NativeFunction f = NativeFunction{
+                /*call*/ [](const Interpreter& interpreter,
+                            const std::vector<Object> arguments) -> Object {
+                    std::cout << "inside func \n";
+
+                    using namespace std::chrono;
+                    double s = duration<double>(
+                        system_clock::now().time_since_epoch()).count();
+                    std::cout << s << "\n";
+
+                    return 1.2;
+                },
+                /*arity*/ []() { return 0; }};;
+
+        f.m_func(*this,{});
+
+        globals->define(
+            "clock",
+            f);
+        Object c = globals->get(Token(ETokenType::FUN, "clock", nullptr, 0));
+        Object o = c.get<NativeFunction>().m_func(*this, {});
+        std::cout << stringify(o);
+		
+
     }
+
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
@@ -34,7 +63,6 @@ struct Interpreter {
     Object operator()(const Logical& logical);
     Object operator()(const Call& call);
 
-
     Object operator()(const void*) {
         return nullptr;
     }
@@ -49,11 +77,13 @@ struct Interpreter {
                              const Object& right);
     std::string stringify(const Object& object);
     std::unique_ptr<Environment>
+        globals; // place to store global native functions etc
+    std::unique_ptr<Environment>
         environment; // this maybe overriden temporarily by blocks and then set
                      // back
     const TimeIt timeIt;
     bool enableEnvironmentSwitching =
         true; // when looping, we dont need to push and pop environments so we
-               // disable
+              // disable
 };
 } // namespace cpplox
