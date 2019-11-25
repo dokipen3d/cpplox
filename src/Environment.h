@@ -43,7 +43,7 @@ struct Environment {
     }
 
     void define(std::string name, Object value) {
-        values.insert_or_assign(name, std::move(value));
+        values.insert_or_assign(name, value);
     }
 
     void assign(Token name, Object value) {

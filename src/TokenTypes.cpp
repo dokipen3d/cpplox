@@ -6,18 +6,9 @@ namespace cpplox {
 	NativeFunction::NativeFunction(
     std::function<Object(const Interpreter&, const std::vector<Object>)> func,
     std::function<int()> arity)
-    : m_func(func), arity(arity) {
+    : m_func(func), m_arity(arity) {
 }
 
-Object NativeFunction::call(const Interpreter& interpreter,
-                            const std::vector<Object> arguments) const {
-    return {};
-}
-
-Object FunctionObject::call(const Interpreter& interpreter,
-                            const std::vector<Object> arguments) {
-    return {};
-}
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<NativeFunction>& dt) {

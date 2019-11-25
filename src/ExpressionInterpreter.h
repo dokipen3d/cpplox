@@ -10,33 +10,35 @@
 namespace cpplox {
 struct Interpreter {
     Interpreter()
-        : globals(std::make_unique<Environment>()),
-          environment(std::make_unique<Environment>(globals.get())) {
+
+    {
+
+        globals = std::make_unique<Environment>();
+        environment = std::make_unique<Environment>(globals.get());
         // should move this to cpp file....
         NativeFunction f = NativeFunction{
-                /*call*/ [](const Interpreter& interpreter,
-                            const std::vector<Object> arguments) -> Object {
-                    std::cout << "inside func \n";
+            /*call*/ [](const Interpreter& interpreter,
+                        const std::vector<Object> arguments) -> Object {
+                std::cout << "inside func \n";
 
-                    using namespace std::chrono;
-                    double s = duration<double>(
-                        system_clock::now().time_since_epoch()).count();
-                    std::cout << s << "\n";
+                using namespace std::chrono;
+                double s =
+                    duration<double>(system_clock::now().time_since_epoch())
+                        .count();
+                std::cout << s << "\n";
 
-                    return 1.2;
-                },
-                /*arity*/ []() { return 0; }};;
+                return 1.2;
+            },
+            /*arity*/ []() { return 0; }};
+        ;
 
-        f.m_func(*this,{});
+        Object o1 = f.m_func(*this, {});
+        std::cout << "0 " << stringify(o1);
 
-        globals->define(
-            "clock",
-            f);
+        globals->define("clock", f);
         Object c = globals->get(Token(ETokenType::FUN, "clock", nullptr, 0));
-        Object o = c.get<NativeFunction>().m_func(*this, {});
-        std::cout << stringify(o);
-		
-
+        Object o2 = c.get<NativeFunction>().m_func(*this, {});
+        std::cout << "1 " << stringify(o2);
     }
 
     void interpret(const std::vector<Statement>& statements);

@@ -13,6 +13,11 @@
 namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
+
+    Object c = globals->get(Token(ETokenType::FUN, "clock", nullptr, 0));
+    NativeFunction nf = std::get<recursive_wrapper<NativeFunction>>(c);
+    Object o = nf.m_func(*this, {});
+    std::cout << "2 " << stringify(o);
     try {
         for (auto& statement : statements) {
             execute(statement);
@@ -246,7 +251,8 @@ Object Interpreter::operator()(const Call& call) {
     // check if is a callable
     if (callee.is<NativeFunction>()) {
         std::cout << "is native function! \n";
-        const NativeFunction& func = callee.get<NativeFunction>();
+        //const NativeFunction& func = callee.get<NativeFunction>();
+        NativeFunction func = std::get<recursive_wrapper<NativeFunction>>(callee);
         std::cout << "got native function! \n";
 
         // if (arguments.size() != func.arity()) {

@@ -181,11 +181,8 @@ struct NativeFunction {
         std::function<Object(const Interpreter&, const std::vector<Object>)>
             func,
         std::function<int()> arity);
-    NativeFunction(const NativeFunction&) = default;
-    NativeFunction(NativeFunction&&) = default;
-
-    Object call(const Interpreter& interpreter,
-                const std::vector<Object> arguments) const;
+    // NativeFunction(const NativeFunction&) = default;
+    // NativeFunction(NativeFunction&&) = default;
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
@@ -193,7 +190,7 @@ struct NativeFunction {
     // we store references to lambdas
     std::function<Object(const Interpreter&, const std::vector<Object>)>
         m_func;
-    std::function<int()> arity;
+    std::function<int()> m_arity;
     int test = 0;
 };
 
