@@ -28,14 +28,11 @@ struct Environment {
     //Environment(const Environment&)=default;
 
     const Object& get(const Token& name) const {
-        std::cout << "searching " << name.lexeme << "\n";
-
         if (auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
-            std::cout << "found " << name.lexeme << "\n";
             return search->second;
         } else if (enclosing != nullptr) {
-            std::cout << "couldnt find so getting " << name.lexeme << "\n"; // if not in current scope, check parent
+            // if not in current scope, check parent
             return enclosing->get(name);
         } else {
             throw RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");

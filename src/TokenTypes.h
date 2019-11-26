@@ -169,7 +169,6 @@ struct Object : ObjectVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        std::cout << typeid(actualTypeToGet).name() << "\n";
         return std::get<actualTypeToGet>(*this);
     }
 };
@@ -181,8 +180,6 @@ struct NativeFunction {
         std::function<Object(const Interpreter&, const std::vector<Object>)>
             func,
         std::function<int()> arity);
-    // NativeFunction(const NativeFunction&) = default;
-    // NativeFunction(NativeFunction&&) = default;
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
@@ -190,7 +187,7 @@ struct NativeFunction {
     // we store references to lambdas
     std::function<Object(const Interpreter&, const std::vector<Object>)>
         m_func;
-    std::function<int()> m_arity;
+    std::function<int()> arity;
     int test = 0;
 };
 

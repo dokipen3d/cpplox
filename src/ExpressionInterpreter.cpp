@@ -13,11 +13,6 @@
 namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
-
-    Object c = globals->get(Token(ETokenType::FUN, "clock", nullptr, 0));
-    NativeFunction nf = std::get<recursive_wrapper<NativeFunction>>(c);
-    Object o = nf.m_func(*this, {});
-    std::cout << "2 " << stringify(o);
     try {
         for (auto& statement : statements) {
             execute(statement);
@@ -250,23 +245,18 @@ Object Interpreter::operator()(const Call& call) {
 
     // check if is a callable
     if (callee.is<NativeFunction>()) {
-        std::cout << "is native function! \n";
         //const NativeFunction& func = callee.get<NativeFunction>();
-        NativeFunction func = std::get<recursive_wrapper<NativeFunction>>(callee);
-        std::cout << "got native function! \n";
+        NativeFunction func = callee.get<NativeFunction>();
 
-        // if (arguments.size() != func.arity()) {
-        //     std::stringstream stream;
-        //     stream << "Expected " << func.arity() << " arguments but got "
-        //            << arguments.size() << ".";
-        //     throw RuntimeError(call.paren, stream.str());
-        // }
-        std::cout << "calling \n";
-        std::cout << func.test << "\n";
+        if (arguments.size() != func.arity()) {
+            std::stringstream stream;
+            stream << "Expected " << func.arity() << " arguments but got "
+                   << arguments.size() << ".";
+            throw RuntimeError(call.paren, stream.str());
+        }
 
         const Object ret = func.m_func(*this, arguments);
-        std::cout << stringify(ret) << "\n";
-        std::cout << "called \n";
+
 
         return ret;
 

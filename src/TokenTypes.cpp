@@ -6,7 +6,7 @@ namespace cpplox {
 	NativeFunction::NativeFunction(
     std::function<Object(const Interpreter&, const std::vector<Object>)> func,
     std::function<int()> arity)
-    : m_func(func), m_arity(arity) {
+    : m_func(func), arity(arity) {
 }
 
 

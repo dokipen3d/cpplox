@@ -13,67 +13,76 @@
 #include <vector>
 
 
-cpplox::Interpreter interpreter;
 
-void run(const std::string& code) {
+struct lox {
 
-    std::cout << "scanning tokens\n";
+    void run(const std::string& code) {
 
-    auto tokens = cpplox::scanTokens(code);
-    // for (auto& t : tokens){
-    //         std::cout << t.lexeme << " ";
-    // }
-    std::cout << "\n";
+        std::cout << "scanning tokens\n";
 
-    std::cout << "parsing expressions\n";
-    cpplox::Parser parser(tokens);
-    std::vector<cpplox::Statement> statements;
+        auto tokens = cpplox::scanTokens(code);
+        // for (auto& t : tokens){
+        //         std::cout << t.lexeme << " ";
+        // }
+        std::cout << "\n";
 
-    statements = parser.parse();
+        std::cout << "parsing expressions\n";
+        cpplox::Parser parser(tokens);
+        std::vector<cpplox::Statement> statements;
 
-    if (hadError) {
-        std::cout << "parse error\n";
-        return;
+        statements = parser.parse();
+
+        if (hadError) {
+            std::cout << "parse error\n";
+            return;
+        }
+        
+        std::cout << "interpreting expression\n";
+        try {
+
+            interpreter.interpret(statements);
+
+        } catch (std::exception& error) {
+            std::cout << error.what() << "\n";
+        }
+    }
+
+    // dummy functions to make main run at this stage
+    void runFile(const std::string& filePath) {
+        std::cout << "running file " << filePath << "\n";
+        std::ifstream inputFileStream(filePath);
+        std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
+        run(code);
+    }
+
+    void runPrompt() {
+        std::cout << "Running prompt\n";
+        std::string currentLine;
+        for (;;) {
+            std::getline(std::cin, currentLine);
+            run(currentLine);
+            // set error back in case there was an error as we don't want to
+            // kill session
+            hadError = false;
+        }
     }
     
-    std::cout << "interpreting expression\n";
-    try {
-
-        interpreter.interpret(statements);
-
-    } catch (std::exception& error) {
-        std::cout << error.what() << "\n";
-    }
-}
-
-// dummy functions to make main run at this stage
-void runFile(const std::string& filePath) {
-    std::cout << "running file " << filePath << "\n";
-    std::ifstream inputFileStream(filePath);
-    std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
-    run(code);
+    cpplox::Interpreter interpreter;
 };
-void runPrompt() {
-    std::cout << "Running prompt\n";
-    std::string currentLine;
-    for (;;) {
-        std::getline(std::cin, currentLine);
-        run(currentLine);
-        // set error back in case there was an error as we don't want to
-        // kill session
-        hadError = false;
-    }
-};
+
+
 
 int main(int argumentCount, char* argumentValues[]) {
 
     // ddcpplox::visit2();
 
+    lox l;
+
     if (argumentCount > 2) {
         std::cout << "Usage: cpplox [script] \n";
         return 0;
     } else if (argumentCount == 2) {
-        runFile(argumentValues[1]);
+        l.runFile(argumentValues[1]);
         if (hadError) {
             return 1;
         }
@@ -81,7 +90,7 @@ int main(int argumentCount, char* argumentValues[]) {
             return 1;
         }
     } else {
-        runPrompt();
+        l.runPrompt();
     }
 
         std::cout << "done!" << std::endl;

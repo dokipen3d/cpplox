@@ -9,36 +9,23 @@
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter()
+    Interpreter() : globals(std::make_unique<Environment>()),
+                    environment ( std::make_unique<Environment>(globals.get())) {
 
-    {
-
-        globals = std::make_unique<Environment>();
-        environment = std::make_unique<Environment>(globals.get());
         // should move this to cpp file....
-        NativeFunction f = NativeFunction{
+
+
+        globals->define("clock", NativeFunction{
             /*call*/ [](const Interpreter& interpreter,
                         const std::vector<Object> arguments) -> Object {
-                std::cout << "inside func \n";
 
                 using namespace std::chrono;
                 double s =
                     duration<double>(system_clock::now().time_since_epoch())
                         .count();
-                std::cout << s << "\n";
-
-                return 1.2;
+                return s;
             },
-            /*arity*/ []() { return 0; }};
-        ;
-
-        Object o1 = f.m_func(*this, {});
-        std::cout << "0 " << stringify(o1);
-
-        globals->define("clock", f);
-        Object c = globals->get(Token(ETokenType::FUN, "clock", nullptr, 0));
-        Object o2 = c.get<NativeFunction>().m_func(*this, {});
-        std::cout << "1 " << stringify(o2);
+            /*arity*/ []() { return 0; }});
     }
 
     void interpret(const std::vector<Statement>& statements);
