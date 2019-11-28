@@ -196,23 +196,23 @@ struct NativeFunction {
     std::function<int()> arity;
 };
 
-// struct FunctionStatement;
+struct FunctionStatement;
 
-// struct FunctionObject {
-//     explicit FunctionObject(FunctionStatement& functionStatement);
+struct FunctionObject {
+    explicit FunctionObject(FunctionStatement& functionStatement);
 
-//     Object operator()(const Interpreter& interpreter,
-//                       const std::vector<Object>& objects) {
-//         return nullptr;
-//     }
+    Object operator()(const Interpreter& interpreter,
+                      const std::vector<Object>& objects) {
+        return nullptr;
+    }
 
-//     int arity();
+    int arity();
 
-//     friend std::ostream&
-//     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
+    friend std::ostream&
+    operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
-//     FunctionStatement& m_declaration;
-// };
+    FunctionStatement& m_declaration;
+};
 
 class Token {
   public:

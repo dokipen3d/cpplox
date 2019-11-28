@@ -1,4 +1,5 @@
 #include "ExpressionInterpreter.h"
+#include "Statement.hpp"
 
 
 namespace cpplox {
@@ -9,13 +10,13 @@ NativeFunction::NativeFunction(
     : m_func(func), arity(arity) {
 }
 
-// FunctionObject::FunctionObject(FunctionStatement& functionStatement)
-//     : m_declaration(functionStatement) {
-// }
+FunctionObject::FunctionObject(FunctionStatement& functionStatement)
+    : m_declaration(functionStatement) {
+}
 
-// int FunctionObject::arity() {
-//     return m_declaration.params.size();
-// };
+int FunctionObject::arity() {
+    return m_declaration.params.size();
+};
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<NativeFunction>& dt) {
@@ -24,10 +25,10 @@ std::ostream& operator<<(std::ostream& os,
     return os;
 }
 
-// std::ostream& operator<<(std::ostream& os,
-//                          const recursive_wrapper<FunctionObject>& dt) {
-//     os << "Function Object"
-//        << "\n";
-//     return os;
-// }
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<FunctionObject>& dt) {
+    os << "Function Object"
+       << "\n";
+    return os;
+}
 } // namespace cpplox
