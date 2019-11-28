@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+struct Object;
+
 namespace cpplox {
 struct Interpreter {
     Interpreter() : globals(std::make_unique<Environment>()),
@@ -34,6 +36,7 @@ struct Interpreter {
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);
+    void operator()(const FunctionStatement& functionStatement);
 
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);

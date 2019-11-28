@@ -1,5 +1,7 @@
 #pragma once
 
+//#include "Object.h"
+
 #include "TokenTypes.h"
 #include "Utilities.hpp"
 #include <variant>

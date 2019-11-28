@@ -3,6 +3,8 @@
 #include "ExceptionError.h"
 #include "Expr.hpp"
 #include "Utilities.hpp"
+//#include "Object.h"
+#include "TokenTypes.h"
 
 #include <functional>
 #include <iostream>
@@ -68,6 +70,9 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
 
     environment->define(variableStatement.name.lexeme, value);
     return;
+}
+
+void Interpreter::operator()(const FunctionStatement& functionStatement) {
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
@@ -243,11 +248,15 @@ Object Interpreter::operator()(const Call& call) {
         arguments.push_back(evaluate(argument));
     }
 
-    // check if is a callable
-    if (callee.is<NativeFunction>()) {
-        //const NativeFunction& func = callee.get<NativeFunction>();
-        NativeFunction func = callee.get<NativeFunction>();
+    // when we visit the callee (which should be a function object ie with a
+    // callable member ) we want to call this if it is one of the other types
+    auto throwIfWrongType = [&]() -> Object {
+        throw RuntimeError(call.paren, "Can only call functions and classes");
+    };
 
+    // this is a lambda which will also be called when we visit to prevent the
+    // need writing this twice
+    auto checkArityAndCallFunction = [&](auto func) -> Object {
         if (arguments.size() != func.arity()) {
             std::stringstream stream;
             stream << "Expected " << func.arity() << " arguments but got "
@@ -255,15 +264,42 @@ Object Interpreter::operator()(const Call& call) {
             throw RuntimeError(call.paren, stream.str());
         }
 
-        const Object ret = func.m_func(*this, arguments);
+        return func(*this, arguments);
+    };
 
+    Object ret = std::visit(
+        overloaded{[&](const NativeFunction& func) -> Object {
+                       return checkArityAndCallFunction(func);
+                   },
+                   [&](const bool b) -> Object { throwIfWrongType(); },
+                   [&](const std::string s) -> Object { throwIfWrongType(); },
+                   [&](const double d) -> Object { throwIfWrongType(); },
+                   [&](const void* vs) -> Object { throwIfWrongType(); }},
+        static_cast<ObjectVariant>(callee));
 
-        return ret;
+    return ret;
 
-    } else {
-        throw RuntimeError(call.paren, "Can only call functions and classes");
-    }
-}
+    // // check if is a callable
+    // if (callee.is<NativeFunction>()) {
+    //     // const NativeFunction& func = callee.get<NativeFunction>();
+    //     NativeFunction func = callee.get<NativeFunction>();
+
+    //     if (arguments.size() != func.arity()) {
+    //         std::stringstream stream;
+    //         stream << "Expected " << func.arity() << " arguments but got "
+    //                << arguments.size() << ".";
+    //         throw RuntimeError(call.paren, stream.str());
+    //     }
+
+    //     const Object ret = func.m_func(*this, arguments);
+
+    //     return ret;
+
+    // } else {
+    //     throw RuntimeError(call.paren, "Can only call functions and
+    //     classes");
+    // }
+} // namespace cpplox
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {

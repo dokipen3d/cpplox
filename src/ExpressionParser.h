@@ -27,6 +27,8 @@ class Parser {
     auto advance() -> /*----------------------------------------------------->*/Token;
     auto consume(ETokenType type, const std::string& message) -> /*--------->*/ Token;
 
+    auto function(std::string kind) -> /*---------------------------------------------------->*/Statement;
+
     auto declaration() -> /*------------------------------------------------->*/Statement;
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
     auto statement() -> /*--------------------------------------------------->*/Statement;

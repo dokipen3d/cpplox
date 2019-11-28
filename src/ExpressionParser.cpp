@@ -173,7 +173,8 @@ auto Parser::forStatement() -> Statement {
         // small optimization to modify existing block if one already exists to
         // prevent env pushing.
         if (is<BlockStatement>(body)) {
-            getAs<BlockStatement>(body).statements.emplace_back(ExpressionStatement{increment});
+            getAs<BlockStatement>(body).statements.emplace_back(
+                ExpressionStatement{increment});
         } else {
             // if it was just a single statement (no { } ) then make a block
             // statment. there will still be no env push due to while statements
@@ -208,8 +209,31 @@ auto Parser::whileStatement() -> Statement {
     return WhileStatement(condition, body);
 }
 
+auto Parser::function(std::string kind) -> Statement {
+    Token name = consume(ETokenType::IDENTIFIER, "Expect " + kind + " name.");
+    consume(ETokenType::LEFT_PARENTHESIS, "Expect '(' after " + kind + " name.");
+    std::vector<Token> parameters;
+    if (!check(ETokenType::RIGHT_PARENTHESIS)) {
+        do {
+            if (parameters.size() >= 255) {
+                error(peek(), "Cannot have more than 255 parameters.");
+            }
+
+            parameters.push_back(consume(ETokenType::IDENTIFIER, "Expect parameter name."));
+        } while (match({ETokenType::COMMA}));
+    }
+    consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after parameters.");
+
+    consume(ETokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
+    std::vector<Statement> body = block();                                  
+    return FunctionStatement(name, parameters, body);  
+}
+
 auto Parser::declaration() -> Statement {
     try {
+        if (match({ETokenType::FUN})) {
+            return function("function");
+        }
         if (match({ETokenType::VAR})) {
             return varDeclaration();
         }
@@ -305,8 +329,8 @@ auto Parser::unary() -> Expr {
 auto Parser::call() -> Expr {
     Expr expr = primary();
 
-    while(true) {
-        if(match({ETokenType::LEFT_PARENTHESIS})){
+    while (true) {
+        if (match({ETokenType::LEFT_PARENTHESIS})) {
             expr = finishCall(expr);
         } else {
             break;
@@ -316,23 +340,22 @@ auto Parser::call() -> Expr {
     return expr;
 }
 
-
 auto Parser::finishCall(Expr callee) -> Expr {
     std::vector<Expr> arguments;
-    if(!check(ETokenType::RIGHT_PARENTHESIS)){
+    if (!check(ETokenType::RIGHT_PARENTHESIS)) {
         do {
-            if(arguments.size() >= 255) {
+            if (arguments.size() >= 255) {
                 error(peek(), "Cannot have more than 255 arguments.");
             }
             arguments.push_back(expression());
-        }   while (match({ETokenType::COMMA}));
+        } while (match({ETokenType::COMMA}));
     }
 
-    Token paren = consume(ETokenType::RIGHT_PARENTHESIS, "Expect \) after arguments." );
+    Token paren =
+        consume(ETokenType::RIGHT_PARENTHESIS, "Expect \) after arguments.");
 
     return Call(callee, paren, arguments);
 }
-
 
 auto Parser::multiplication() -> Expr {
     Expr expr = unary();

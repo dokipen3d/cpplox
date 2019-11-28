@@ -6,6 +6,7 @@
 #include <string>
 #include <variant>
 
+//#include "Object.h"
 #include "Utilities.hpp"
 
 namespace cpplox {
@@ -181,28 +182,42 @@ struct NativeFunction {
             func,
         std::function<int()> arity);
 
+    Object operator()(const Interpreter& interpreter,
+                      const std::vector<Object>& objects) {
+        return m_func(interpreter, objects);
+    }
+
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 
     // we store references to lambdas
-    std::function<Object(const Interpreter&, const std::vector<Object>)>
+    std::function<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
     std::function<int()> arity;
-    int test = 0;
 };
 
-struct FunctionObject {
-    FunctionObject() = default;
-    Object call(const Interpreter& interpreter,
-                const std::vector<Object> arguments);
-    friend std::ostream&
-    operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
-};
+// struct FunctionStatement;
+
+// struct FunctionObject {
+//     explicit FunctionObject(FunctionStatement& functionStatement);
+
+//     Object operator()(const Interpreter& interpreter,
+//                       const std::vector<Object>& objects) {
+//         return nullptr;
+//     }
+
+//     int arity();
+
+//     friend std::ostream&
+//     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
+
+//     FunctionStatement& m_declaration;
+// };
 
 class Token {
   public:
-    Token() = default; // need th to make expression be able to hold Tokens as
-                       // members
+    Token() = default; // need th to make expression be able to hold Tokens
+                       // as members
     Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
         : eTokenType(tokenType), literal(std::move(literal)),
           lexeme(std::move(lexeme)), line(line) {

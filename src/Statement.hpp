@@ -1,6 +1,8 @@
 #pragma once
 #include "Expr.hpp"
 #include "TokenTypes.h"
+
+
 #include "Utilities.hpp"
 
 namespace cpplox {
@@ -10,17 +12,16 @@ struct VoidType {};
 struct BlockStatement;
 struct IfStatement;
 struct WhileStatement;
+struct FunctionStatement;
 
 struct ExpressionStatement {
-    explicit ExpressionStatement(Expr expression)
-        : expression(expression) {
+    explicit ExpressionStatement(Expr expression) : expression(expression) {
     }
     Expr expression;
 };
 
 struct PrintStatement {
-    explicit PrintStatement(Expr expression)
-        : expression(expression) {
+    explicit PrintStatement(Expr expression) : expression(expression) {
     }
     Expr expression;
 };
@@ -36,7 +37,9 @@ struct VariableStatement {
 using Statement =
     std::variant<ExpressionStatement, PrintStatement, VariableStatement,
                  recursive_wrapper<BlockStatement>,
-                 recursive_wrapper<IfStatement>, recursive_wrapper<WhileStatement>, VoidType*>;
+                 recursive_wrapper<IfStatement>,
+                 recursive_wrapper<WhileStatement>,
+                 recursive_wrapper<FunctionStatement>, VoidType*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -52,16 +55,16 @@ inline bool operator!=(const Statement& other, std::nullptr_t ptr) {
     return !(other == ptr);
 }
 
-//helper for hold_alternative to unwrap the wrapper
+// helper for hold_alternative to unwrap the wrapper
 template <typename T>
-bool is(const Statement& statement) { // function needs to be const  to make it callable
-                            // from a const ref
+bool is(const Statement& statement) { // function needs to be const  to make it
+                                      // callable from a const ref
     return std::holds_alternative<recursive_wrapper<T>>(statement);
 }
 
 template <typename T>
-T& getAs( Statement& statement)  { // function needs to be const  to make it callable
-                            // from a const ref
+T& getAs(Statement& statement) { // function needs to be const  to make it
+                                 // callable from a const ref
     return std::get<recursive_wrapper<T>>(statement);
 }
 //////////////////////////////////////////////////////////////////////////
@@ -73,9 +76,22 @@ struct BlockStatement {
     std::vector<Statement> statements;
 };
 
+struct FunctionStatement {
+    FunctionStatement(Token p_name, std::vector<Token> params,
+                      std::vector<Statement> body)
+        : m_name(std::move(p_name)), params(std::move(params)),
+          body(std::move(body)) {
+    }
+
+    Token m_name;
+    std::vector<Token> params;
+    std::vector<Statement> body;
+};
+
 struct IfStatement {
     IfStatement(Expr condition, Statement thenBranch, Statement elseBranch)
-        : condition(condition), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch)) {
+        : condition(condition), thenBranch(std::move(thenBranch)),
+          elseBranch(std::move(elseBranch)) {
     }
     Expr condition;
     Statement thenBranch;
