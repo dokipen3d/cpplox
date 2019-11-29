@@ -77,6 +77,8 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // break. If there are multiple calls to the same function in play at the
     // same time, each needs its own environment, even though they are all calls
     // to the same function.
+    // Here we are taking a function syntax node (a compile time representation)
+    // and converting it to its runtime representation
     const FunctionObject functionObject(functionStatement);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
