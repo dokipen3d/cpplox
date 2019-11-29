@@ -1,5 +1,18 @@
+fun thisIsThird(){
+    print 1.2;
+}
+
+
+
+fun thisIsSecond(){
+    print "boo";
+    thisIsThird();
+}
+
+
 fun thisIsTheOne(){
-    print 5;
+    thisIsSecond();
+    thisIsThird();
 }
 
 thisIsTheOne();

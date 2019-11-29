@@ -73,8 +73,12 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
-    FunctionObject functionObject(functionStatement);
-    environment->define(functionStatement.name.lexeme, functionObject );
+    // Each function call gets its own environment. Otherwise, recursion would
+    // break. If there are multiple calls to the same function in play at the
+    // same time, each needs its own environment, even though they are all calls
+    // to the same function.
+    const FunctionObject functionObject(functionStatement);
+    environment->define(functionStatement.name.lexeme, functionObject);
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
@@ -290,9 +294,7 @@ Object Interpreter::operator()(const Call& call) {
         static_cast<ObjectVariant>(callee));
 
     return ret;
-
- 
-} 
+}
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {
