@@ -72,6 +72,15 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
     return;
 }
 
+void Interpreter::operator()(const ReturnStatement& variableStatement) {
+    Object value;
+    if (variableStatement.value != nullptr) {
+        value = evaluate(variableStatement.value);
+    }
+
+    throw Return(value);
+}
+
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // Each function call gets its own environment. Otherwise, recursion would
     // break. If there are multiple calls to the same function in play at the
@@ -281,7 +290,7 @@ Object Interpreter::operator()(const Call& call) {
 
         return func(*this, arguments);
     };
-
+	// clang-format off
     Object ret = std::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
@@ -289,14 +298,16 @@ Object Interpreter::operator()(const Call& call) {
                    [&](const FunctionObject& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
-                   [&](const bool b) -> Object { throwIfWrongType(); },
-                   [&](const std::string s) -> Object { throwIfWrongType(); },
-                   [&](const double d) -> Object { throwIfWrongType(); },
-                   [&](const void* vs) -> Object { throwIfWrongType(); }},
+                   [&](const bool b) -> Object { throwIfWrongType(); return {};},
+                   [&](const std::string s) -> Object { throwIfWrongType(); return {}; },
+                   [&](const double d) -> Object { throwIfWrongType();  return {};},
+                   [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
         static_cast<ObjectVariant>(callee));
+		// clang-format on
 
     return ret;
 }
+
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {

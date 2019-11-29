@@ -134,6 +134,10 @@ auto Parser::statement() -> Statement {
     if (match({ETokenType::PRINT})) {
         return printStatement();
     }
+    if (match({ETokenType::RETURN})) {
+        return returnStatement();
+    }
+
     if (match({ETokenType::WHILE})) {
         return whileStatement();
     }
@@ -211,7 +215,8 @@ auto Parser::whileStatement() -> Statement {
 
 auto Parser::function(std::string kind) -> Statement {
     Token name = consume(ETokenType::IDENTIFIER, "Expect " + kind + " name.");
-    consume(ETokenType::LEFT_PARENTHESIS, "Expect '(' after " + kind + " name.");
+    consume(ETokenType::LEFT_PARENTHESIS,
+            "Expect '(' after " + kind + " name.");
     std::vector<Token> parameters;
     if (!check(ETokenType::RIGHT_PARENTHESIS)) {
         do {
@@ -219,14 +224,15 @@ auto Parser::function(std::string kind) -> Statement {
                 error(peek(), "Cannot have more than 255 parameters.");
             }
 
-            parameters.push_back(consume(ETokenType::IDENTIFIER, "Expect parameter name."));
+            parameters.push_back(
+                consume(ETokenType::IDENTIFIER, "Expect parameter name."));
         } while (match({ETokenType::COMMA}));
     }
     consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after parameters.");
 
     consume(ETokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
-    std::vector<Statement> body = block();                                  
-    return FunctionStatement(name, parameters, body);  
+    std::vector<Statement> body = block();
+    return FunctionStatement(name, parameters, body);
 }
 
 auto Parser::declaration() -> Statement {
@@ -283,6 +289,17 @@ auto Parser::printStatement() -> Statement {
     Expr value = expression();
     consume(ETokenType::SEMICOLON, "Expect ';' after value.");
     return PrintStatement(value);
+}
+
+auto Parser::returnStatement() -> Statement {
+    Token keyword = previous();
+    Expr value = nullptr;
+    if (!check(ETokenType::SEMICOLON)) {
+        value = expression();
+    }
+
+    consume(ETokenType::SEMICOLON, "Expect ';' after return value.");
+    return ReturnStatement(keyword, value);
 }
 
 auto Parser::expressionStatement() -> Statement {

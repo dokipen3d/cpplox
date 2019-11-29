@@ -2,7 +2,6 @@
 #include "Expr.hpp"
 #include "TokenTypes.h"
 
-
 #include "Utilities.hpp"
 
 namespace cpplox {
@@ -15,28 +14,39 @@ struct WhileStatement;
 struct FunctionStatement;
 
 struct ExpressionStatement {
-    explicit ExpressionStatement(Expr expression) : expression(expression) {
+    explicit ExpressionStatement(Expr expression)
+        : expression(std::move(expression)) {
     }
     Expr expression;
 };
 
 struct PrintStatement {
-    explicit PrintStatement(Expr expression) : expression(expression) {
+    explicit PrintStatement(Expr expression)
+        : expression(std::move(expression)) {
     }
     Expr expression;
 };
 
 struct VariableStatement {
     VariableStatement(Token name, Expr initializer)
-        : name(std::move(name)), initializer(initializer) {
+        : name(std::move(name)), initializer(std::move(initializer)) {
     }
     Token name;
     Expr initializer;
 };
 
+struct ReturnStatement {
+    ReturnStatement(Token name, Expr value)
+        : name(std::move(name)), value(std::move(value)) {
+    }
+    Token name;
+    // an expression that resolves to the value that we want to return
+    Expr value;
+};
+
 using Statement =
     std::variant<ExpressionStatement, PrintStatement, VariableStatement,
-                 recursive_wrapper<BlockStatement>,
+                 ReturnStatement, recursive_wrapper<BlockStatement>,
                  recursive_wrapper<IfStatement>,
                  recursive_wrapper<WhileStatement>,
                  recursive_wrapper<FunctionStatement>, VoidType*>;

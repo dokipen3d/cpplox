@@ -29,7 +29,12 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     for (int i = 0; i < m_declaration.params.size(); i++) {
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }
-    interpreter.executeBlock(m_declaration.body, std::move(environment));
+
+    try {
+        interpreter.executeBlock(m_declaration.body, std::move(environment));
+    } catch(Return returnValue) { //our custom exception type to embed a value and jump back to here
+        return returnValue.value;
+    }
     return nullptr;
 }
 

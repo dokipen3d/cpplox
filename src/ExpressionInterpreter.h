@@ -4,12 +4,23 @@
 #include "Statement.hpp"
 #include "TimeIt.hpp"
 #include <chrono>
+#include <exception>
 #include <memory>
 #include <vector>
 
 struct Object;
 
 namespace cpplox {
+
+// we hijack c++ exceptions to be able to unwind a stack and jump back to a
+// particular point in code and embed a value
+struct Return : std::exception {
+
+    Return(Object value) : value(std::move(value)) {
+    }
+    Object value;
+};
+
 struct Interpreter {
     Interpreter()
         : globals(std::make_unique<Environment>()),
@@ -41,6 +52,8 @@ struct Interpreter {
 
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
+    void operator()(const ReturnStatement& variableStatement);
+
     void operator()(const VoidType*) {
     }
 
