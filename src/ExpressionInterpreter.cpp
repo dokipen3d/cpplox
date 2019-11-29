@@ -77,11 +77,16 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
 
-    executeBlock(blockStatement.statements); // pass in current env as parent
+    auto newEnvironement = std::make_unique<Environment>(environment.get());
+    executeBlock(blockStatement.statements,
+                 std::move(newEnvironement)); // pass in current env as parent
     return;
 }
 
-void Interpreter::executeBlock(const std::vector<Statement>& statements) {
+// this is also called by function objects, so the env might not be the one
+// created by operator()(BlockStatement) above
+void Interpreter::executeBlock(const std::vector<Statement>& statements,
+                               std::unique_ptr<Environment> newEnvironement) {
 
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
@@ -90,7 +95,9 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements) {
         // main root will get a new one which stores a raw to prev itself. prev
         // will not be moved as it remains on this stack. so pointer should
         // still stay valid.
-        this->environment = std::make_unique<Environment>(previous.get());
+        // 2. if this is called by  operator()(BlockStatement) then the
+        // enclosing of newEnv will be previous
+        this->environment = std::move(newEnvironement);
 
         // these will go and possibly make env be moved/chagned but thats okay,
         // they will be taken over by lower stacks

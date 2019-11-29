@@ -1,0 +1,5 @@
+fun thisIsTheOne(){
+    print 5;
+}
+
+thisIsTheOne();

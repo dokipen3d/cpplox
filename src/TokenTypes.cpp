@@ -1,5 +1,6 @@
 #include "ExpressionInterpreter.h"
 #include "Statement.hpp"
+#include "Environment.h"
 
 
 namespace cpplox {
@@ -17,6 +18,18 @@ FunctionObject::FunctionObject(FunctionStatement& functionStatement)
 int FunctionObject::arity() {
     return m_declaration.params.size();
 };
+
+Object FunctionObject::operator()(Interpreter& interpreter,
+                                  const std::vector<Object>& arguments) {
+
+    auto environment = std::make_unique<Environment>(interpreter.globals.get());
+    for (int i = 0; i < m_declaration.params.size(); i++){
+        environment->define(m_declaration.params[i].lexeme, arguments[i]);
+
+    }
+    interpreter.executeBlock(m_declaration.body, std::move(environment));
+    return nullptr;
+}
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<NativeFunction>& dt) {

@@ -201,11 +201,8 @@ struct FunctionStatement;
 struct FunctionObject {
     explicit FunctionObject(FunctionStatement& functionStatement);
 
-    Object operator()(const Interpreter& interpreter,
-                      const std::vector<Object>& objects) {
-        return nullptr;
-    }
-
+    Object operator()(Interpreter& interpreter,
+                      const std::vector<Object>& arguments) ;
     int arity();
 
     friend std::ostream&

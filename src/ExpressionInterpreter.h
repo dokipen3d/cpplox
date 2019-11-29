@@ -11,23 +11,24 @@ struct Object;
 
 namespace cpplox {
 struct Interpreter {
-    Interpreter() : globals(std::make_unique<Environment>()),
-                    environment ( std::make_unique<Environment>(globals.get())) {
+    Interpreter()
+        : globals(std::make_unique<Environment>()),
+          environment(std::make_unique<Environment>(globals.get())) {
 
         // should move this to cpp file....
 
-
-        globals->define("clock", NativeFunction{
-            /*call*/ [](const Interpreter& interpreter,
-                        const std::vector<Object> arguments) -> Object {
-
-                using namespace std::chrono;
-                double s =
-                    duration<double>(system_clock::now().time_since_epoch())
-                        .count();
-                return s;
-            },
-            /*arity*/ []() { return 0; }});
+        globals->define(
+            "clock",
+            NativeFunction{
+                /*call*/ [](const Interpreter& interpreter,
+                            const std::vector<Object> arguments) -> Object {
+                    using namespace std::chrono;
+                    double s =
+                        duration<double>(system_clock::now().time_since_epoch())
+                            .count();
+                    return s;
+                },
+                /*arity*/ []() { return 0; }});
     }
 
     void interpret(const std::vector<Statement>& statements);
@@ -44,7 +45,8 @@ struct Interpreter {
     }
 
     void operator()(const BlockStatement& blockStatement);
-    void executeBlock(const std::vector<Statement>& statements);
+    void executeBlock(const std::vector<Statement>& statements,
+                      std::unique_ptr<Environment> newEnvironement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
