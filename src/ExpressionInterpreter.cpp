@@ -73,6 +73,8 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
+    FunctionObject functionObject(functionStatement);
+    environment->define(functionStatement.name.lexeme, functionObject );
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
@@ -278,6 +280,9 @@ Object Interpreter::operator()(const Call& call) {
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
+                   [&](const FunctionObject& func) -> Object {
+                       return checkArityAndCallFunction(func);
+                   },
                    [&](const bool b) -> Object { throwIfWrongType(); },
                    [&](const std::string s) -> Object { throwIfWrongType(); },
                    [&](const double d) -> Object { throwIfWrongType(); },
@@ -286,27 +291,8 @@ Object Interpreter::operator()(const Call& call) {
 
     return ret;
 
-    // // check if is a callable
-    // if (callee.is<NativeFunction>()) {
-    //     // const NativeFunction& func = callee.get<NativeFunction>();
-    //     NativeFunction func = callee.get<NativeFunction>();
-
-    //     if (arguments.size() != func.arity()) {
-    //         std::stringstream stream;
-    //         stream << "Expected " << func.arity() << " arguments but got "
-    //                << arguments.size() << ".";
-    //         throw RuntimeError(call.paren, stream.str());
-    //     }
-
-    //     const Object ret = func.m_func(*this, arguments);
-
-    //     return ret;
-
-    // } else {
-    //     throw RuntimeError(call.paren, "Can only call functions and
-    //     classes");
-    // }
-} // namespace cpplox
+ 
+} 
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {

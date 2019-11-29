@@ -79,11 +79,11 @@ struct BlockStatement {
 struct FunctionStatement {
     FunctionStatement(Token p_name, std::vector<Token> params,
                       std::vector<Statement> body)
-        : m_name(std::move(p_name)), params(std::move(params)),
+        : name(std::move(p_name)), params(std::move(params)),
           body(std::move(body)) {
     }
 
-    Token m_name;
+    Token name;
     std::vector<Token> params;
     std::vector<Statement> body;
 };

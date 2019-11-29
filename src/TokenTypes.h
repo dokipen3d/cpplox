@@ -114,12 +114,13 @@ inline const std::map<std::string, ETokenType> keywordMap{
 
 // forward declares
 struct NativeFunction;
+struct FunctionObject;
 
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant = std::variant<void*, double, std::string, bool,
-                                   recursive_wrapper<NativeFunction>>;
+                                   recursive_wrapper<NativeFunction>,recursive_wrapper<FunctionObject>>;
 
 struct Object : ObjectVariant {
 
@@ -199,7 +200,7 @@ struct NativeFunction {
 struct FunctionStatement;
 
 struct FunctionObject {
-    explicit FunctionObject(FunctionStatement& functionStatement);
+    explicit FunctionObject(const FunctionStatement& functionStatement);
 
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments) ;
@@ -208,7 +209,7 @@ struct FunctionObject {
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
-    FunctionStatement& m_declaration;
+    const FunctionStatement& m_declaration;
 };
 
 class Token {

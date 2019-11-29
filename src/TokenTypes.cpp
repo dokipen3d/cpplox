@@ -11,7 +11,7 @@ NativeFunction::NativeFunction(
     : m_func(func), arity(arity) {
 }
 
-FunctionObject::FunctionObject(FunctionStatement& functionStatement)
+FunctionObject::FunctionObject(const FunctionStatement& functionStatement)
     : m_declaration(functionStatement) {
 }
 

@@ -39,7 +39,7 @@ struct Environment {
         }
     }
 
-    void define(std::string name, Object value) {
+    void define(std::string name, const Object& value) {
         values.insert_or_assign(name, value);
     }
 
