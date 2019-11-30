@@ -76,6 +76,7 @@ int main(int argumentCount, char* argumentValues[]) {
 
     // ddcpplox::visit2();
 
+    std::cout.precision(17);
     lox l;
 
     if (argumentCount > 2) {

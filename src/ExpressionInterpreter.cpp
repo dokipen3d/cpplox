@@ -58,7 +58,7 @@ void Interpreter::operator()(const WhileStatement& whileStatement) {
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
     Object value = evaluate(printStatement.expression);
-    std::cout << stringify(value) << "\n";
+    std::cout << std::fixed << stringify(value) << "\n";
     return;
 }
 
