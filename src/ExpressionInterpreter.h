@@ -16,9 +16,11 @@ namespace cpplox {
 // particular point in code and embed a value
 struct Return : std::exception {
 
-    Return(Object value) : value(std::move(value)) {
+    Return(Object value)
+        : value(std::move(value)) {
     }
     Object value;
+ 
 };
 
 struct Interpreter {

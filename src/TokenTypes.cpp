@@ -33,7 +33,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     try {
         interpreter.executeBlock(m_declaration.body, std::move(environment));
     } catch(Return returnValue) { //our custom exception type to embed a value and jump back to here
-        return returnValue.value;
+		return returnValue.value;
     }
     return nullptr;
 }

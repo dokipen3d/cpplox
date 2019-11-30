@@ -108,6 +108,9 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
         auto previous = std::move(environment);
+        auto final = finally([&](){
+            this->environment = std::move(previous);
+        });
 
         // main root will get a new one which stores a raw to prev itself. prev
         // will not be moved as it remains on this stack. so pointer should
@@ -123,7 +126,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
         }
         // destructor of the environment argument will reset the top level
         // interpreter env to its current parent
-        this->environment = std::move(previous);
+        // this->environment = std::move(previous);
     } else {
         enableEnvironmentSwitching = true;
         for (auto& statement : statements) {
@@ -290,7 +293,7 @@ Object Interpreter::operator()(const Call& call) {
 
         return func(*this, arguments);
     };
-	// clang-format off
+    // clang-format off
     Object ret = std::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
@@ -303,11 +306,10 @@ Object Interpreter::operator()(const Call& call) {
                    [&](const double d) -> Object { throwIfWrongType();  return {};},
                    [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
         static_cast<ObjectVariant>(callee));
-		// clang-format on
+    // clang-format on
 
     return ret;
 }
-
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object == nullptr) {
