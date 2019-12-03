@@ -137,7 +137,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
 }
 
 Object Interpreter::operator()(const Binary& binary) {
-    Object returnValue;
+    //Object returnValue;
 
     Object left = evaluate(binary.left);
     Object right = evaluate(binary.right);
@@ -145,40 +145,32 @@ Object Interpreter::operator()(const Binary& binary) {
     switch (binary.op.eTokenType) {
     case ETokenType::GREATER: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) > std::get<double>(right);
-        break;
+        return std::get<double>(left) > std::get<double>(right);
     }
     case ETokenType::GREATER_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) >= std::get<double>(right);
-        break;
+        return std::get<double>(left) >= std::get<double>(right);
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) < std::get<double>(right);
-        break;
+        return std::get<double>(left) < std::get<double>(right);
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) <= std::get<double>(right);
-        break;
+        return std::get<double>(left) <= std::get<double>(right);
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) - std::get<double>(right);
-        break;
+        return std::get<double>(left) - std::get<double>(right);
     }
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            returnValue = std::get<double>(left) + std::get<double>(right);
-            break;
+            return std::get<double>(left) + std::get<double>(right);
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            returnValue =
-                std::get<std::string>(left) + std::get<std::string>(right);
-            break;
+            return std::get<std::string>(left) + std::get<std::string>(right);
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -187,26 +179,20 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::SLASH: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) / std::get<double>(right);
-        break;
+        return std::get<double>(left) / std::get<double>(right);
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
-        returnValue = std::get<double>(left) * std::get<double>(right);
-        break;
+        return std::get<double>(left) * std::get<double>(right);
     }
     case ETokenType::BANG_EQUAL: {
-        returnValue = !isEqual(left, right);
-        break;
+        return !isEqual(left, right);
     }
     case ETokenType::EQUAL_EQUAL: {
-        returnValue = isEqual(left, right);
-        break;
+        return isEqual(left, right);
     }
     }
-
-    // unreachable
-    return returnValue;
+    return {};
 }
 
 Object Interpreter::operator()(const Assign& assign) {
@@ -228,7 +214,6 @@ Object Interpreter::operator()(const Grouping& grouping) {
     return evaluate(grouping.expr);
 }
 Object Interpreter::operator()(const Unary& unary) {
-    Object returnObject;
     Object right = evaluate(unary.expr);
 
     switch (unary.token.eTokenType) {
@@ -239,16 +224,12 @@ Object Interpreter::operator()(const Unary& unary) {
         // type, an exception will get thrown. this is equivalent to the
         // cast in java failing and throwing
 
-        returnObject = -std::get<double>(right);
-        break;
+        return -std::get<double>(right);
     }
     case ETokenType::BANG: {
-        returnObject = !isTruthy(right);
-        break;
+        return !isTruthy(right);
     }
     }
-    // unreachable
-    return returnObject;
 }
 
 Object Interpreter::operator()(const Logical& logical) {
@@ -305,7 +286,7 @@ Object Interpreter::operator()(const Call& call) {
                    [&](const std::string s) -> Object { throwIfWrongType(); return {}; },
                    [&](const double d) -> Object { throwIfWrongType();  return {};},
                    [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
-        static_cast<ObjectVariant>(callee));
+                static_cast<ObjectVariant>(callee));
     // clang-format on
 
     return ret;
