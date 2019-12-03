@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <variant>
+#include <memory>
 
 //#include "Object.h"
 #include "Utilities.hpp"
