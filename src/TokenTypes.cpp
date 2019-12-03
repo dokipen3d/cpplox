@@ -25,7 +25,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // the global one like in the book. might have something to do with how we set up the globals
     // to just be one level higher than the first env instead of a seperate env
     auto environment =
-        std::make_unique<Environment>(interpreter.environment.get());
+        std::make_unique<Environment>(interpreter.globals);
     for (int i = 0; i < m_declaration.params.size(); i++) {
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }

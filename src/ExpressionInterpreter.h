@@ -16,17 +16,15 @@ namespace cpplox {
 // particular point in code and embed a value
 struct Return : std::exception {
 
-    Return(Object value)
-        : value(std::move(value)) {
+    Return(Object value) : value(std::move(value)) {
     }
     Object value;
- 
 };
 
 struct Interpreter {
     Interpreter()
-        : globals(std::make_unique<Environment>()),
-          environment(std::make_unique<Environment>(globals.get())) {
+        : environment(std::make_unique<Environment>()),
+          globals(environment.get()) {
 
         // should move this to cpp file....
 
@@ -85,11 +83,11 @@ struct Interpreter {
     void checkNumberOperands(const Token& token, const Object& left,
                              const Object& right);
     std::string stringify(const Object& object);
-    std::unique_ptr<Environment>
-        globals; // place to store global native functions etc
+
     std::unique_ptr<Environment>
         environment; // this maybe overriden temporarily by blocks and then set
-                     // back
+    // back
+    Environment* globals; // place to store global native functions etc
     const TimeIt timeIt;
     bool enableEnvironmentSwitching =
         true; // when looping, we dont need to push and pop environments so we
