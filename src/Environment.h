@@ -12,12 +12,12 @@ namespace cpplox {
 struct Environment {
     //Environment() = default;
     // address of a ref is the same as taking the address of the object it refers to
-    explicit Environment(Environment* environment = nullptr) : enclosing(environment) {
+    explicit Environment(const std::shared_ptr<Environment>& environment = nullptr) : enclosing(environment) {
     }
     // Environment(const Environment&) = delete;
     //Environment(Environment&&) = delete;
 
-    Environment* enclosing;
+    std::shared_ptr<Environment> enclosing;
     // ~Environment() {
     //     if (enclosing != nullptr) {
     //         // set back env when this goes goes out of scope. should be execption safe. it might

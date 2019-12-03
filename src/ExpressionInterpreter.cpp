@@ -88,28 +88,28 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // to the same function.
     // Here we are taking a function syntax node (a compile time representation)
     // and converting it to its runtime representation
-    const FunctionObject functionObject(functionStatement);
+    const FunctionObject functionObject(functionStatement, this->environment);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
 
-    auto newEnvironement = std::make_unique<Environment>(environment.get());
+    auto newEnvironement = std::make_shared<Environment>(environment);
     executeBlock(blockStatement.statements,
-                 std::move(newEnvironement)); // pass in current env as parent
+                 newEnvironement); // pass in current env as parent
     return;
 }
 
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               std::unique_ptr<Environment> newEnvironement) {
+                               const std::shared_ptr<Environment>& newEnvironement) {
 
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
-        auto previous = std::move(environment);
+        auto previous = environment;
         auto final = finally([&](){
-            this->environment = std::move(previous);
+            this->environment = previous;
         });
 
         // main root will get a new one which stores a raw to prev itself. prev
@@ -117,7 +117,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
         // still stay valid.
         // 2. if this is called by  operator()(BlockStatement) then the
         // enclosing of newEnv will be previous
-        this->environment = std::move(newEnvironement);
+        this->environment = newEnvironement;
 
         // these will go and possibly make env be moved/chagned but thats okay,
         // they will be taken over by lower stacks

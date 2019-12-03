@@ -23,8 +23,7 @@ struct Return : std::exception {
 
 struct Interpreter {
     Interpreter()
-        : environment(std::make_unique<Environment>()),
-          globals(environment.get()) {
+        : globals(std::make_shared<Environment>()), environment(globals) {
 
         // should move this to cpp file....
 
@@ -59,7 +58,7 @@ struct Interpreter {
 
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements,
-                      std::unique_ptr<Environment> newEnvironement);
+                      const std::shared_ptr<Environment>& newEnvironement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -84,10 +83,12 @@ struct Interpreter {
                              const Object& right);
     std::string stringify(const Object& object);
 
-    std::unique_ptr<Environment>
+    std::shared_ptr<Environment>
+        globals; // place to store global native functions etc
+
+    std::shared_ptr<Environment>
         environment; // this maybe overriden temporarily by blocks and then set
     // back
-    Environment* globals; // place to store global native functions etc
     const TimeIt timeIt;
     bool enableEnvironmentSwitching =
         true; // when looping, we dont need to push and pop environments so we

@@ -10,8 +10,9 @@ NativeFunction::NativeFunction(
     : m_func(func), arity(arity) {
 }
 
-FunctionObject::FunctionObject(const FunctionStatement& functionStatement)
-    : m_declaration(functionStatement) {
+FunctionObject::FunctionObject(const FunctionStatement& functionStatement,
+                               const std::shared_ptr<Environment>& closure)
+    : m_declaration(functionStatement), closure(closure) {
 }
 
 int FunctionObject::arity() {
@@ -22,18 +23,19 @@ Object FunctionObject::operator()(Interpreter& interpreter,
                                   const std::vector<Object>& arguments) {
 
     // for some reason to get this to work, I had to choose the current env not
-    // the global one like in the book. might have something to do with how we set up the globals
-    // to just be one level higher than the first env instead of a seperate env
-    auto environment =
-        std::make_unique<Environment>(interpreter.globals);
+    // the global one like in the book. might have something to do with how we
+    // set up the globals to just be one level higher than the first env instead
+    // of a seperate env
+    auto environment = std::make_shared<Environment>(closure);
     for (int i = 0; i < m_declaration.params.size(); i++) {
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }
 
     try {
-        interpreter.executeBlock(m_declaration.body, std::move(environment));
-    } catch(Return returnValue) { //our custom exception type to embed a value and jump back to here
-		return returnValue.value;
+        interpreter.executeBlock(m_declaration.body, environment);
+    } catch (Return returnValue) { // our custom exception type to embed a value
+                                   // and jump back to here
+        return returnValue.value;
     }
     return nullptr;
 }
