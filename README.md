@@ -100,3 +100,10 @@ cant have a combined visitor that can visit multiple variants that share monosta
 
 we can use std function inside the native function object to not force us to use polymorphism. this also means we can put a sinle type into the variant and it wont need vtable. that would be double type lookup. does std function do the same? 
 the constructor of native function is doing the job of enforcing the interface of providing an arity vs pure virtual functions. it doesnt force users to inherit from a base class. they juat provide a couple of std function objects. its a bit like sean parents runtime polymorphism in that it doesnt force that requirement on users. also this has sbo for std function. arguments are in a vector as well so there is allocation somewhere.
+
+maybe use if init
+
+if (auto* front = std::get_if<Scanner::Token>(from); front && front->isKeyword())
+{
+	// ongoing use of front
+}
