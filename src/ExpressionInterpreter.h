@@ -51,7 +51,7 @@ struct Interpreter {
 
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const ReturnStatement& variableStatement);
+    void operator()(const ReturnStatement& returnStatement);
 
     void operator()(const VoidType*) {
     }

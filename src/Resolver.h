@@ -16,6 +16,8 @@ struct Resolver {
     void resolve(const Statement& statement);
     void resolve(const std::vector<Statement>& statements);
     void resolve(const Expr& expr);
+    void resolveLocal(const Expr& expr, const Token& name);  
+    void resolveFunction(const FunctionStatement& FunctionStatement); 
 
     void declare(const Token& name);
     void define(const Token& name);
@@ -23,13 +25,14 @@ struct Resolver {
     void beginScope();
     void endScope();
 
+
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);
     void operator()(const FunctionStatement& functionStatement);
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
-    void operator()(const ReturnStatement& variableStatement);
+    void operator()(const ReturnStatement& returnStatement);
     void operator()(const VoidType*) {
     }
     void operator()(const BlockStatement& blockStatement);

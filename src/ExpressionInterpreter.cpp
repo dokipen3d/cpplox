@@ -71,10 +71,10 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
     return;
 }
 
-void Interpreter::operator()(const ReturnStatement& variableStatement) {
+void Interpreter::operator()(const ReturnStatement& returnStatement) {
     Object value;
-    if (variableStatement.value != nullptr) {
-        value = evaluate(variableStatement.value);
+    if (returnStatement.value != nullptr) {
+        value = evaluate(returnStatement.value);
     }
 
     throw Return(value);
