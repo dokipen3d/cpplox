@@ -12,7 +12,7 @@ endif()
 
 
 
-add_executable(cpplox main.cpp TokenTypes.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
+add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
 #target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
 
