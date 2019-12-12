@@ -77,6 +77,15 @@ T& getAs(Statement& statement) { // function needs to be const  to make it
                                  // callable from a const ref
     return std::get<recursive_wrapper<T>>(statement);
 }
+
+template <typename T> T& get(Statement& statement) {
+    // constexpr bool isRecursive = ;
+    using actualTypeToGet =
+        std::conditional_t<has_type_v<recursive_wrapper<T>, Statement>,
+                           recursive_wrapper<T>, T>;
+    return std::get<actualTypeToGet>(statement);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 struct BlockStatement {

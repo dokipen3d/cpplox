@@ -8,7 +8,6 @@
 #include <functional>
 #include <iostream>
 #include <iterator> //for std::next()
-#include <variant>
 #include <vector>
 
 namespace cpplox {
@@ -32,6 +31,19 @@ void Interpreter::execute(const Statement& statementToExecute) {
 
 Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, static_cast<ExprVariant>(expression));
+}
+
+void Interpreter::resolve(const Expr& expr, int depth) {
+    locals.insert_or_assign(static_cast<ExprVariant>(expr), depth);
+}
+
+Object Interpreter::lookUpVariable(const Token& name, const Expr& expr) {
+    auto search = locals.find(expr);
+    if (search != locals.end()) {
+        return environment->getAt(search->second, name.lexeme);
+    } else {
+        return globals->get(name);
+    }
 }
 
 void Interpreter::operator()(const ExpressionStatement& expressionStatement) {
@@ -101,15 +113,14 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
-void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               const std::shared_ptr<Environment>& newEnvironement) {
+void Interpreter::executeBlock(
+    const std::vector<Statement>& statements,
+    const std::shared_ptr<Environment>& newEnvironement) {
 
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
         auto previous = environment;
-        auto final = finally([&](){
-            this->environment = previous;
-        });
+        auto final = finally([&]() { this->environment = previous; });
 
         // main root will get a new one which stores a raw to prev itself. prev
         // will not be moved as it remains on this stack. so pointer should
@@ -136,7 +147,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
 }
 
 Object Interpreter::operator()(const Binary& binary) {
-    //Object returnValue;
+    // Object returnValue;
 
     Object left = evaluate(binary.left);
     Object right = evaluate(binary.right);
@@ -196,8 +207,14 @@ Object Interpreter::operator()(const Binary& binary) {
 
 Object Interpreter::operator()(const Assign& assign) {
     Object value = evaluate(assign.value);
-    environment->assign(assign.name, value);
 
+    auto search = locals.find(assign);
+    if (search != locals.end()) {
+        int distance = search->second;
+        environment->assignAt(distance, assign.name, value);
+    } else {
+        globals->assign(assign.name, value);
+    }
     return value;
 }
 
@@ -206,7 +223,7 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable) {
-    return environment->get(variable.name);
+    return lookUpVariable(variable.name, variable);
 }
 
 Object Interpreter::operator()(const Grouping& grouping) {
@@ -256,13 +273,14 @@ Object Interpreter::operator()(const Call& call) {
     }
 
     // when we visit the callee (which should be a function object ie with a
-    // callable member ) we want to call this if it is one of the other types
+    // callable member ) we want to call this if it is one of the other
+    // types
     auto throwIfWrongType = [&]() -> Object {
         throw RuntimeError(call.paren, "Can only call functions and classes");
     };
 
-    // this is a lambda which will also be called when we visit to prevent the
-    // need writing this twice
+    // this is a lambda which will also be called when we visit to prevent
+    // the need writing this twice
     auto checkArityAndCallFunction = [&](auto func) -> Object {
         if (arguments.size() != func.arity()) {
             std::stringstream stream;

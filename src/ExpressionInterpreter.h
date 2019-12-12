@@ -5,7 +5,10 @@
 #include "TimeIt.hpp"
 #include <chrono>
 #include <exception>
+#include <map>
 #include <memory>
+#include <unordered_map>
+#include <variant>
 #include <vector>
 
 struct Object;
@@ -44,6 +47,9 @@ struct Interpreter {
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
+    void resolve(const Expr& expr, int depth);
+    Object lookUpVariable(const Token& name, const Expr& expr);
+
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);
@@ -75,8 +81,8 @@ struct Interpreter {
 
     bool isTruthy(const Object& object);
     bool isEqual(const Object& a, const Object& b);
-    // we could rely on the bad_variant_access but this way we throw based on
-    // type. might be slower. worth investigating in future.
+    // we could rely on the bad_variant_access but this way we throw based
+    // on type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
     // version of the fuction for binary operators
     void checkNumberOperands(const Token& token, const Object& left,
@@ -87,11 +93,20 @@ struct Interpreter {
         globals; // place to store global native functions etc
 
     std::shared_ptr<Environment>
-        environment; // this maybe overriden temporarily by blocks and then set
+        environment; // this maybe overriden temporarily by blocks and then
+                     // set
     // back
     const TimeIt timeIt;
     bool enableEnvironmentSwitching =
-        true; // when looping, we dont need to push and pop environments so we
-              // disable
+        true; // when looping, we dont need to push and pop environments so
+              // we disable
+
+    struct ExprComparitor {
+        bool operator()(const ExprVariant& a, const ExprVariant& b) const {
+            return &a < &b; // compare address of Expressions to see if they
+                            // are equal?
+        }
+    };
+    std::map<ExprVariant, int, ExprComparitor> locals;
 };
 } // namespace cpplox

@@ -6,6 +6,7 @@
 #include "Utilities.hpp"
 #include <variant>
 #include <vector>
+#include <iostream>
 
 namespace cpplox {
 // foward declares for recursive variant
@@ -17,12 +18,14 @@ struct Unary;
 struct Literal;
 struct Logical;
 struct Call;
+struct ExprVoidType {};
 
 using ExprVariant =
     std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
                  recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
                  recursive_wrapper<Unary>, recursive_wrapper<Variable>,
-                 recursive_wrapper<Logical>, recursive_wrapper<Call>, void*>;
+                 recursive_wrapper<Logical>, recursive_wrapper<Call>,
+                 ExprVoidType*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -36,7 +39,7 @@ struct Expr : ExprVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        return std::holds_alternative<void*>(*this);
+        return std::holds_alternative<ExprVoidType*>(*this);
     }
 
     inline bool operator!=(std::nullptr_t ptr) const {

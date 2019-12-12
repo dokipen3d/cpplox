@@ -5,8 +5,7 @@
 
 namespace cpplox {
 
-Resolver::Resolver(const Interpreter& interpreter)
-    : m_interpreter(interpreter) {
+Resolver::Resolver(Interpreter& interpreter) : m_interpreter(interpreter) {
 }
 
 void Resolver::resolve(const Statement& statement) {
@@ -14,13 +13,16 @@ void Resolver::resolve(const Statement& statement) {
 }
 
 void Resolver::resolve(const std::vector<Statement>& statements) {
-    for (auto& statement : statements) {
-        resolve(statement);
+    // for (const auto& statement : statements) {
+    //     resolve(statement);
+    // }
+    for (int i = 0; i < statements.size(); i++) {
+        resolve(statements[i]);
     }
 }
 
 void Resolver::resolve(const Expr& expr) {
-    std::visit(*this, static_cast<ExprVariant>(expr));
+    std::visit(*this, expr);
 }
 
 void Resolver::declare(const Token& name) {
@@ -49,13 +51,14 @@ void Resolver::endScope() {
 }
 
 void Resolver::resolveLocal(const Expr& expr, const Token& name) {
-    for (auto i = scopes.size() - 1; i >= 0; i--) {
-        if (scopes[i].count(name.lexeme) > 0) {
-            m_interpreter.resolve(expr, scopes.size() - 1 - i);
+    for (auto i = scopes.size(); i > 0; i--) {
+        auto search = scopes[i].find(name.lexeme);
+        if (search != scopes[i].end()) {
+            m_interpreter.resolve(expr, scopes.size() - i);
             return;
         }
     }
-
+    return;
     // Not found. Assume it is global.
 }
 
@@ -136,9 +139,11 @@ void Resolver::operator()(const Variable& variable) {
                 "Cannot read local variable in its own initializer.");
         }
     }
-
     resolveLocal(variable, variable.name);
+
+    return;
 }
+
 void Resolver::operator()(const Logical& logical) {
     resolve(logical.left);
     resolve(logical.right);

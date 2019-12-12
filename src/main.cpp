@@ -2,6 +2,7 @@
 #include "Expr.hpp"
 #include "ExpressionInterpreter.h"
 #include "ExpressionParser.h"
+#include "Resolver.h"
 #include "Scanner.h"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
@@ -11,8 +12,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-
 
 struct lox {
 
@@ -28,17 +27,20 @@ struct lox {
 
         std::cout << "parsing expressions\n";
         cpplox::Parser parser(tokens);
-        std::vector<cpplox::Statement> statements;
+        const std::vector<cpplox::Statement> statements = parser.parse();
+        std::cout << "resolving\n";
 
-        statements = parser.parse();
+        cpplox::Resolver resolver{interpreter};
+        resolver.resolve(statements);
 
         if (hadError) {
             std::cout << "parse error\n";
             return;
         }
-        
-        std::cout << "interpreting expression\n";
+
         try {
+
+            std::cout << "interpreting expression\n";
 
             interpreter.interpret(statements);
 
@@ -66,11 +68,9 @@ struct lox {
             hadError = false;
         }
     }
-    
+
     cpplox::Interpreter interpreter;
 };
-
-
 
 int main(int argumentCount, char* argumentValues[]) {
 
@@ -94,6 +94,5 @@ int main(int argumentCount, char* argumentValues[]) {
         l.runPrompt();
     }
 
-        std::cout << "done!" << std::endl;
-
+    std::cout << "done!" << std::endl;
 }

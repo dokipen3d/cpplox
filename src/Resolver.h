@@ -3,8 +3,8 @@
 #include "Statement.hpp"
 #include "TokenTypes.h"
 #include "Utilities.hpp"
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace cpplox {
@@ -12,19 +12,18 @@ namespace cpplox {
 struct Interpreter;
 
 struct Resolver {
-    Resolver(const Interpreter& interpreter);
+    Resolver(Interpreter& interpreter);
     void resolve(const Statement& statement);
     void resolve(const std::vector<Statement>& statements);
     void resolve(const Expr& expr);
-    void resolveLocal(const Expr& expr, const Token& name);  
-    void resolveFunction(const FunctionStatement& FunctionStatement); 
+    void resolveFunction(const FunctionStatement& FunctionStatement);
 
     void declare(const Token& name);
     void define(const Token& name);
 
     void beginScope();
     void endScope();
-
+    void resolveLocal(const Expr& expr, const Token& name);
 
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
@@ -45,10 +44,10 @@ struct Resolver {
     void operator()(const Variable& variable);
     void operator()(const Logical& logical);
     void operator()(const Call& call);
-    void operator()(const void*) {
+    void operator()(const ExprVoidType*) {
     }
-    const Interpreter& m_interpreter;
-    std::vector<std::map<std::string, bool>> scopes;
+    Interpreter& m_interpreter;
+    std::vector<std::unordered_map<std::string, bool>> scopes;
 };
 
 } // namespace cpplox

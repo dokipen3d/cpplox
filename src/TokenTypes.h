@@ -226,6 +226,9 @@ class Token {
           lexeme(std::move(lexeme)), line(line) {
     }
 
+    
+
+
     std::string toString() {
         std::stringstream stream;
         auto search = tokenMap.find(eTokenType);
