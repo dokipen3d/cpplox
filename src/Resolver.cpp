@@ -50,10 +50,11 @@ void Resolver::endScope() {
     scopes.pop_back();
 }
 
-void Resolver::resolveLocal(const Expr& expr, const Token& name) {
+
+void Resolver::resolveLocal(const LookupVariableVariant& expr, const Token& name) {
     for (auto i = scopes.size(); i > 0; i--) {
-        auto search = scopes[i].find(name.lexeme);
-        if (search != scopes[i].end()) {
+        auto search = scopes[i-1].find(name.lexeme);
+        if (search != scopes[i-1].end()) {
             m_interpreter.resolve(expr, scopes.size() - i);
             return;
         }

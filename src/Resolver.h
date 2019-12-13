@@ -23,7 +23,7 @@ struct Resolver {
 
     void beginScope();
     void endScope();
-    void resolveLocal(const Expr& expr, const Token& name);
+    void resolveLocal(const LookupVariableVariant& expr, const Token& name);
 
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);

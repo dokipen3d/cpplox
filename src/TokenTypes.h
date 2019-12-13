@@ -2,10 +2,10 @@
 
 #include <functional>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <variant>
-#include <memory>
 
 //#include "Object.h"
 #include "Utilities.hpp"
@@ -138,17 +138,17 @@ struct Object : ObjectVariant {
         return std::holds_alternative<void*>(*this);
     }
 
-    inline bool operator==(const Object& other)
-        const { // needs to be inline because its a free function that
-                // it included in multiple translation units. needs to
-                // be marked inline so linker knows its the same one
-        if (std::holds_alternative<recursive_wrapper<NativeFunction>>(*this) ||
-            std::holds_alternative<recursive_wrapper<NativeFunction>>(other)) {
-            return false;
-        } else {
-            return *this == other;
-        };
-    }
+    // inline bool operator==(const Object& other)
+    //     const { // needs to be inline because its a free function that
+    //             // it included in multiple translation units. needs to
+    //             // be marked inline so linker knows its the same one
+    //     if (std::holds_alternative<recursive_wrapper<NativeFunction>>(other) ||
+    //         std::holds_alternative<recursive_wrapper<NativeFunction>>(*this)) {
+    //         return false;
+    //     } else {
+    //         return *this == other;
+    //     };
+    // }
 
     inline bool operator!=(std::nullptr_t ptr) const {
         return !(*this == ptr);
@@ -191,6 +191,10 @@ struct NativeFunction {
         return m_func(interpreter, objects);
     }
 
+    inline bool operator==(const NativeFunction& other){
+        return false;
+    }
+
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 
@@ -204,10 +208,16 @@ struct FunctionStatement;
 
 struct FunctionObject {
     FunctionObject(const FunctionStatement& functionStatement,
-                        const std::shared_ptr<Environment>& closure);
+                   const std::shared_ptr<Environment>& closure);
 
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
+
+    inline bool operator==(const FunctionObject& other){
+        return false;
+    }
+
+
     int arity();
 
     friend std::ostream&
@@ -226,8 +236,11 @@ class Token {
           lexeme(std::move(lexeme)), line(line) {
     }
 
-    
-
+    bool operator==(const Token& other) const {
+        return ((eTokenType == other.eTokenType) &&
+                (literal == other.literal) && (lexeme == other.lexeme) &&
+                (line == other.line));
+    }
 
     std::string toString() {
         std::stringstream stream;

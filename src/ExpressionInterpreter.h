@@ -47,8 +47,8 @@ struct Interpreter {
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
-    void resolve(const Expr& expr, int depth);
-    Object lookUpVariable(const Token& name, const Expr& expr);
+    void resolve(const LookupVariableVariant& expr, int depth);
+    Object lookUpVariable(const Token& name, const LookupVariableVariant& expr);
 
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
@@ -102,11 +102,12 @@ struct Interpreter {
               // we disable
 
     struct ExprComparitor {
-        bool operator()(const ExprVariant& a, const ExprVariant& b) const {
+        bool operator()(const LookupVariableVariant& a, const LookupVariableVariant& b) const {
             return &a < &b; // compare address of Expressions to see if they
                             // are equal?
         }
     };
-    std::map<ExprVariant, int, ExprComparitor> locals;
+
+std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox

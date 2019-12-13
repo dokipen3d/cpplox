@@ -33,11 +33,11 @@ Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, static_cast<ExprVariant>(expression));
 }
 
-void Interpreter::resolve(const Expr& expr, int depth) {
-    locals.insert_or_assign(static_cast<ExprVariant>(expr), depth);
+void Interpreter::resolve(const LookupVariableVariant& expr, int depth) {
+    locals.insert_or_assign(expr, depth);
 }
 
-Object Interpreter::lookUpVariable(const Token& name, const Expr& expr) {
+Object Interpreter::lookUpVariable(const Token& name, const LookupVariableVariant& expr) {
     auto search = locals.find(expr);
     if (search != locals.end()) {
         return environment->getAt(search->second, name.lexeme);

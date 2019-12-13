@@ -20,6 +20,11 @@ template <typename T> struct recursive_wrapper {
     operator T&() {
         return t[index];
     }
+
+    bool operator==(const recursive_wrapper<T>& other) const {
+        return (t[index] == static_cast<T>(other)) ;
+    }
+    
     // if we ever need a non const ref back
     // operator T&() {
     //     return t[index];
