@@ -34,13 +34,18 @@ Object Interpreter::evaluate(const Expr& expression) {
 }
 
 void Interpreter::resolve(const LookupVariableVariant& expr, int depth) {
-    locals.insert_or_assign(expr, depth);
+    //locals.insert_or_assign(expr, depth);
 }
 
-Object Interpreter::lookUpVariable(const Token& name, const LookupVariableVariant& expr) {
-    auto search = locals.find(expr);
-    if (search != locals.end()) {
-        return environment->getAt(search->second, name.lexeme);
+Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
+    // auto search = locals.find(expr);
+    // if (search != locals.end()) {
+    //     return environment->getAt(search->second, name.lexeme);
+    // } else {
+    //     return globals->get(name);
+    // }
+    if (expr.distance != -1) {
+        return environment->getAt(expr.distance, name.lexeme);
     } else {
         return globals->get(name);
     }
@@ -208,10 +213,15 @@ Object Interpreter::operator()(const Binary& binary) {
 Object Interpreter::operator()(const Assign& assign) {
     Object value = evaluate(assign.value);
 
-    auto search = locals.find(assign);
-    if (search != locals.end()) {
-        int distance = search->second;
-        environment->assignAt(distance, assign.name, value);
+    // auto search = locals.find(assign);
+    // if (search != locals.end()) {
+    //     int distance = search->second;
+    //     environment->assignAt(distance, assign.name, value);
+    // } else {
+    //     globals->assign(assign.name, value);
+    // }
+    if (assign.distance != -1) {
+        environment->assignAt(assign.distance, assign.name, value);
     } else {
         globals->assign(assign.name, value);
     }

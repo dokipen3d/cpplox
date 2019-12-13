@@ -79,9 +79,9 @@ struct Literal {
     explicit Literal(Object val) : val(std::move(val)) {
     }
     Object val;
-    bool operator==(const Literal& other) const {
-        return (val == other.val);
-    }
+    // bool operator==(const Literal& other) const {
+    //     return (val == other.val);
+    // }
 };
 
 struct Assign {
@@ -89,19 +89,21 @@ struct Assign {
     }
     Token name;
     Expr value;
+    mutable int distance = -1;
 
-    bool operator==(const Assign& other) const {
-        return ((name == other.name) && (value == other.value));
-    }
+
+    // bool operator==(const Assign& other) const {
+    //     return ((name == other.name) && (value == other.value));
+    // }
 };
 
 struct Grouping {
     explicit Grouping(Expr expr) : expr(expr) {
     }
     Expr expr;
-    bool operator==(const Grouping& other) const {
-        return (expr == other.expr);
-    }
+    // bool operator==(const Grouping& other) const {
+    //     return (expr == other.expr);
+    // }
 };
 
 struct Binary {
@@ -112,10 +114,10 @@ struct Binary {
     Expr left;
     Expr right;
     Token op;
-    bool operator==(const Binary& other) const {
-        return ((left == other.left) && (right == other.right) &&
-                (op == other.op));
-    }
+    // bool operator==(const Binary& other) const {
+    //     return ((left == other.left) && (right == other.right) &&
+    //             (op == other.op));
+    // }
 };
 
 struct Unary {
@@ -124,18 +126,19 @@ struct Unary {
     Token token;
     Expr expr;
 
-    bool operator==(const Unary& other) const {
-        return ((token == other.token) && (expr == other.expr));
-    }
+    // bool operator==(const Unary& other) const {
+    //     return ((token == other.token) && (expr == other.expr));
+    // }
 };
 
 struct Variable {
     explicit Variable(Token name) : name(std::move(name)) {
     }
     Token name;
-    bool operator==(const Variable& other) const {
-        return (name == other.name);
-    }
+    mutable int distance = -1;
+    // bool operator==(const Variable& other) const {
+    //     return (name == other.name);
+    // }
 };
 
 struct Logical {
@@ -146,10 +149,10 @@ struct Logical {
     Expr left;
     Expr right;
     Token op;
-    bool operator==(const Logical& other) const {
-        return ((left == other.left) && (right == other.right) &&
-                (op == other.op));
-    }
+    // bool operator==(const Logical& other) const {
+    //     return ((left == other.left) && (right == other.right) &&
+    //             (op == other.op));
+    // }
 };
 
 struct Call {
@@ -160,10 +163,10 @@ struct Call {
     Expr callee;
     Token paren;
     std::vector<Expr> arguments;
-    bool operator==(const Call& other) const {
-        return ((callee == other.callee) && (paren == other.paren) &&
-                (arguments == other.arguments));
-    }
+    // bool operator==(const Call& other) const {
+    //     return ((callee == other.callee) && (paren == other.paren) &&
+    //             (arguments == other.arguments));
+    // }
 };
 
 using LookupVariableVariant = std::variant<Variable, Assign>;
@@ -184,13 +187,13 @@ template <std::size_t I>
 struct std::variant_alternative<I, cpplox::Expr>
     : std::variant_alternative<I, cpplox::ExprVariant> {};
 
-//custom specialization of std::hash can be injected in namespace std
-namespace std {
-template <> struct hash<cpplox::LookupVariableVariant> {
-    std::size_t operator()(cpplox::LookupVariableVariant const& luv) const
-        noexcept {
-        std::string hs = std::visit([](auto&& arg){ return arg.name.lexeme;}, luv);
-        return std::hash<std::string>{}(hs);
-    }
-};
-} // namespace std
+// //custom specialization of std::hash can be injected in namespace std
+// namespace std {
+// template <> struct hash<cpplox::LookupVariableVariant> {
+//     std::size_t operator()(cpplox::LookupVariableVariant const& luv) const
+//         noexcept {
+//         std::string hs = std::visit([](auto&& arg){ return arg.name.lexeme;}, luv);
+//         return std::hash<std::string>{}(hs);
+//     }
+// };
+//} // namespace std

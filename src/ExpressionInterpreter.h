@@ -48,7 +48,7 @@ struct Interpreter {
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
     void resolve(const LookupVariableVariant& expr, int depth);
-    Object lookUpVariable(const Token& name, const LookupVariableVariant& expr);
+    Object lookUpVariable(const Token& name, const Variable& expr);
 
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
@@ -108,6 +108,6 @@ struct Interpreter {
         }
     };
 
-std::unordered_map<LookupVariableVariant, int> locals;
+//std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox

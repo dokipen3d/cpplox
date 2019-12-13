@@ -51,11 +51,25 @@ void Resolver::endScope() {
 }
 
 
-void Resolver::resolveLocal(const LookupVariableVariant& expr, const Token& name) {
+void Resolver::resolveLocal(const Variable& expr, const Token& name) {
     for (auto i = scopes.size(); i > 0; i--) {
-        auto search = scopes[i-1].find(name.lexeme);
+       auto search = scopes[i-1].find(name.lexeme);
         if (search != scopes[i-1].end()) {
-            m_interpreter.resolve(expr, scopes.size() - i);
+            // m_interpreter.resolve(expr, scopes.size() - i);
+            expr.distance = scopes.size() - i;
+            return;
+        }
+    }
+    return;
+    // Not found. Assume it is global.
+}
+
+void Resolver::resolveLocal(const Assign& expr, const Token& name) {
+     for (auto i = scopes.size(); i > 0; i--) {
+       auto search = scopes[i-1].find(name.lexeme);
+        if (search != scopes[i-1].end()) {
+            // m_interpreter.resolve(expr, scopes.size() - i);
+            expr.distance = scopes.size() - i;
             return;
         }
     }
