@@ -50,11 +50,10 @@ void Resolver::endScope() {
     scopes.pop_back();
 }
 
-
 void Resolver::resolveLocal(const Variable& expr, const Token& name) {
     for (auto i = scopes.size(); i > 0; i--) {
-       auto search = scopes[i-1].find(name.lexeme);
-        if (search != scopes[i-1].end()) {
+        auto search = scopes[i - 1].find(name.lexeme);
+        if (search != scopes[i - 1].end()) {
             // m_interpreter.resolve(expr, scopes.size() - i);
             expr.distance = scopes.size() - i;
             return;
@@ -65,9 +64,9 @@ void Resolver::resolveLocal(const Variable& expr, const Token& name) {
 }
 
 void Resolver::resolveLocal(const Assign& expr, const Token& name) {
-     for (auto i = scopes.size(); i > 0; i--) {
-       auto search = scopes[i-1].find(name.lexeme);
-        if (search != scopes[i-1].end()) {
+    for (auto i = scopes.size(); i > 0; i--) {
+        auto search = scopes[i - 1].find(name.lexeme);
+        if (search != scopes[i - 1].end()) {
             // m_interpreter.resolve(expr, scopes.size() - i);
             expr.distance = scopes.size() - i;
             return;
@@ -98,8 +97,11 @@ void Resolver::operator()(const IfStatement& ifStatement) {
     }
 }
 void Resolver::operator()(const WhileStatement& whileStatement) {
+    enableEnvironmentSwitching = false;
+
     resolve(whileStatement.condition);
     resolve(whileStatement.body);
+    enableEnvironmentSwitching = true;
 }
 void Resolver::operator()(const FunctionStatement& functionStatement) {
     declare(functionStatement.name);
@@ -124,9 +126,15 @@ void Resolver::operator()(const ReturnStatement& returnStatement) {
 }
 
 void Resolver::operator()(const BlockStatement& blockStatement) {
-    beginScope();
-    resolve(blockStatement.statements);
-    endScope();
+    if (enableEnvironmentSwitching) {
+        beginScope();
+        resolve(blockStatement.statements);
+        endScope();
+    } else {
+        enableEnvironmentSwitching = false;
+        resolve(blockStatement.statements);
+        enableEnvironmentSwitching = true;
+    }
 }
 void Resolver::operator()(const Assign& assign) {
     resolve(assign.value);

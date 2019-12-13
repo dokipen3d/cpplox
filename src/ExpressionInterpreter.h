@@ -47,7 +47,6 @@ struct Interpreter {
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
-    void resolve(const LookupVariableVariant& expr, int depth);
     Object lookUpVariable(const Token& name, const Variable& expr);
 
     void operator()(const ExpressionStatement& expressionStatement);
@@ -96,7 +95,6 @@ struct Interpreter {
         environment; // this maybe overriden temporarily by blocks and then
                      // set
     // back
-    const TimeIt timeIt;
     bool enableEnvironmentSwitching =
         true; // when looping, we dont need to push and pop environments so
               // we disable

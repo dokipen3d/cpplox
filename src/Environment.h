@@ -17,19 +17,8 @@ struct Environment : std::enable_shared_from_this<Environment> {
         const std::shared_ptr<Environment>& environment = nullptr)
         : enclosing(environment) {
     }
-    // Environment(const Environment&) = delete;
-    // Environment(Environment&&) = delete;
 
     std::shared_ptr<Environment> enclosing;
-    // ~Environment() {
-    //     if (enclosing != nullptr) {
-    //         // set back env when this goes goes out of scope. should be
-    //         execption safe. it might
-    //         // have been changed bhy other blocks with their own
-    //         environements *enclosing = *this;
-    //     }
-    // }
-    // Environment(const Environment&)=default;
 
     const std::shared_ptr<Environment> ancestor(int distance) {
         std::shared_ptr<Environment> environment = shared_from_this();

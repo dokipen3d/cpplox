@@ -14,6 +14,7 @@ namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
+        TimeIt timer("interpreter");
         for (auto& statement : statements) {
             execute(statement);
         }
@@ -33,17 +34,7 @@ Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, static_cast<ExprVariant>(expression));
 }
 
-void Interpreter::resolve(const LookupVariableVariant& expr, int depth) {
-    //locals.insert_or_assign(expr, depth);
-}
-
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
-    // auto search = locals.find(expr);
-    // if (search != locals.end()) {
-    //     return environment->getAt(search->second, name.lexeme);
-    // } else {
-    //     return globals->get(name);
-    // }
     if (expr.distance != -1) {
         return environment->getAt(expr.distance, name.lexeme);
     } else {
@@ -221,6 +212,7 @@ Object Interpreter::operator()(const Assign& assign) {
     //     globals->assign(assign.name, value);
     // }
     if (assign.distance != -1) {
+        int offset = enableEnvironmentSwitching == false;
         environment->assignAt(assign.distance, assign.name, value);
     } else {
         globals->assign(assign.name, value);

@@ -48,6 +48,7 @@ struct Resolver {
     void operator()(const Call& call);
     void operator()(const ExprVoidType*) {
     }
+    bool enableEnvironmentSwitching = true;
     Interpreter& m_interpreter;
     std::vector<std::unordered_map<std::string, bool>> scopes;
 };
