@@ -19,7 +19,7 @@ void Resolver::resolve(const std::vector<Statement>& statements) {
 }
 
 void Resolver::resolve(const Expr& expr) {
-    std::visit(*this, expr);
+    std::visit(*this, static_cast<ExprVariant>(expr));
 }
 
 void Resolver::declare(const Token& name) {
