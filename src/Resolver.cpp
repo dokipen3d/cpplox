@@ -1,12 +1,9 @@
 #include "Resolver.h"
 #include "Error.h"
-#include "ExpressionInterpreter.h"
 #include <variant>
 
 namespace cpplox {
 
-Resolver::Resolver(Interpreter& interpreter) : m_interpreter(interpreter) {
-}
 
 void Resolver::resolve(const Statement& statement) {
     std::visit(*this, statement);
@@ -54,7 +51,6 @@ void Resolver::resolveLocal(const Variable& expr, const Token& name) {
     for (auto i = scopes.size(); i > 0; i--) {
         auto search = scopes[i - 1].find(name.lexeme);
         if (search != scopes[i - 1].end()) {
-            // m_interpreter.resolve(expr, scopes.size() - i);
             expr.distance = scopes.size() - i;
             return;
         }
@@ -67,7 +63,6 @@ void Resolver::resolveLocal(const Assign& expr, const Token& name) {
     for (auto i = scopes.size(); i > 0; i--) {
         auto search = scopes[i - 1].find(name.lexeme);
         if (search != scopes[i - 1].end()) {
-            // m_interpreter.resolve(expr, scopes.size() - i);
             expr.distance = scopes.size() - i;
             return;
         }

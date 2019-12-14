@@ -8,11 +8,9 @@
 #include <vector>
 
 namespace cpplox {
-
-struct Interpreter;
-
+    
 struct Resolver {
-    Resolver(Interpreter& interpreter);
+    Resolver(){}
     void resolve(const Statement& statement);
     void resolve(const std::vector<Statement>& statements);
     void resolve(const Expr& expr);
@@ -49,7 +47,6 @@ struct Resolver {
     void operator()(const ExprVoidType*) {
     }
     bool enableEnvironmentSwitching = true;
-    Interpreter& m_interpreter;
     std::vector<std::unordered_map<std::string, bool>> scopes;
 };
 

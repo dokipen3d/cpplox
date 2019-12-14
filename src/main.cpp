@@ -30,7 +30,7 @@ struct lox {
         const std::vector<cpplox::Statement> statements = parser.parse();
         std::cout << "resolving\n";
 
-        cpplox::Resolver resolver{interpreter};
+        cpplox::Resolver resolver;
         resolver.resolve(statements);
 
         if (hadError) {
