@@ -60,4 +60,5 @@ have to think about.
    :maxdepth: 2
    :caption: Contents:
 
+   ch1_scanning.md
    codetest

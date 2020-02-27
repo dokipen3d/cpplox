@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/css/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Ooh yeah" href="codetest.html" /> 
+    <link rel="next" title="Scanning" href="ch1_scanning.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,6 +82,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ch1_scanning.html">Scanning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="codetest.html">Ooh yeah</a></li>
 </ul>
 
@@ -150,8 +151,9 @@
 <div class="section" id="acknowledgements">
 <h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
 <p>This book would not have been possible without Bob Nystrom’s Crafting Interepreters. This book can be seen a seen as a companion piece to it to show how a similar implementation can be made using c++.</p>
+<p>I mainly use struct instead of classes to make it easier to follow along and to make it easier to write as I was going and not have to worry about private/public access. One thing I didn’t have to think about.</p>
 <table class="hlist"><tr><td><ul>
-<li><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<li><div class="first highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
 <span class="k">struct</span> <span class="n">example</span> <span class="p">{</span>
    <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
@@ -174,12 +176,17 @@
 </li>
 </ul>
 </td><td><ul class="simple">
-<li><p>this is an example of some code that we will want to talk about</p></li>
+<li>this is an example of some code that we will want to talk about</li>
 </ul>
 </td></tr></table>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ch1_scanning.html">Scanning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ch1_scanning.html#fleshing-out-the-apllication-4-1">Fleshing out the apllication 4.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ch1_scanning.html#handling-errors-4-1-1">Handling Errors 4.1.1</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="codetest.html">Ooh yeah</a></li>
 </ul>
 </div>
@@ -194,7 +201,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="codetest.html" class="btn btn-neutral float-right" title="Ooh yeah" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ch1_scanning.html" class="btn btn-neutral float-right" title="Scanning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
