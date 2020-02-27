@@ -1,6 +1,0 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-PointerAlignment: Left
-AllowShortFunctionsOnASingleLine: None
-AlignTrailingComments: true
-AllowShortCaseLabelsOnASingleLine: true
