@@ -133,3 +133,65 @@ std::vector<std::string> scanTokens(const std::string& code) {
 
 } // end namespace cpplox
 ```
+Now we can build our first main.cpp file and run it in the command line!
+
+## Handling Errors 4.1.1
+
+Now we can add some basic error handling into the Lox class. We will eventually factor out error handling into a different file, but again, for this part while we are getting our feet wet, we will do in directly in this file.
+
+```c++
+                                                                        /*
+struct Lox {                                                            */
+
+    bool hadError = false;
+                                                                        /*
+    void run(const std::string& code) {                                 */
+```
+
+We introduce a new variable within the Lox class to track if we had an Error or not.
+
+Next we add into Lox the report() function.
+
+```c++
+                                                                        /*
+bool hadError = false;                                                  */
+
+void report(int line, const std::string& where,
+            const std::string& message) {
+    std::cout << "[line " << line << "] Error" << where << ": " << message
+                << "\n";
+    hadError = true;
+}
+
+void error(int line, const std::string& message) {
+    report(line, "", message);
+}
+                                                                /*
+void run(const std::string& code) {                             */
+```
+
+In runPrompt()....
+
+```c++
+                                                                /*
+        run(currentLine);
+    }                               */                                                                 
+    // set error back in case there was an error as we don't 
+    // want to kill session
+    hadError = false;                                        /*
+};                                                          */
+```
+In main()...
+
+```c++
+                                                            /*
+} else if (argumentCount == 2) {
+    runFile(argumentValues[1]);                             */
+    if (hadError) {
+        return 1;
+    }                                                       /*
+}                                                           */
+```
+
+Now we have the ability to report errors. We aren't actually calling that yet anywhere but we will soon!
+

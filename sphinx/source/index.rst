@@ -19,6 +19,10 @@ This book would not have been possible without Bob Nystrom's Crafting Interepret
 can be seen a seen as a companion piece to it to show how a similar implementation can be made \
 using c++.  
 
+I mainly use struct instead of classes to make it easier to follow along and to make it easier \
+to write as I was going and not have to worry about private/public access. One thing I didn't \
+have to think about.  
+
 
 .. hlist::
 
