@@ -174,13 +174,16 @@ In runPrompt()....
 
 ```c++
                                                                 /*
-        run(currentLine);
-    }                               */                                                                 
-    // set error back in case there was an error as we don't 
-    // want to kill session
-    hadError = false;                                        /*
+        run(currentLine);                                       */
+        // set error back in case there was an error as we don't 
+        // want to kill session
+        hadError = false;  
+    }                                                                                
+                                          /*
 };                                                          */
 ```
+in the prompt, we might have had an error, but we dont want to close the interpreter, so we reset the error state.
+
 In main()...
 
 ```c++
@@ -193,5 +196,5 @@ In main()...
 }                                                           */
 ```
 
-Now we have the ability to report errors. We aren't actually calling that yet anywhere but we will soon!
+Now we have the ability to report errors. We aren't actually calling that yet anywhere but we will soon! Return 1 returns to the operating system with an error code which is non zerp (ie something went wrong).
 
