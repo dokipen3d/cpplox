@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "TokenTypes.h"
+
 namespace cpplox {
 
 std::vector<std::string> scanTokens(const std::string& code) {
@@ -57,6 +59,9 @@ struct Lox {
 int main(int argumentCount, char* argumentValues[]) {
 
     Lox lox;
+
+    cpplox::Token token(cpplox::ETokenType::NUMBER, "lexeme", 3.0, 4);
+    std::cout << token.toString();
 
     if (argumentCount > 2) {
         std::cout << "Usage: cpplox [script] \n";

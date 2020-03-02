@@ -35,7 +35,9 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Ooh yeah" href="codetest.html" />
+    <link rel="prev" title="Homepage" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,7 +82,36 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scanning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fleshing-out-the-apllication-4-1">Fleshing out the apllication 4.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main">Main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-lox-class">Creating the lox class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-a-file">Reading a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-from-the-command-line">Reading from the command line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-code">Running the code.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stubbing-out-a-temporary-dummy-scantokens-function">Stubbing out a temporary dummy scanTokens() function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handling-errors-4-1-1">Handling Errors 4.1.1</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tokens-and-lexemes-4-2">Tokens and Lexemes 4.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">4.2.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#token-4-2-3">Token 4.2.3</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#java-objects-to-c">Java Objects to c++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#printing-enums">Printing enums</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#using-c-variant-to-emulate-java-s-object-class-4-2-4">Using c++ variant to emulate Java’s Object class 4.2.4</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scanning-4-4">Scanning 4.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recognizing-lexemes-4-5">Recognizing Lexemes 4.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lexical-errors-4-5-1">Lexical Errors 4.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operators-4-5-2">Operators 4.5.2</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="codetest.html">Ooh yeah</a></li>
 </ul>
 
@@ -261,9 +292,8 @@ Then we construct a std::string directly using the string constructor that takes
 </div>
 <p>Now we can build our first main.cpp file and run it in the command line!</p>
 </div>
-</div>
 <div class="section" id="handling-errors-4-1-1">
-<h2>Handling Errors 4.1.1<a class="headerlink" href="#handling-errors-4-1-1" title="Permalink to this headline">¶</a></h2>
+<h3>Handling Errors 4.1.1<a class="headerlink" href="#handling-errors-4-1-1" title="Permalink to this headline">¶</a></h3>
 <p>Now we can add some basic error handling into the Lox class. We will eventually factor out error handling into a different file, but again, for this part while we are getting our feet wet, we will do in directly in this file.</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>                                                                        <span class="cm">/*</span>
 <span class="cm">struct Lox {                                                            */</span>
@@ -294,14 +324,16 @@ Then we construct a std::string directly using the string constructor that takes
 </div>
 <p>In runPrompt()….</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>                                                                <span class="cm">/*</span>
-<span class="cm">        run(currentLine);</span>
-<span class="cm">    }                               */</span>                                                                 
-    <span class="c1">// set error back in case there was an error as we don&#39;t </span>
-    <span class="c1">// want to kill session</span>
-    <span class="n">hadError</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>                                        <span class="cm">/*</span>
+<span class="cm">        run(currentLine);                                       */</span>
+        <span class="c1">// set error back in case there was an error as we don&#39;t </span>
+        <span class="c1">// want to kill session</span>
+        <span class="n">hadError</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>  
+    <span class="p">}</span>                                                                                
+                                          <span class="cm">/*</span>
 <span class="cm">};                                                          */</span>
 </pre></div>
 </div>
+<p>in the prompt, we might have had an error, but we dont want to close the interpreter, so we reset the error state.</p>
 <p>In main()…</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>                                                            <span class="cm">/*</span>
 <span class="cm">} else if (argumentCount == 2) {</span>
@@ -312,7 +344,436 @@ Then we construct a std::string directly using the string constructor that takes
 <span class="cm">}                                                           */</span>
 </pre></div>
 </div>
-<p>Now we have the ability to report errors. We aren’t actually calling that yet anywhere but we will soon!</p>
+<p>Now we have the ability to report errors. We aren’t actually calling that yet anywhere but we will soon! Return 1 returns to the operating system with an error code which is non zerp (ie something went wrong).</p>
+</div>
+</div>
+<div class="section" id="tokens-and-lexemes-4-2">
+<h2>Tokens and Lexemes 4.2<a class="headerlink" href="#tokens-and-lexemes-4-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>4.2.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>We will now define all of the token types. We will do that in a separate .h file.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">cpplox</span> <span class="p">{</span>
+
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">ETokenType</span> <span class="p">{</span>
+    <span class="c1">// Single-character tokens</span>
+    <span class="n">LEFT_PARENTHESIS</span><span class="p">,</span>
+    <span class="n">RIGHT_PARENTHESIS</span><span class="p">,</span>
+    <span class="n">LEFT_BRACE</span><span class="p">,</span>
+    <span class="n">RIGHT_BRACE</span><span class="p">,</span>
+    <span class="n">COMMA</span><span class="p">,</span>
+    <span class="n">DOT</span><span class="p">,</span>
+    <span class="n">MINUS</span><span class="p">,</span>
+    <span class="n">PLUS</span><span class="p">,</span>
+    <span class="n">SEMICOLON</span><span class="p">,</span>
+    <span class="n">SLASH</span><span class="p">,</span>
+    <span class="n">STAR</span><span class="p">,</span>
+
+    <span class="c1">// One or two character tokens.</span>
+    <span class="n">BANG</span><span class="p">,</span>
+    <span class="n">BANG_EQUAL</span><span class="p">,</span>
+    <span class="n">EQUAL</span><span class="p">,</span>
+    <span class="n">EQUAL_EQUAL</span><span class="p">,</span>
+    <span class="n">GREATER</span><span class="p">,</span>
+    <span class="n">GREATER_EQUAL</span><span class="p">,</span>
+    <span class="n">LESS</span><span class="p">,</span>
+    <span class="n">LESS_EQUAL</span><span class="p">,</span>
+
+    <span class="c1">// Literals.</span>
+    <span class="n">IDENTIFIER</span><span class="p">,</span>
+    <span class="n">STRING</span><span class="p">,</span>
+    <span class="n">NUMBER</span><span class="p">,</span>
+
+    <span class="c1">// Keywords.</span>
+    <span class="n">AND</span><span class="p">,</span>
+    <span class="n">CLASS</span><span class="p">,</span>
+    <span class="n">ELSE</span><span class="p">,</span>
+    <span class="n">FALSE</span><span class="p">,</span>
+    <span class="n">FUN</span><span class="p">,</span>
+    <span class="n">FOR</span><span class="p">,</span>
+    <span class="n">IF</span><span class="p">,</span>
+    <span class="n">NIL</span><span class="p">,</span>
+    <span class="n">OR</span><span class="p">,</span>
+    <span class="n">PRINT</span><span class="p">,</span>
+    <span class="n">RETURN</span><span class="p">,</span>
+    <span class="n">SUPER</span><span class="p">,</span>
+    <span class="n">THIS</span><span class="p">,</span>
+    <span class="n">TRUE</span><span class="p">,</span>
+    <span class="n">VAR</span><span class="p">,</span>
+    <span class="n">WHILE</span><span class="p">,</span>
+    <span class="n">END_OF_FILE</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="token-4-2-3">
+<h3>Token 4.2.3<a class="headerlink" href="#token-4-2-3" title="Permalink to this headline">¶</a></h3>
+<p>This is a class that represents a token.</p>
+<p>We will add a contructor that takes some arguments to initialize its members (We will also add a default contructor later for other reasons).</p>
+<div class="section" id="java-objects-to-c">
+<h4>Java Objects to c++<a class="headerlink" href="#java-objects-to-c" title="Permalink to this headline">¶</a></h4>
+<p>Java has a class of type ‘Object’ that can store any object. We want something like that in c++. One option could be c++’s std::any type, but that has a runtime cost. We will soon decide that c++17’s std::variant is a good choice because we know at compile time the finite set of type that it will contain, so the compiler can optimize for that. Also, we will be using the visitor pattern which we get for free with std::variant.</p>
+<p>For now we will just use a dummy class and not print the Object in the to_string method.</p>
+</div>
+<div class="section" id="printing-enums">
+<h4>Printing enums<a class="headerlink" href="#printing-enums" title="Permalink to this headline">¶</a></h4>
+<p>We also want to be able to print the token type stored in the token. Java can do this automatically but c++ isn’t quite there yet. So we will define a map to be able to convert from one to the other.</p>
+</div>
+<p>In TokenTypes.h…
+Required includes….</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">ETokenType</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">tokenMap</span><span class="p">{</span>
+    <span class="c1">// Single-character tokens</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LEFT_PARENTHESIS</span><span class="p">,</span> <span class="s">&quot;Left Parenthesis&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">RIGHT_PARENTHESIS</span><span class="p">,</span> <span class="s">&quot;Right Parenthesis&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LEFT_BRACE</span><span class="p">,</span> <span class="s">&quot;Left_brace&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">RIGHT_BRACE</span><span class="p">,</span> <span class="s">&quot;Right_brace&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">COMMA</span><span class="p">,</span> <span class="s">&quot;Comma&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">DOT</span><span class="p">,</span> <span class="s">&quot;Dot&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">MINUS</span><span class="p">,</span> <span class="s">&quot;Minus&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">PLUS</span><span class="p">,</span> <span class="s">&quot;Plus&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">SEMICOLON</span><span class="p">,</span> <span class="s">&quot;Semicolon&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">SLASH</span><span class="p">,</span> <span class="s">&quot;Slash&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">STAR</span><span class="p">,</span> <span class="s">&quot;Star&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">BANG</span><span class="p">,</span> <span class="s">&quot;Bang&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">BANG_EQUAL</span><span class="p">,</span> <span class="s">&quot;Bang_equal&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">EQUAL</span><span class="p">,</span> <span class="s">&quot;Equal&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">EQUAL_EQUAL</span><span class="p">,</span> <span class="s">&quot;Equal_equal&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">GREATER</span><span class="p">,</span> <span class="s">&quot;Greater&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">GREATER_EQUAL</span><span class="p">,</span> <span class="s">&quot;Greater_equal&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LESS</span><span class="p">,</span> <span class="s">&quot;Less&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LESS_EQUAL</span><span class="p">,</span> <span class="s">&quot;Less_equal&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">IDENTIFIER</span><span class="p">,</span> <span class="s">&quot;Identifier&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">STRING</span><span class="p">,</span> <span class="s">&quot;String&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">NUMBER</span><span class="p">,</span> <span class="s">&quot;Number&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">AND</span><span class="p">,</span> <span class="s">&quot;And&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">CLASS</span><span class="p">,</span> <span class="s">&quot;Class&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">ELSE</span><span class="p">,</span> <span class="s">&quot;Else&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">FALSE</span><span class="p">,</span> <span class="s">&quot;False&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">FUN</span><span class="p">,</span> <span class="s">&quot;Fun&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">FOR</span><span class="p">,</span> <span class="s">&quot;For&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">IF</span><span class="p">,</span> <span class="s">&quot;If&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">NIL</span><span class="p">,</span> <span class="s">&quot;Nil&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">OR</span><span class="p">,</span> <span class="s">&quot;Or&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">PRINT</span><span class="p">,</span> <span class="s">&quot;Print&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">RETURN</span><span class="p">,</span> <span class="s">&quot;Return&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">SUPER</span><span class="p">,</span> <span class="s">&quot;Super&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">THIS</span><span class="p">,</span> <span class="s">&quot;This&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">TRUE</span><span class="p">,</span> <span class="s">&quot;True&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">VAR</span><span class="p">,</span> <span class="s">&quot;Var&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">WHILE</span><span class="p">,</span> <span class="s">&quot;While&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">END_OF_FILE</span><span class="p">,</span> <span class="s">&quot;End_of_file&quot;</span><span class="p">}};</span>
+
+<span class="k">class</span> <span class="nc">Object</span><span class="p">{};</span>
+
+<span class="k">class</span> <span class="nc">Token</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    
+    <span class="n">Token</span><span class="p">(</span><span class="n">ETokenType</span> <span class="n">tokenType</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lexeme</span><span class="p">,</span> <span class="n">Object</span> <span class="n">literal</span><span class="p">,</span> <span class="kt">int</span> <span class="n">line</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">eTokenType</span><span class="p">(</span><span class="n">tokenType</span><span class="p">),</span> <span class="n">literal</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">literal</span><span class="p">)),</span>
+          <span class="n">lexeme</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">lexeme</span><span class="p">)),</span> <span class="n">line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">toString</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">stream</span><span class="p">;</span>
+        <span class="k">auto</span> <span class="n">search</span> <span class="o">=</span> <span class="n">tokenMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">eTokenType</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">!=</span> <span class="n">tokenMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">stream</span> <span class="o">&lt;&lt;</span> <span class="n">search</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">stream</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">lexeme</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; Object&quot;</span><span class="p">;</span>
+        <span class="n">stream</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">stream</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">ETokenType</span> <span class="n">eTokenType</span><span class="p">;</span>
+    <span class="n">Object</span> <span class="n">literal</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lexeme</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">line</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// end namespace cpplox</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-c-variant-to-emulate-java-s-object-class-4-2-4">
+<h3>Using c++ variant to emulate Java’s Object class 4.2.4<a class="headerlink" href="#using-c-variant-to-emulate-java-s-object-class-4-2-4" title="Permalink to this headline">¶</a></h3>
+<p>This is a custom section not in the original books. I will show you how to use c++17’s std::variant to emulate the Object class.</p>
+<p>What we will do is first define a type alias (with c++’s using keyword) to state that an ObjectVariant is a std::variant which can be anyone of a…</p>
+<ul class="simple">
+<li>void*</li>
+<li>double (lox’s internal representation for all numbers)</li>
+<li>std::string</li>
+<li>bool</li>
+</ul>
+<p>We then inherit from that type to define our ‘Object’. The reason for this is that we will want to add on extra function to this class to be able to compare it to null and to also control the extraction of the type it holds later on.</p>
+<p>Required includes….</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                        <span class="cm">/*</span>
+<span class="cm">#include &lt;map&gt;</span>
+<span class="cm">#include &lt;sstream&gt;</span>
+<span class="cm">#include &lt;string&gt;                                                       */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;variant&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Object{}</span></code> above Token in TokenTypes/h with this….</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// equivalent to the use of the Java.Object in the crafting interpreters</span>
+<span class="c1">// tutorial. void* means a not a literal. we check for it by checking the active</span>
+<span class="c1">// index of the variant ie index() &gt; 0</span>
+<span class="k">using</span> <span class="n">ObjectVariant</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="nl">Object</span> <span class="p">:</span> <span class="n">ObjectVariant</span> <span class="p">{</span>
+
+    <span class="k">using</span> <span class="n">ObjectVariant</span><span class="o">::</span><span class="n">ObjectVariant</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">ObjectVariant</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">;</span>
+
+    <span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span><span class="p">)</span>
+        <span class="k">const</span> <span class="p">{</span> <span class="c1">// needs to be inline because its a free function that</span>
+                <span class="c1">// it included in multiple translation units. needs to</span>
+                <span class="c1">// be marked inline so linker knows its the same one</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span> <span class="n">ptr</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="o">==</span> <span class="n">ptr</span><span class="p">);</span>
+    <span class="p">}</span>   
+
+
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Now we can print the Object by calling the std::visit method on is inside Token’s to_string() function…</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                            <span class="cm">/*</span>
+<span class="cm">stream &lt;&lt; &quot; &quot; &lt;&lt; lexeme &lt;&lt; &quot; &quot;;                                             */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span>
+            <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">literal</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// not a void* so can print</span>
+                    <span class="n">stream</span> <span class="o">&lt;&lt;</span> <span class="n">arg</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ObjectVariant</span><span class="o">&gt;</span><span class="p">(</span><span class="n">literal</span><span class="p">));</span>                           <span class="cm">/*</span>
+<span class="cm">        stream &lt;&lt; &quot;\n&quot;;                                                     </span>
+<span class="cm">        return stream.str();                                                </span>
+<span class="cm">    }                                                                       */</span>
+</pre></div>
+</div>
+<p>Now in main this can be demonstrated by creating a token and printing it.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                            <span class="cm">/*</span>
+<span class="cm">int main(int argumentCount, char* argumentValues[]) {</span>
+
+<span class="cm">    Lox lox;                                                                */</span>
+
+    <span class="n">cpplox</span><span class="o">::</span><span class="n">Token</span> <span class="n">token</span><span class="p">(</span><span class="n">cpplox</span><span class="o">::</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">NUMBER</span><span class="p">,</span> <span class="s">&quot;lexeme&quot;</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">token</span><span class="p">.</span><span class="n">toString</span><span class="p">();</span>                                          <span class="cm">/*</span>
+
+<span class="cm">    if (argumentCount &gt; 2) {                                                */</span>
+</pre></div>
+</div>
+<p>But remove those lines as we will now move on to the next section which is actually scanning lox code and turning it into tokens.</p>
+</div>
+</div>
+<div class="section" id="scanning-4-4">
+<h2>Scanning 4.4<a class="headerlink" href="#scanning-4-4" title="Permalink to this headline">¶</a></h2>
+<p>Lets write our scanner in a new file Scanner.h</p>
+<p>We are going to do a bit of experimenting here with c++. We don’t need Scanner to be a class so we will just make it a function. The scanner function itself doesn’t have a public interface. However the original book does define a few functions in it’s scanner class. To keep scanner a function, we will just make a few lambda functions within the scanTokens() function itself. Lets see how it turns out!</p>
+<blockquote>
+<div><p>Note: you should now remove the scanTokens() function in main.cpp as there will be clashing versions of the function in the same namespace. Also Tokens aren’t just strings now so we can’t stream them to print them and we should remove this part of the code that prints of them in run() in main.cpp…</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>   <span class="c1">// print the tokens</span>
+   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">token</span> <span class="p">:</span> <span class="n">tokens</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">token</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;TokenTypes.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">cpplox</span> <span class="p">{</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span> <span class="n">scanTokens</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">source</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Over in the cpp file we define the function. We will implement the scanToken() and other functions soon.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;Scanner.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">cpplox</span> <span class="p">{</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span> <span class="n">scanTokens</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">source</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span> <span class="n">tokens</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">isAtEnd</span><span class="p">())</span> <span class="p">{</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span> <span class="c1">// We are at the beginning of the next lexeme. reset</span>
+                         <span class="c1">// start to be where we last finished</span>
+        <span class="n">scanToken</span><span class="p">();</span> <span class="c1">// scan one token (which adds to the token vector) and then</span>
+                     <span class="c1">// the loop continues until it meets the end condition</span>
+    <span class="p">}</span>
+
+    <span class="n">tokens</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Token</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">END_OF_FILE</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">line</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">tokens</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">}</span> <span class="c1">// end namespace cpplox</span>
+</pre></div>
+</div>
+<p>Now we need to introduce the ints which track which part of the source code we are.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>                                                                            <span class="cm">/*</span>
+<span class="cm">    std::vector&lt;Token&gt; tokens;                                              */</span>
+
+    <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">line</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> 
+                                                                            <span class="cm">/*</span>
+<span class="cm">    while (!isAtEnd()) {                                                    */</span>
+</pre></div>
+</div>
+<p>Then we introduce the isAtEnd() function (notice the fact that it is a lambda and it is using the trailing return type syntax).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                            <span class="cm">/*</span>
+<span class="cm">    int line = 1;                                                           */</span>
+
+    <span class="c1">// helper for detecting if we have gone past the end of the file</span>
+    <span class="k">auto</span> <span class="n">isAtEnd</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="p">{</span> <span class="k">return</span> <span class="n">current</span> <span class="o">&gt;=</span> <span class="n">source</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="p">};</span>
+                                                                            <span class="cm">/*</span>
+<span class="cm">    while (!isAtEnd()) {                                                    */</span>
+</pre></div>
+</div>
+<p>Before we move onto the next section, I like to get things to compile and so far, we don’t have a scanToken() function. Lets define an empty one.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                            <span class="cm">/*</span>
+<span class="cm">    auto isAtEnd = [&amp;]() -&gt; bool { return current &gt;= source.length(); };    */</span>
+
+    <span class="k">auto</span> <span class="n">scanToken</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{};</span>
+                                                                            <span class="cm">/*</span>
+<span class="cm">    while (!isAtEnd()) {                                                    */</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="recognizing-lexemes-4-5">
+<h2>Recognizing Lexemes 4.5<a class="headerlink" href="#recognizing-lexemes-4-5" title="Permalink to this headline">¶</a></h2>
+<p>Now lets stub out the scanToken() function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">scanToken</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">advance</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;(&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LEFT_PARENTHESIS</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;)&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">RIGHT_PARENTHESIS</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;{&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">LEFT_BRACE</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;}&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">RIGHT_BRACE</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;,&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">COMMA</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;.&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">DOT</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;-&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">MINUS</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;+&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">PLUS</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;;&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">SEMICOLON</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">STAR</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+</pre></div>
+</div>
+<p>This calls the addToken functions. There are actually two overloads for the function in the Java version. Because we can’t have two lambda’s named the same in c++, we will rename one of them….</p>
+<p>Above scanToken()…</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>    <span class="k">auto</span> <span class="n">advance</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="p">{</span>
+        <span class="n">current</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">current</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="p">};</span>
+
+    <span class="k">auto</span> <span class="n">addTokenLiteral</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ETokenType</span> <span class="n">type</span><span class="p">,</span> <span class="n">Object</span> <span class="n">literal</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">text</span> <span class="o">=</span> <span class="n">source</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="cm">/*offset=*/</span><span class="n">current</span> <span class="o">-</span> <span class="n">start</span><span class="p">);</span>
+        <span class="n">tokens</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Token</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">literal</span><span class="p">,</span> <span class="n">line</span><span class="p">));</span>
+    <span class="p">};</span>
+
+    <span class="k">auto</span> <span class="n">addToken</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ETokenType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span> <span class="n">addTokenLiteral</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span> <span class="p">};</span>
+</pre></div>
+</div>
+<div class="section" id="lexical-errors-4-5-1">
+<h3>Lexical Errors 4.5.1<a class="headerlink" href="#lexical-errors-4-5-1" title="Permalink to this headline">¶</a></h3>
+<p>Now we want to be able to report errors. Fo our scanner function to be able to report errors, we need to move the Lox.error() function to somewhere we can access it. We will move it to a separate header and make it a static function accessible from anywhere. We make hadError an inline variable (a  feature added in c++17 exactly for this purpose), so that all files that include this header see hadError as the same bool when the application is linked.</p>
+<p>In Error.h…</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma once </span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;TokenTypes.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="kr">inline</span> <span class="kt">bool</span> <span class="n">hadError</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="n">cpplox</span> <span class="p">{</span>
+<span class="k">struct</span> <span class="n">Error</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">report</span><span class="p">(</span><span class="kt">int</span> <span class="n">line</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">where</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">error</span><span class="p">(</span><span class="kt">int</span> <span class="n">line</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="p">}</span> <span class="c1">//end namespace lox</span>
+</pre></div>
+</div>
+<p>In Error.cpp</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;Error.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">cpplox</span> <span class="p">{</span>
+
+<span class="kt">void</span> <span class="n">Error</span><span class="o">::</span><span class="n">report</span><span class="p">(</span><span class="kt">int</span> <span class="n">line</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">where</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[line &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">line</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] Error&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">where</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">message</span>
+              <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">hadError</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Error</span><span class="o">::</span><span class="n">error</span><span class="p">(</span><span class="kt">int</span> <span class="n">line</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">report</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="p">}</span> <span class="c1">// end namespace cpplox</span>
+</pre></div>
+</div>
+<p>Then remove the error() and report() functions from Lox struct in main.cpp and include this Error.h in main.cpp and Scanner.cpp</p>
+<p>in main(), change</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">lox</span><span class="p">.</span><span class="n">hadError</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">hadError</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="operators-4-5-2">
+<h3>Operators 4.5.2<a class="headerlink" href="#operators-4-5-2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>                                                                                <span class="cm">/*</span>
+<span class="cm">        case &#39;;&#39;: addToken(ETokenType::SEMICOLON); break;                       */</span>
+        <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span> <span class="n">addToken</span><span class="p">(</span><span class="n">ETokenType</span><span class="o">::</span><span class="n">STAR</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="sc">&#39;!&#39;</span><span class="o">:</span>
+            <span class="n">addToken</span><span class="p">(</span><span class="n">match</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="n">ETokenType</span><span class="o">::</span><span class="nl">BANG_EQUAL</span> <span class="p">:</span> <span class="n">ETokenType</span><span class="o">::</span><span class="n">BANG</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;=&#39;</span><span class="o">:</span>
+            <span class="n">addToken</span><span class="p">(</span><span class="n">match</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="n">ETokenType</span><span class="o">::</span><span class="nl">EQUAL_EQUAL</span> <span class="p">:</span> <span class="n">ETokenType</span><span class="o">::</span><span class="n">EQUAL</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;&lt;&#39;</span><span class="o">:</span>
+            <span class="n">addToken</span><span class="p">(</span><span class="n">match</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="n">ETokenType</span><span class="o">::</span><span class="nl">LESS_EQUAL</span> <span class="p">:</span> <span class="n">ETokenType</span><span class="o">::</span><span class="n">LESS</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;&gt;&#39;</span><span class="o">:</span>
+            <span class="n">addToken</span><span class="p">(</span><span class="n">match</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="n">ETokenType</span><span class="o">::</span><span class="nl">GREATER_EQUAL</span>
+                                <span class="p">:</span> <span class="n">ETokenType</span><span class="o">::</span><span class="n">GREATER</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>                                                              <span class="cm">/*</span>
+<span class="cm">        default: {                                                              */</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>    <span class="k">auto</span> <span class="n">match</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">expected</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">isAtEnd</span><span class="p">())</span>
+            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="n">current</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">};</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -321,6 +782,15 @@ Then we construct a std::string directly using the string constructor that takes
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="codetest.html" class="btn btn-neutral float-right" title="Ooh yeah" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Homepage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

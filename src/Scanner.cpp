@@ -8,11 +8,12 @@ namespace cpplox {
 
 ////////////////////////////////////////////////////////////////////////
 std::vector<Token> scanTokens(const std::string& source) {
+
+    std::vector<Token> tokens;
+
     int start = 0;
     int current = 0;
     int line = 1;
-
-    std::vector<Token> tokens;
 
     auto addTokenLiteral = [&](ETokenType type, Object literal) {
         std::string text = source.substr(start, /*offset=*/current - start);
@@ -29,7 +30,7 @@ std::vector<Token> scanTokens(const std::string& source) {
     };
 
     // helper for detecting if we have gone past the end of the file
-    auto isAtEnd = [&]() { return current >= source.length(); };
+    auto isAtEnd = [&]() -> bool { return current >= source.length(); };
 
     // match checks the second character. like a conditional advance(). It only
     // consumes the current character if it’s what we’re looking for.

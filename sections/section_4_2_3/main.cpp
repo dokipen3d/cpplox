@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "TokenTypes.h"
+
 namespace cpplox {
 
 std::vector<std::string> scanTokens(const std::string& code) {

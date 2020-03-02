@@ -3,36 +3,14 @@
 #include <string>
 #include <vector>
 
-namespace cpplox {
-
-std::vector<std::string> scanTokens(const std::string& code) {
-    return {"token 1", "token2"};
-}
-
-} // end namespace cpplox
+#include "TokenTypes.h"
+#include "Scanner.h"
+#include "Error.h"
 
 struct Lox {
 
-    bool hadError = false;
-
-    void error(int line, const std::string& message) {
-        report(line, "", message);
-    }
-
-    void report(int line, const std::string& where,
-                const std::string& message) {
-        std::cout << "[line " << line << "] Error" << where << ": " << message
-                  << "\n";
-        hadError = true;
-    }
-
     void run(const std::string& code) {
         auto tokens = cpplox::scanTokens(code);
-
-        // print the tokens
-        for (auto& token : tokens) {
-            std::cout << token << "\n";
-        }
     }
 
     void runFile(const std::string& filePath) {
@@ -63,7 +41,7 @@ int main(int argumentCount, char* argumentValues[]) {
         return 0;
     } else if (argumentCount == 2) {
         lox.runFile(argumentValues[1]);
-        if (lox.hadError) {
+        if (hadError) {
             return 1;
         }
     } else {

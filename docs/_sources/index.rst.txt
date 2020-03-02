@@ -61,4 +61,4 @@ have to think about.
    :caption: Contents:
 
    ch1_scanning.md
-   codetest
+   codetest.md

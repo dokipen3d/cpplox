@@ -3,13 +3,8 @@
 #include <string>
 #include <vector>
 
-namespace cpplox {
-
-std::vector<std::string> scanTokens(const std::string& code) {
-    return {"token 1", "token2"};
-}
-
-} // end namespace cpplox
+#include "TokenTypes.h"
+#include "Scanner.h"
 
 struct Lox {
 
@@ -28,11 +23,6 @@ struct Lox {
 
     void run(const std::string& code) {
         auto tokens = cpplox::scanTokens(code);
-
-        // print the tokens
-        for (auto& token : tokens) {
-            std::cout << token << "\n";
-        }
     }
 
     void runFile(const std::string& filePath) {
