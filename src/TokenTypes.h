@@ -256,7 +256,7 @@ class Token {
                 }
             },
             static_cast<ObjectVariant>(literal));
-        stream << "\n"
+        stream << "\n";
         return stream.str();
     }
 

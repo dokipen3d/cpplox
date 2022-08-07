@@ -17,3 +17,14 @@ var c = "global c";
 print a;
 print b;
 print c;
+
+// should print this...
+// inner a
+// outer b
+// global c
+// outer a
+// outer b
+// global c
+// global a
+// global b
+// global c
