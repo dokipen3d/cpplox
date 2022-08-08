@@ -106,6 +106,8 @@ struct Interpreter {
         }
     };
 
+    Return currentReturn = Object{nullptr};
+    bool containsReturn = false;
 //std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox

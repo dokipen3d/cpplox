@@ -85,7 +85,9 @@ void Interpreter::operator()(const ReturnStatement& returnStatement) {
         value = evaluate(returnStatement.value);
     }
 
-    throw Return(value);
+    // throw Return(value);
+    currentReturn = {value};
+    containsReturn = true;
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
@@ -129,6 +131,11 @@ void Interpreter::executeBlock(
         // they will be taken over by lower stacks
         for (auto& statement : statements) {
             execute(statement);
+            // if we have encountered a return in this block then don't execute
+            // any further statemenets (there could be multiple returns)
+            if (containsReturn) {
+                return;
+            }
         }
         // destructor of the environment argument will reset the top level
         // interpreter env to its current parent

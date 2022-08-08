@@ -31,12 +31,16 @@ Object FunctionObject::operator()(Interpreter& interpreter,
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }
 
-    try {
+    //try {
         interpreter.executeBlock(m_declaration.body, environment);
-    } catch (Return returnValue) { // our custom exception type to embed a value
+    //} catch (Return returnValue) { // our custom exception type to embed a value
                                    // and jump back to here
-        return returnValue.value;
-    }
+    //    return returnValue.value;
+        if(interpreter.containsReturn){
+            interpreter.containsReturn = false;
+            return interpreter.currentReturn.value;
+        }
+    //}
     return nullptr;
 }
 
