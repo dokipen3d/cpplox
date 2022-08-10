@@ -144,7 +144,7 @@ template <typename T> class uniquestack {
     template <typename Callable> std::size_t retrieve(Callable&& callable) {
         if (spareIds.size() == 0) {
 
-            _data.push_back(std::make_unique<T::element_type>());
+            _data.push_back(std::make_unique<typename T::element_type>());
             //_data.push_back(env);
 
             auto existing_size = _data.size() - 1;
