@@ -208,7 +208,7 @@ struct FunctionStatement;
 
 struct FunctionObject {
     FunctionObject(const FunctionStatement& functionStatement,
-                   const std::shared_ptr<Environment>& closure);
+                   Environment* closure);
 
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
@@ -224,7 +224,7 @@ struct FunctionObject {
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
     const FunctionStatement& m_declaration;
-    std::shared_ptr<Environment> closure;
+    Environment* closure;
 };
 
 class Token {

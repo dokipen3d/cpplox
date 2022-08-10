@@ -11,7 +11,7 @@ NativeFunction::NativeFunction(
 }
 
 FunctionObject::FunctionObject(const FunctionStatement& functionStatement,
-                               const std::shared_ptr<Environment>& closure)
+                               Environment* closure)
     : m_declaration(functionStatement), closure(closure) {
 }
 
@@ -26,7 +26,10 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // the global one like in the book. might have something to do with how we
     // set up the globals to just be one level higher than the first env instead
     // of a seperate env
-    auto environment = std::make_shared<Environment>(closure);
+    
+    //auto environment = std::make_shared<Environment>(closure);
+    auto it = interpreter.getNewEnvironment(closure);
+    Environment* environment = &(*it);
     for (int i = 0; i < m_declaration.params.size(); i++) {
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }
@@ -41,6 +44,8 @@ Object FunctionObject::operator()(Interpreter& interpreter,
             return interpreter.currentReturn.value;
         }
     //}
+
+    //interpreter.ClearEnvironment(environment);
     return nullptr;
 }
 

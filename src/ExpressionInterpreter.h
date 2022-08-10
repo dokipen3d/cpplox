@@ -3,6 +3,8 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
+#include "thirdparty/sparestack.hpp"
+#include "thirdparty/plf_colony.h"
 #include <chrono>
 #include <exception>
 #include <map>
@@ -26,10 +28,12 @@ struct Return : std::exception {
 
 struct Interpreter {
     Interpreter()
-        : globals(std::make_shared<Environment>()), environment(globals) {
-
+         {
+        auto globalIt = getNewEnvironment();
+        globals = &(*globalIt);
+        
+        environment = globals; 
         // should move this to cpp file....
-
         globals->define(
             "clock",
             NativeFunction{
@@ -63,7 +67,7 @@ struct Interpreter {
 
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements,
-                      const std::shared_ptr<Environment>& newEnvironement);
+                      Environment* newEnvironment);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -88,11 +92,16 @@ struct Interpreter {
                              const Object& right);
     std::string stringify(const Object& object);
 
-    std::shared_ptr<Environment>
-        globals; // place to store global native functions etc
+    // std::shared_ptr<Environment>
+    //     globals; // place to store global native functions etc
 
-    std::shared_ptr<Environment>
-        environment; // this maybe overriden temporarily by blocks and then
+    // std::shared_ptr<Environment>
+    //     environment; // this maybe overriden temporarily by blocks and then
+    //                  // set
+
+    Environment* globals; // place to store global native functions etc
+
+    Environment* environment; // this maybe overriden temporarily by blocks and then
                      // set
     // back
     bool enableEnvironmentSwitching =
@@ -106,8 +115,26 @@ struct Interpreter {
         }
     };
 
+    struct objVectorHelper {
+        std::vector<Object>& objVector;
+        size_t index;
+    };
+
+    plf::colony<Environment>::iterator getNewEnvironment(Environment* closure = nullptr);
+    Environment* retrieveEnvironment(Environment* closure = nullptr);
+    void clearEnvironmentFromStack(size_t index);
+
+    objVectorHelper getNewArgumentVector();
+    void clearArgumentVector(size_t index);
+
+
+    void ClearEnvironment (Environment* environment);
     Return currentReturn = Object{nullptr};
     bool containsReturn = false;
-//std::unordered_map<LookupVariableVariant, int> locals;
+    uniquestack<std::unique_ptr<Environment>> Environments;
+    sparestack<std::vector<Object>> argumentsStack;
+    
+    plf::colony<Environment> EnvironmentsColony;
+    //std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox

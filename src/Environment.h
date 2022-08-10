@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ExceptionError.h"
+
+
+
 #include "TokenTypes.h"
 #include <iostream>
 #include <memory>
@@ -8,26 +10,66 @@
 #include <type_traits>
 #include <unordered_map>
 
+#include "thirdparty/bytell_hash_map.hpp"
+#include "thirdparty/plf_colony.h"
+#include "ExceptionError.h"
+
 namespace cpplox {
-struct Environment : std::enable_shared_from_this<Environment> {
+struct Environment { //}: std::enable_shared_from_this<Environment> {
     // Environment() = default;
     // address of a ref is the same as taking the address of the object it
     // refers to
+    // explicit Environment(
+    //     const std::shared_ptr<Environment>& environment = nullptr)
+    //     : enclosing(environment) {
+    // }
+
     explicit Environment(
-        const std::shared_ptr<Environment>& environment = nullptr)
+        Environment* environment = nullptr)
         : enclosing(environment) {
+        //std::cout << "env\n";
     }
+    /*Environment() = delete;
+    Environment(const Environment& other) {
+        std::cout << "copy\n";
+        enclosing = other.enclosing;
+        values = other.values;
+    };*/
 
-    std::shared_ptr<Environment> enclosing;
+    //Environment(Environment&& other) {
+    //    //std::cout << "move\n";
 
-    const std::shared_ptr<Environment> ancestor(int distance) {
-        std::shared_ptr<Environment> environment = shared_from_this();
+    //   enclosing = other.enclosing;
+    //   values = other.values;
+    //   handle = other.handle;
+
+    //};
+    
+    //Environment& operator=(const Environment& other) {
+    //    //std::cout << "copy assignment of env\n";
+    //    enclosing = other.enclosing;
+    //    values = other.values;
+    //    handle = other.handle;
+    //    return *this;
+    //}
+    //Environment(Environment&& other) = default;
+    //Environment(Environment&& other) = default;
+
+    //~Environment(){
+    //    std::cout << "AAAAA\n";
+    //}
+
+
+
+
+    Environment* ancestor(int distance) {
+        Environment* environmentLocal = this;
         for (int i = 0; i < distance; i++) {
 
-            environment = environment->enclosing;
+            environmentLocal = environmentLocal->enclosing;
         }
 
-        return environment;
+        return environmentLocal;
     }
 
     const Object& get(const Token& name) const {
@@ -44,7 +86,8 @@ struct Environment : std::enable_shared_from_this<Environment> {
     }
 
     Object getAt(int distance, const std::string& name) {
-        auto varmap = ancestor(distance)->values;
+        Environment* anc = ancestor(distance);
+        const auto& varmap = anc->values;
         auto env = varmap.find(name);
         if (env != varmap.end()) {
             return env->second;
@@ -72,7 +115,13 @@ struct Environment : std::enable_shared_from_this<Environment> {
         }
     }
 
+    // std::shared_ptr<Environment> enclosing;
+    Environment* enclosing = nullptr;
     std::unordered_map<std::string, Object> values;
+    int handle = -1;
+    //plf::colony<Environment>::iterator it;
+    //ska::bytell_hash_map<std::string, Object> values;
+
 };
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");
