@@ -4,7 +4,7 @@
 #include "Utilities.hpp"
 //#include "Object.h"
 #include "TokenTypes.h"
-
+#include "thirdparty/visit.hpp"
 
 #include <functional>
 #include <iostream>
@@ -28,11 +28,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-     std::visit(*this, statementToExecute);
+     rollbear::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return  std::visit(*this, static_cast<ExprVariant>(expression));
+    return  rollbear::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -348,6 +348,7 @@ Object Interpreter::operator()(const Call& call) {
 
     auto objHelper = getNewArgumentVector();
     auto& arguments = objHelper.objVector;
+    arguments.reserve(call.arguments.size());
 
     for (auto& argument : call.arguments) {
         arguments.push_back(evaluate(argument));
@@ -373,7 +374,7 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    Object ret = std::visit(
+    Object ret = rollbear::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },

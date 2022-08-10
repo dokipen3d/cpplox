@@ -1,6 +1,24 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <utility>
+
+static unsigned int FNVHash(std::string str) {
+	const unsigned int fnv_prime = 0x811C9DC5;
+	unsigned int hash = 0;
+	unsigned int i = 0;
+	unsigned int len = str.length();
+
+	for (i = 0; i < len; i++)
+	{
+		hash *= fnv_prime;
+		hash ^= (str[i]);
+	}
+
+	return hash;
+}
+
+
 
 namespace cpplox {
 
@@ -9,6 +27,7 @@ template <typename T> struct recursive_wrapper {
     // construct from an existing object
     recursive_wrapper(T t_) {
         t.push_back(std::move(t_));
+        //t.push_back(std::forward<T>(t_));
         index = t.size() - 1;
     }
 

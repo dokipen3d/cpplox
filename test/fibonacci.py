@@ -5,5 +5,5 @@ def Fibonacci(n):
     return Fibonacci(n-1)+Fibonacci(n-2) 
   
 # Driver Program 
-for i in range(0,20):
-    print(Fibonacci(i)) 
+#for i in range(0,20):
+print(Fibonacci(35)) 

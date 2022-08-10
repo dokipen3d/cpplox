@@ -1,8 +1,5 @@
 #pragma once
 
-
-
-
 #include "TokenTypes.h"
 #include <iostream>
 #include <memory>
@@ -11,8 +8,20 @@
 #include <unordered_map>
 
 #include "thirdparty/bytell_hash_map.hpp"
-#include "thirdparty/plf_colony.h"
+#include "thirdparty/flat_hash_map.hpp"
+#include "thirdparty/robin_hood.h"
+#include "thirdparty/tsl/robin_map.h"
+
 #include "ExceptionError.h"
+#include "Utilities.hpp"
+#include "thirdparty/plf_colony.h"
+
+template <typename S> struct hasher {
+    size_t operator()(const S& x) const {
+        /* your code here, e.g. "return hash<int>()(x.value);" */
+        return FNVHash(x);
+    }
+};
 
 namespace cpplox {
 struct Environment { //}: std::enable_shared_from_this<Environment> {
@@ -24,10 +33,9 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
     //     : enclosing(environment) {
     // }
 
-    explicit Environment(
-        Environment* environment = nullptr)
+    explicit Environment(Environment* environment = nullptr)
         : enclosing(environment) {
-        //std::cout << "env\n";
+        // std::cout << "env\n";
     }
     /*Environment() = delete;
     Environment(const Environment& other) {
@@ -36,31 +44,28 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         values = other.values;
     };*/
 
-    //Environment(Environment&& other) {
-    //    //std::cout << "move\n";
+    // Environment(Environment&& other) {
+    //     //std::cout << "move\n";
 
     //   enclosing = other.enclosing;
     //   values = other.values;
     //   handle = other.handle;
 
     //};
-    
-    //Environment& operator=(const Environment& other) {
-    //    //std::cout << "copy assignment of env\n";
-    //    enclosing = other.enclosing;
-    //    values = other.values;
-    //    handle = other.handle;
-    //    return *this;
-    //}
-    //Environment(Environment&& other) = default;
-    //Environment(Environment&& other) = default;
+
+    // Environment& operator=(const Environment& other) {
+    //     //std::cout << "copy assignment of env\n";
+    //     enclosing = other.enclosing;
+    //     values = other.values;
+    //     handle = other.handle;
+    //     return *this;
+    // }
+    // Environment(Environment&& other) = default;
+    // Environment(Environment&& other) = default;
 
     //~Environment(){
     //    std::cout << "AAAAA\n";
     //}
-
-
-
 
     Environment* ancestor(int distance) {
         Environment* environmentLocal = this;
@@ -117,11 +122,14 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     // std::shared_ptr<Environment> enclosing;
     Environment* enclosing = nullptr;
-    std::unordered_map<std::string, Object> values;
-    int handle = -1;
-    //plf::colony<Environment>::iterator it;
-    //ska::bytell_hash_map<std::string, Object> values;
+    // std::unordered_map<std::string, Object> values;
+    // robin_hood::unordered_map<std::string, Object> values;
+    tsl::robin_map<std::string, Object> values;
 
+    int handle = -1;
+    // plf::colony<Environment>::iterator it;
+    // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
+    // ska::flat_hash_map<std::string, Object> values;
 };
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");
