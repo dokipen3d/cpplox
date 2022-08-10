@@ -9,6 +9,8 @@
 
 //#include "Object.h"
 #include "Utilities.hpp"
+#include "thirdparty/tsl/robin_map.h"
+#include "thirdparty/visit.hpp"
 
 namespace cpplox {
 enum class ETokenType {
@@ -129,6 +131,7 @@ struct Object : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
+
     // helper functions to make variant comparable to nullptr
     //////////////////////////////////////////////////////////////////////////
     inline bool operator==(std::nullptr_t)
@@ -186,6 +189,12 @@ struct NativeFunction {
             func,
         std::function<int()> arity);
 
+    // NativeFunction(NativeFunction const&) = default;
+    // NativeFunction(NativeFunction&&) = default; 
+
+    // NativeFunction& operator=(const NativeFunction& other) = default;
+    // NativeFunction& operator=(NativeFunction&& other) = default;
+
     Object operator()(const Interpreter& interpreter,
                       const std::vector<Object>& objects) {
         return m_func(interpreter, objects);
@@ -199,9 +208,9 @@ struct NativeFunction {
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 
     // we store references to lambdas
-    std::function<Object(const Interpreter&, const std::vector<Object>&)>
+     std::function<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
-    std::function<int()> arity;
+     std::function<int()> arity;
 };
 
 struct FunctionStatement;
@@ -213,12 +222,17 @@ struct FunctionObject {
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
 
+    // FunctionObject(FunctionObject const&) = default;
+    // FunctionObject(FunctionObject&&) = default; 
+
+    // FunctionObject& operator=(const FunctionObject& other) = default;
+    // FunctionObject& operator=(FunctionObject&& other) = default;
+
     // inline bool operator==(const FunctionObject& other){
     //     return false;
     // }
 
-
-    int arity();
+    int arity() const;
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
@@ -249,7 +263,7 @@ class Token {
             stream << search->second;
         }
         stream << " " << lexeme << " ";
-        std::visit(
+        rollbear::visit(
             [&](auto&& arg) {
                 if (!(literal == nullptr)) { // not a void* so can print
                     stream << arg;

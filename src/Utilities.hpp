@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include "thirdparty/sparestack.hpp"
 
 static unsigned int FNVHash(std::string str) {
 	const unsigned int fnv_prime = 0x811C9DC5;
@@ -27,7 +28,7 @@ template <typename T> struct recursive_wrapper {
     // construct from an existing object
     recursive_wrapper(T t_) {
         t.push_back(std::move(t_));
-        //t.push_back(std::forward<T>(t_));
+       // index = ts.push(std::move(t_));
         index = t.size() - 1;
     }
 
@@ -51,6 +52,7 @@ template <typename T> struct recursive_wrapper {
 
     // store the value
     static std::vector<T> t;
+    //static sparestack<T> ts;
     size_t index = -1;
     // std::basic_string<T> t;
 };

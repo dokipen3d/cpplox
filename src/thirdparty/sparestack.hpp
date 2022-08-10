@@ -14,17 +14,17 @@ public:
 
     // returns the position the item was inserted into
 
-    template <typename Callable>
-    std::size_t push(T&& env, Callable&& callable)
+    template <typename U, typename Callable>
+    std::size_t push(U&& env, Callable&& callable)
     {
         if (spareIds.size() == 0) {
-            std::cout << "creating new " << "\n";
+            //std::cout << "creating new " << "\n";
 
-            _data.emplace_back(std::forward<T>(env));
+            _data.emplace_back(std::forward<U>(env));
             //_data.push_back(env);
 
             auto existing_size = _data.size()-1;
-            std::cout << "existing_size " << existing_size << "\n";
+            //std::cout << "existing_size " << existing_size << "\n";
 
             callable(existing_size, _data[existing_size]);
 
@@ -34,7 +34,8 @@ public:
             int accessElement = spareIds.back();
 
 
-            _data.at(accessElement) = env;
+            _data[accessElement] = std::forward<U>(env);
+           //_data.emplace(_data.begin()+accessElement, std::forward<U>(env));
             //_data.at(accessElement) = env;
 
             spareIds.pop_back();
@@ -82,11 +83,11 @@ public:
         }
     }
 
-    // template<typename U>
-    // std::size_t push(U&& in)
-    // {
-    //     return push(std::forward<U>(in), [](auto a, auto b) { return; });
-    // }
+    template<typename U>
+    std::size_t push(U&& in)
+    {
+        return push(std::forward<U>(in), [](auto a, auto b) { return; });
+    }
 
     T& operator[](int idx)
     {
@@ -116,14 +117,14 @@ template <typename T> class uniquestack {
     template <typename Callable>
     std::size_t push(T&& env, Callable&& callable) {
         if (spareIds.size() == 0) {
-            std::cout << "creating new "
-                      << "\n";
+            // std::cout << "creating new "
+            //           << "\n";
 
             _data.emplace_back(std::forward<T>(env));
             //_data.push_back(env);
 
             auto existing_size = _data.size() - 1;
-            std::cout << "existing_size " << existing_size << "\n";
+            //std::cout << "existing_size " << existing_size << "\n";
 
             callable(existing_size, _data[existing_size]);
 

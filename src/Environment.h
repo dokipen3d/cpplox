@@ -35,37 +35,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     explicit Environment(Environment* environment = nullptr)
         : enclosing(environment) {
-        // std::cout << "env\n";
     }
-    /*Environment() = delete;
-    Environment(const Environment& other) {
-        std::cout << "copy\n";
-        enclosing = other.enclosing;
-        values = other.values;
-    };*/
-
-    // Environment(Environment&& other) {
-    //     //std::cout << "move\n";
-
-    //   enclosing = other.enclosing;
-    //   values = other.values;
-    //   handle = other.handle;
-
-    //};
-
-    // Environment& operator=(const Environment& other) {
-    //     //std::cout << "copy assignment of env\n";
-    //     enclosing = other.enclosing;
-    //     values = other.values;
-    //     handle = other.handle;
-    //     return *this;
-    // }
-    // Environment(Environment&& other) = default;
-    // Environment(Environment&& other) = default;
-
-    //~Environment(){
-    //    std::cout << "AAAAA\n";
-    //}
 
     Environment* ancestor(int distance) {
         Environment* environmentLocal = this;
@@ -97,6 +67,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         if (env != varmap.end()) {
             return env->second;
         }
+        return {};
     }
 
     void define(std::string name, const Object& value) {
@@ -128,7 +99,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     int handle = -1;
     // plf::colony<Environment>::iterator it;
-    // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
+    //ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
     // ska::flat_hash_map<std::string, Object> values;
 };
 

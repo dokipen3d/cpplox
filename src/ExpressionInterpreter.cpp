@@ -28,11 +28,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-     rollbear::visit(*this, statementToExecute);
+    rollbear::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return  rollbear::visit(*this, static_cast<ExprVariant>(expression));
+    return rollbear::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -75,22 +75,20 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
     if (variableStatement.initializer != nullptr) {
         value = evaluate(variableStatement.initializer);
     }
-
+    
     environment->define(variableStatement.name.lexeme, value);
     return;
 }
 
 void Interpreter::operator()(const ReturnStatement& returnStatement) {
-    //Object value;
+    // Object value;
     if (returnStatement.value != nullptr) {
-        //value = evaluate(returnStatement.value);
-            // throw Return(value);
-        //Object value = evaluate(returnStatement.value);
+        // value = evaluate(returnStatement.value);
+        //  throw Return(value);
+        // Object value = evaluate(returnStatement.value);
         currentReturn = {evaluate(returnStatement.value)};
         containsReturn = true;
     }
-
-
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
@@ -104,17 +102,18 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
-plf::colony<Environment>::iterator Interpreter::getNewEnvironment(Environment* closure) {
-    //Environment ev(closure);
-    //auto index = Environments.push(
-    //    Environment(closure), [&](auto index, auto& environment) {
-    //    std::cout << "setting env to " << index << "\n";
-    //    environment.handle = index;
-    //    environment.values.clear();
-    //});
+plf::colony<Environment>::iterator
+Interpreter::getNewEnvironment(Environment* closure) {
+    // Environment ev(closure);
+    // auto index = Environments.push(
+    //     Environment(closure), [&](auto index, auto& environment) {
+    //     std::cout << "setting env to " << index << "\n";
+    //     environment.handle = index;
+    //     environment.values.clear();
+    // });
 
     auto it = EnvironmentsColony.insert(Environment(closure));
-    //it->it = it;
+    // it->it = it;
 
     return it;
 }
@@ -122,51 +121,46 @@ plf::colony<Environment>::iterator Interpreter::getNewEnvironment(Environment* c
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
 
     auto index = Environments.retrieve([&](auto index, auto& env) {
-      
-            env->enclosing = closure;
-            env->handle = index;
-            env->values.clear();
+        env->enclosing = closure;
+        env->handle = index;
+        env->values.clear();
     });
 
     return Environments[index].get();
 }
 
-
 void Interpreter::clearEnvironmentFromStack(size_t index) {
     Environments.eraseAt(index);
-
 }
 
-
-void Interpreter::ClearEnvironment(Environment* environment){
-    //environment->values.clear();
-    //Environments.eraseAt(environment->handle);
+void Interpreter::ClearEnvironment(Environment* environment) {
+    // environment->values.clear();
+    // Environments.eraseAt(environment->handle);
 
     // delete self
-    //EnvironmentsColony.erase(environment->it);
+    // EnvironmentsColony.erase(environment->it);
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
 
-   // auto newEnvironement = std::make_shared<Environment>(environment);
-    //auto newEnvironmentPtr = Interpreter::getNewEnvironment(environment);
+    // auto newEnvironement = std::make_shared<Environment>(environment);
+    // auto newEnvironmentPtr = Interpreter::getNewEnvironment(environment);
     auto newEnvironmentPtr = retrieveEnvironment(environment);
-   
+
     executeBlock(blockStatement.statements,
                  &(*newEnvironmentPtr)); // pass in current env as parent
-    
+
     // clean up env by marking it as free in the storage
-    //ClearEnvironment(newEnvironmentPtr);
-   // EnvironmentsColony.erase(newEnvironmentPtr);
+    // ClearEnvironment(newEnvironmentPtr);
+    // EnvironmentsColony.erase(newEnvironmentPtr);
     clearEnvironmentFromStack(newEnvironmentPtr->handle);
     return;
 }
 
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
-void Interpreter::executeBlock(
-    const std::vector<Statement>& statements,
-    Environment* newEnvironment) {
+void Interpreter::executeBlock(const std::vector<Statement>& statements,
+                               Environment* newEnvironment) {
 
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
@@ -311,6 +305,7 @@ Object Interpreter::operator()(const Unary& unary) {
         return !isTruthy(right);
     }
     }
+    return {};
 }
 
 Object Interpreter::operator()(const Logical& logical) {
@@ -336,15 +331,14 @@ Interpreter::objVectorHelper Interpreter::getNewArgumentVector() {
     return {argumentsStack[sizet], sizet};
 }
 
-void Interpreter::clearArgumentVector(size_t index){
+void Interpreter::clearArgumentVector(size_t index) {
     argumentsStack.eraseAt(index);
 }
-
 
 Object Interpreter::operator()(const Call& call) {
     Object callee = evaluate(call.callee);
 
-    //std::vector<Object> arguments;
+    // std::vector<Object> arguments;
 
     auto objHelper = getNewArgumentVector();
     auto& arguments = objHelper.objVector;
@@ -442,7 +436,5 @@ std::string Interpreter::stringify(const Object& object) {
     }
     return text;
 }
-
-
 
 } // namespace cpplox

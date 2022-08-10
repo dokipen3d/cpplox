@@ -53,6 +53,7 @@ struct Interpreter {
     Object evaluate(const Expr& expression);
     Object lookUpVariable(const Token& name, const Variable& expr);
 
+
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);

@@ -15,7 +15,7 @@ FunctionObject::FunctionObject(const FunctionStatement& functionStatement,
     : m_declaration(functionStatement), closure(closure) {
 }
 
-int FunctionObject::arity() {
+int FunctionObject::arity() const {
     return m_declaration.params.size();
 };
 
