@@ -28,8 +28,8 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // of a seperate env
     
     //auto environment = std::make_shared<Environment>(closure);
-    auto it = interpreter.getNewEnvironment(closure);
-    Environment* environment = &(*it);
+    auto environment = interpreter.retrieveEnvironment(closure);
+
     for (int i = 0; i < m_declaration.params.size(); i++) {
         environment->define(m_declaration.params[i].lexeme, arguments[i]);
     }
@@ -45,7 +45,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
         }
     //}
 
-    //interpreter.ClearEnvironment(environment);
+    interpreter.clearEnvironmentFromStack(environment->handle);
     return nullptr;
 }
 
