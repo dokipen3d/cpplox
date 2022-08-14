@@ -9,6 +9,6 @@ def Fibonacci(n):
 # Driver Program 
 #for i in range(0,20):
 starttime = time.time()
-print(Fibonacci(10)) 
+print(Fibonacci(35)) 
 lasttime = time.time()
 print("Time: "+str(lasttime - starttime ))

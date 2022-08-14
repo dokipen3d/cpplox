@@ -30,9 +30,16 @@ template <typename T> struct recursive_wrapper {
         //t.push_back(std::move(t_));
         
         t.push_back(std::forward<T>(t_));
-       // index = ts.push(std::move(t_));
+        //index = ts.push(std::forward<T>(t_));
         index = t.size() - 1;
     }
+
+    // ~recursive_wrapper() {
+    //     //t.push_back(std::move(t_));
+    //     //ts.eraseAt(index);
+    //    //std::cout << "going out of scope\n";
+    // }
+
 
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
@@ -54,12 +61,13 @@ template <typename T> struct recursive_wrapper {
 
     // store the value
     static std::vector<T> t;
-    //static sparestack<T> ts;
+   // static sparestack<T> ts;
     size_t index = -1;
     // std::basic_string<T> t;
 };
 
 template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
+//template <typename T> inline sparestack<T> recursive_wrapper<T>::ts;
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);
