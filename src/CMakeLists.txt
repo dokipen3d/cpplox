@@ -24,8 +24,8 @@ else()
     message(STATUS "IPO / LTO not supported: <${error}>")
 endif()
 
-target_compile_options(cpplox PRIVATE -flto)
-target_link_options(cpplox PRIVATE -flto)
+target_compile_options(cpplox PRIVATE -flto=thin)
+target_link_options(cpplox PRIVATE -flto=thin)
 
 
 #target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)

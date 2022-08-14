@@ -26,8 +26,10 @@ namespace cpplox {
 // recursive wrapper with single vector for each type
 template <typename T> struct recursive_wrapper {
     // construct from an existing object
-    recursive_wrapper(T t_) {
-        t.push_back(std::move(t_));
+    recursive_wrapper(T&& t_) {
+        //t.push_back(std::move(t_));
+        
+        t.push_back(std::forward<T>(t_));
        // index = ts.push(std::move(t_));
         index = t.size() - 1;
     }

@@ -10,6 +10,9 @@
 #include "thirdparty/bytell_hash_map.hpp"
 #include "thirdparty/flat_hash_map.hpp"
 #include "thirdparty/robin_hood.h"
+#include "thirdparty/robin_hood_map.h"
+#include "thirdparty/unordered_dense.h"
+
 #include "thirdparty/tsl/robin_map.h"
 
 #include "ExceptionError.h"
@@ -70,7 +73,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         return {};
     }
 
-    void define(std::string name, const Object& value) {
+    void define(std::string name, const Object value) {
         values.insert_or_assign(name, value);
     }
 
@@ -96,6 +99,8 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
     // std::unordered_map<std::string, Object> values;
     // robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<std::string, Object> values;
+
+    //ankerl::unordered_dense::map<std::string, Object> values;
 
     int handle = -1;
     // plf::colony<Environment>::iterator it;

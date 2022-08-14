@@ -1,4 +1,5 @@
 fun sayHi(first, last) {
+  print "boo";
   print "Hi, " + first + " " + last + "!";
 }
 

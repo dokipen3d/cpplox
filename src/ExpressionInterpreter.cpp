@@ -75,7 +75,7 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
     if (variableStatement.initializer != nullptr) {
         value = evaluate(variableStatement.initializer);
     }
-    
+
     environment->define(variableStatement.name.lexeme, value);
     return;
 }
@@ -98,7 +98,10 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // to the same function.
     // Here we are taking a function syntax node (a compile time representation)
     // and converting it to its runtime representation
-    const FunctionObject functionObject(functionStatement, this->environment);
+    // const FunctionObject functionObject(&functionStatement,
+    // this->environment);
+    const Object& functionObject =
+        FunctionObject(&functionStatement, this->environment);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
@@ -233,7 +236,12 @@ Object Interpreter::operator()(const Binary& binary) {
             return std::get<double>(left) + std::get<double>(right);
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            return std::get<std::string>(left) + std::get<std::string>(right);
+
+            return left.get < std::string > () + left.get < std::string > ();
+            // return
+            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
+            // +
+            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>());
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -432,7 +440,7 @@ std::string Interpreter::stringify(const Object& object) {
 
     // must be a string.
     if (object.is<std::string>()) {
-        text = std::get<std::string>(object);
+        text = object.get<std::string>();
     }
     return text;
 }

@@ -2,7 +2,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
-
+#include <iostream>
 template <typename T>
 class sparestack {
 
@@ -33,6 +33,7 @@ public:
 
             int accessElement = spareIds.back();
 
+            std::cout <<  "reusing " << "\n";
 
             _data[accessElement] = std::forward<U>(env);
            //_data.emplace(_data.begin()+accessElement, std::forward<U>(env));

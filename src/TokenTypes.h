@@ -172,15 +172,20 @@ struct Object : ObjectVariant {
         return std::get<recursive_wrapper<T>>(*this);
     }
     template <typename T>
-    inline const T& get() { // function needs to be const  to
-                            // make it callable from a const ref
+    inline const T& get() const { 
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
+    
 };
-
+// inline std::ostream&
+//     operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt)
+//     {
+//         os << dt.t[dt.index];
+//         return os;
+//     }
 struct Interpreter;
 
 struct NativeFunction {
@@ -216,7 +221,7 @@ struct NativeFunction {
 struct FunctionStatement;
 
 struct FunctionObject {
-    FunctionObject(const FunctionStatement& functionStatement,
+    FunctionObject(const FunctionStatement* functionStatement,
                    Environment* closure);
 
     Object operator()(Interpreter& interpreter,
@@ -237,7 +242,7 @@ struct FunctionObject {
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
-    const FunctionStatement& m_declaration;
+    const FunctionStatement* m_declaration;
     Environment* closure;
 };
 
@@ -295,3 +300,4 @@ struct std::variant_size<cpplox::Object>
 template <std::size_t I>
 struct std::variant_alternative<I, cpplox::Object>
     : std::variant_alternative<I, cpplox::ObjectVariant> {};
+

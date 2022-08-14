@@ -10,13 +10,13 @@ NativeFunction::NativeFunction(
     : m_func(func), arity(arity) {
 }
 
-FunctionObject::FunctionObject(const FunctionStatement& functionStatement,
+FunctionObject::FunctionObject(const FunctionStatement* functionStatement,
                                Environment* closure)
     : m_declaration(functionStatement), closure(closure) {
 }
 
 int FunctionObject::arity() const {
-    return m_declaration.params.size();
+    return m_declaration->params.size();
 };
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -30,12 +30,12 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // auto environment = std::make_shared<Environment>(closure);
     auto environment = interpreter.retrieveEnvironment(closure);
 
-    for (int i = 0; i < m_declaration.params.size(); i++) {
-        environment->define(m_declaration.params[i].lexeme, arguments[i]);
+    for (int i = 0; i < m_declaration->params.size(); i++) {
+        environment->define(m_declaration->params[i].lexeme, arguments[i]);
     }
 
     // try {
-    interpreter.executeBlock(m_declaration.body, environment);
+    interpreter.executeBlock(m_declaration->body, environment);
     //} catch (Return returnValue) { // our custom exception type to embed a
     //value
     // and jump back to here

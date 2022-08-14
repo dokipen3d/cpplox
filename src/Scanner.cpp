@@ -84,7 +84,8 @@ std::vector<Token> scanTokens(const std::string& source) {
         std::string value = source.substr(
             start + 1, current - start - 2); // dont know why we need to do -2
         // need to use different named lambda as we cant override the name
-        addTokenLiteral(ETokenType::STRING, value);
+        addTokenLiteral(ETokenType::STRING, source.substr(
+            start + 1, current - start - 2));
     };
 
     auto isDigit = [&](const char& c) -> bool { return c >= '0' && c <= '9'; };
@@ -188,7 +189,9 @@ std::vector<Token> scanTokens(const std::string& source) {
             } else if (isAlpha(c)) {
                 identifier();
             } else {
-                Error::error(line, "Unexpected character.");
+                std::string str;
+                str = (char)c;
+                Error::error(line, std::string("Unexpected character: \'")+str+std::string("\'"));
                 break;
             }
         }
