@@ -123,7 +123,7 @@ struct Environment;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using ObjectVariant = std::variant<void*, double, std::string, bool,
+using ObjectVariant = std::variant<void*, double, recursive_wrapper<std::string>, bool,
                                    recursive_wrapper<NativeFunction>,
                                    recursive_wrapper<FunctionObject>>;
 
@@ -180,12 +180,12 @@ struct Object : ObjectVariant {
     }
     
 };
-// inline std::ostream&
-//     operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt)
-//     {
-//         os << dt.t[dt.index];
-//         return os;
-//     }
+inline std::ostream&
+    operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt)
+    {
+        os << dt.t[dt.index];
+        return os;
+    }
 struct Interpreter;
 
 struct NativeFunction {
