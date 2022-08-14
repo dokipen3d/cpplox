@@ -31,7 +31,7 @@ using ExprVariant =
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
 
-struct Expr : ExprVariant {
+struct Expr final : ExprVariant {
 
     using ExprVariant::ExprVariant;
     using ExprVariant::operator=;

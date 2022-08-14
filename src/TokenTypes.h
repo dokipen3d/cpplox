@@ -127,7 +127,7 @@ using ObjectVariant = std::variant<void*, double, recursive_wrapper<std::string>
                                    recursive_wrapper<NativeFunction>,
                                    recursive_wrapper<FunctionObject>>;
 
-struct Object : ObjectVariant {
+struct Object final : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
