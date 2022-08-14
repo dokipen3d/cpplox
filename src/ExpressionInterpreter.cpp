@@ -237,7 +237,7 @@ Object Interpreter::operator()(const Binary& binary) {
         }
         if (left.is<std::string>() && right.is<std::string>()) {
 
-            return left.get < std::string > () + left.get < std::string > ();
+            return left.get<std::string>() + right.get<std::string>();
             // return
             // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
             // +
