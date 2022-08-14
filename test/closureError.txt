@@ -8,3 +8,13 @@ var a = "global";
   var a = "block";
   showA();
 }
+
+{
+  fun showA() {
+    print a;
+  }
+
+  showA();
+  var a = "block";
+  showA();
+}

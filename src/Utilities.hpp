@@ -34,11 +34,19 @@ template <typename T> struct recursive_wrapper {
         // index = t.size() - 1;
     }
 
-    ~recursive_wrapper() {
-        if (safeToReuse) {
-            t.eraseAt(index);
-        }
-    }
+    // ~recursive_wrapper() {
+
+    //     if (safeToReuse) [[likely]] {
+    //         t.eraseAt(index);
+    //     }
+    // }
+    // recursive_wrapper(const recursive_wrapper& operand) = default;
+
+    // recursive_wrapper(recursive_wrapper&& operand) = default;
+
+
+    // recursive_wrapper& operator=(const recursive_wrapper& rhs)  = default;
+    // recursive_wrapper& operator=(recursive_wrapper&& rhs) = default;
 
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
