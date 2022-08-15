@@ -20,6 +20,9 @@ template <typename T> class sparestack {
             _data.emplace_back(std::forward<U>(env));
             //_data.push_back(env);
 
+            // std::cout << "pushing "
+            //           << "\n";
+
             auto existing_size = _data.size() - 1;
             // std::cout << "existing_size " << existing_size << "\n";
 
@@ -30,11 +33,11 @@ template <typename T> class sparestack {
 
             int accessElement = spareIds.back();
 
-            std::cout << "reusing "
-                      << "\n";
+            // std::cout << "reusing "
+            //           << "\n";
 
-            //_data[accessElement] = std::forward<U>(env);
-            _data.emplace(_data.begin()+accessElement, std::forward<U>(env));
+            _data[accessElement] = std::forward<U>(env);
+            //_data.emplace(_data.begin()+accessElement, std::forward<U>(env));
             //_data.at(accessElement) = env;
 
             spareIds.pop_back();
@@ -69,19 +72,18 @@ template <typename T> class sparestack {
     }
 
     void eraseAt(std::size_t position) {
-        if (position < _data.size()) { // if position is within range
-            //     if (position == _data.size()-1) { // if UIView id is at the
-            //     end exactly
-            //         //_data.at(id)->deRegisterChildren();
-            //         _data.pop_back();
-            //     } else { // item is in middle of data somewhere
-            //         spareIds.push_back(position); // add the spare slot to
-            //         sparestack
-            //     }
-            // }
-
+        // //if (position < _data.size()) { // if position is within range
+        //         if (position == _data.size()-1) { // if UIView id is at the end exactly
+        //             //_data.at(id)->deRegisterChildren();
+        //             _data.pop_back();
+        //         } else { // item is in middle of data somewhere
+        //             spareIds.push_back(position); // add the spare slot to
+        //         }
+        //     //}
+            // std::cout << "erasing "
+            //           << "\n";
             spareIds.push_back(position); // add the spare slot to sparestack
-        }
+        
     }
 
     template <typename U> std::size_t push(U&& in) {
