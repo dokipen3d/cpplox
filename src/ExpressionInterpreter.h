@@ -27,10 +27,9 @@ struct Return : std::exception {
 };
 
 struct Interpreter {
-    Interpreter()
+    Interpreter() 
          {
-        auto globalIt = getNewEnvironment();
-        globals = &(*globalIt);
+        globals = retrieveEnvironment();
         
         environment = globals; 
         // should move this to cpp file....
@@ -100,9 +99,7 @@ struct Interpreter {
     //     environment; // this maybe overriden temporarily by blocks and then
     //                  // set
 
-    Environment* globals; // place to store global native functions etc
-
-    Environment* environment; // this maybe overriden temporarily by blocks and then
+   
                      // set
     // back
     bool enableEnvironmentSwitching =
@@ -136,6 +133,9 @@ struct Interpreter {
     sparestack<std::vector<Object>> argumentsStack;
     
     plf::colony<Environment> EnvironmentsColony;
+    Environment* globals; // place to store global native functions etc
+
+    Environment* environment; // this maybe overriden temporarily by blocks and then
     //std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox
