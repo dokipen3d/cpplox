@@ -40,7 +40,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         : enclosing(environment) {
     }
 
-    Environment* ancestor(int distance) {
+    Environment* ancestor(std::size_t distance) {
         Environment* environmentLocal = this;
         for (int i = 0; i < distance; i++) {
 
@@ -63,7 +63,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    Object getAt(int distance, const std::string& name) {
+    Object getAt(std::size_t distance, const std::string& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
         auto env = varmap.find(name);
@@ -77,7 +77,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         values.insert_or_assign(name, value);
     }
 
-    void assignAt(int distance, const Token& name, const Object& value) {
+    void assignAt(std::size_t distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }
     void assign(const Token& name, const Object& value) {
@@ -102,8 +102,8 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     //ankerl::unordered_dense::map<std::string, Object> values;
 
-    int handle = -1;
-    int refCount = 0;
+    std::size_t handle = -1;
+    //int refCount = 0;
     // plf::colony<Environment>::iterator it;
     //ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
     // ska::flat_hash_map<std::string, Object> values;

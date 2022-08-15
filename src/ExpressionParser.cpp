@@ -244,7 +244,7 @@ auto Parser::declaration() -> Statement {
             return varDeclaration();
         }
         return statement();
-    } catch (const ParseError& error) {
+    } catch (const ParseError&) {
         synchronize();
         return nullptr;
     }
@@ -369,7 +369,7 @@ auto Parser::finishCall(Expr callee) -> Expr {
     }
 
     Token paren =
-        consume(ETokenType::RIGHT_PARENTHESIS, "Expect \) after arguments.");
+        consume(ETokenType::RIGHT_PARENTHESIS, "Expect right parens after arguments.");
 
     return Call(callee, paren, arguments);
 }

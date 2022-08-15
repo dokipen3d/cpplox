@@ -31,7 +31,7 @@ template <typename T> class sparestack {
             return existing_size;
         } else {
 
-            int accessElement = spareIds.back();
+            std::size_t accessElement = spareIds.back();
 
             // std::cout << "reusing "
             //           << "\n";
@@ -52,14 +52,14 @@ template <typename T> class sparestack {
             auto& element = _data.emplace_back();
             //_data.push_back(env);
 
-            auto existing_size = _data.size() - 1;
+            std::size_t existing_size = _data.size() - 1;
 
             callable(existing_size, _data[existing_size]);
 
             return existing_size;
         } else {
 
-            int accessElement = spareIds.back();
+            std::size_t accessElement = spareIds.back();
 
             spareIds.pop_back();
             callable(accessElement, _data[accessElement]);
@@ -90,17 +90,17 @@ template <typename T> class sparestack {
         return push(std::forward<U>(in), [](auto a, auto b) { return; });
     }
 
-    T& operator[](int idx) {
+    T& operator[](std::size_t idx) {
         return _data[idx];
     }
 
-    T operator[](int idx) const {
+    T operator[](std::size_t idx) const {
         return _data[idx];
     }
 
   private:
     std::vector<T> _data;
-    std::vector<int> spareIds; // index of spare slots to fill ids
+    std::vector<std::size_t> spareIds; // index of spare slots to fill ids
 };
 
 template <typename T> class uniquestack {
@@ -121,7 +121,7 @@ template <typename T> class uniquestack {
             _data.emplace_back(std::forward<T>(env));
             //_data.push_back(env);
 
-            auto existing_size = _data.size() - 1;
+            std::size_t existing_size = _data.size() - 1;
             // std::cout << "existing_size " << existing_size << "\n";
 
             callable(existing_size, _data[existing_size]);
@@ -129,7 +129,7 @@ template <typename T> class uniquestack {
             return existing_size;
         } else {
 
-            int accessElement = spareIds.back();
+            std::size_t accessElement = spareIds.back();
 
             _data[accessElement] = env;
             //_data.at(accessElement) = env;
@@ -146,14 +146,14 @@ template <typename T> class uniquestack {
             _data.push_back(std::make_unique<typename T::element_type>());
             //_data.push_back(env);
 
-            auto existing_size = _data.size() - 1;
+            std::size_t existing_size = _data.size() - 1;
 
             callable(existing_size, _data[existing_size]);
 
             return existing_size;
         } else {
 
-            int accessElement = spareIds.back();
+            std::size_t accessElement = spareIds.back();
 
             spareIds.pop_back();
             callable(accessElement, _data[accessElement]);
@@ -185,15 +185,15 @@ template <typename T> class uniquestack {
     //     return push(std::forward<U>(in), [](auto a, auto b) { return; });
     // }
 
-    T& operator[](int idx) {
+    T& operator[](std::size_t idx) {
         return _data[idx];
     }
 
-    T operator[](int idx) const {
+    T operator[](std::size_t idx) const {
         return _data[idx];
     }
 
   private:
     std::vector<T> _data;
-    std::vector<int> spareIds; // index of spare slots to fill ids
+    std::vector<std::size_t> spareIds; // index of spare slots to fill ids
 };

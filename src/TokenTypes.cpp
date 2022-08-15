@@ -17,7 +17,7 @@ FunctionObject::FunctionObject(Interpreter* interpreter,
       closure(closure) {
 }
 
-int FunctionObject::arity() const {
+std::size_t FunctionObject::arity() const {
     return m_declaration->params.size();
 };
 

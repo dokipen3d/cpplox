@@ -14,30 +14,30 @@ struct WhileStatement;
 struct FunctionStatement;
 
 struct ExpressionStatement {
-    explicit ExpressionStatement(Expr expression)
-        : expression(std::move(expression)) {
+    explicit ExpressionStatement(const Expr& expression)
+        : expression(expression) {
     }
     Expr expression;
 };
 
 struct PrintStatement {
-    explicit PrintStatement(Expr expression)
-        : expression(std::move(expression)) {
+    explicit PrintStatement(const Expr& expression)
+        : expression(expression) {
     }
     Expr expression;
 };
 
 struct VariableStatement {
-    VariableStatement(Token name, Expr initializer)
-        : name(std::move(name)), initializer(std::move(initializer)) {
+    VariableStatement(const Token& name, const Expr& initializer)
+        : name(name), initializer(initializer) {
     }
     Token name;
     Expr initializer;
 };
 
 struct ReturnStatement {
-    ReturnStatement(Token name, Expr value)
-        : name(std::move(name)), value(std::move(value)) {
+    ReturnStatement(const Token& name, const Expr& value)
+        : name(name), value(value) {
     }
     Token name;
     // an expression that resolves to the value that we want to return
@@ -89,17 +89,17 @@ template <typename T> T& get(Statement& statement) {
 //////////////////////////////////////////////////////////////////////////
 
 struct BlockStatement {
-    explicit BlockStatement(std::vector<Statement> statements)
-        : statements(std::move(statements)) {
+    explicit BlockStatement(const std::vector<Statement>& statements)
+        : statements(statements) {
     }
     std::vector<Statement> statements;
 };
 
 struct FunctionStatement {
-    FunctionStatement(Token p_name, std::vector<Token> params,
-                      std::vector<Statement> body)
-        : name(std::move(p_name)), params(std::move(params)),
-          body(std::move(body)) {
+    FunctionStatement(const Token& p_name, const std::vector<Token>& params,
+                      const std::vector<Statement>& body)
+        : name(p_name), params(params),
+          body(body) {
     }
 
     Token name;
@@ -108,9 +108,9 @@ struct FunctionStatement {
 };
 
 struct IfStatement {
-    IfStatement(Expr condition, Statement thenBranch, Statement elseBranch)
-        : condition(condition), thenBranch(std::move(thenBranch)),
-          elseBranch(std::move(elseBranch)) {
+    IfStatement(const Expr& condition, const Statement& thenBranch, const Statement& elseBranch)
+        : condition(condition), thenBranch(thenBranch),
+          elseBranch(elseBranch) {
     }
     Expr condition;
     Statement thenBranch;
@@ -118,8 +118,8 @@ struct IfStatement {
 };
 
 struct WhileStatement {
-    WhileStatement(Expr condition, Statement body)
-        : condition(condition), body(std::move(body)) {
+    WhileStatement(const Expr& condition, const Statement& body)
+        : condition(condition), body(body) {
     }
     Expr condition;
     Statement body;

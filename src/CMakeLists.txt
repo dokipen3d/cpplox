@@ -8,6 +8,8 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     if (_cpp_latest_flag_supported)
         add_compile_options("/std:c++latest")
     endif()
+else()
+
 endif()
 
 include(CheckIPOSupported)
@@ -24,9 +26,11 @@ else()
     message(STATUS "IPO / LTO not supported: <${error}>")
 endif()
 
+if (MSVC)
+else()
 target_compile_options(cpplox PRIVATE -flto=thin)
 target_link_options(cpplox PRIVATE -flto=thin)
-
+endif()
 
 #target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
 #target_compile_options(cpplox PRIVATE --param max-inline-recursive-depth=16)

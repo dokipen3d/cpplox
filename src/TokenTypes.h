@@ -244,7 +244,7 @@ struct FunctionObject {
     //     return false;
     // }
 
-    int arity() const;
+    std::size_t arity() const;
     void setDelayed(Environment* delayed) {
         envToClearDelayed = delayed;
     }

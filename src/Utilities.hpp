@@ -4,19 +4,19 @@
 #include <utility>
 #include <vector>
 
-static unsigned int FNVHash(std::string str) {
-    const unsigned int fnv_prime = 0x811C9DC5;
-    unsigned int hash = 0;
-    unsigned int i = 0;
-    unsigned int len = str.length();
+// static unsigned int FNVHash(std::string str) {
+//     const unsigned int fnv_prime = 0x811C9DC5;
+//     unsigned int hash = 0;
+//     unsigned int i = 0;
+//     unsigned int len = str.length();
 
-    for (i = 0; i < len; i++) {
-        hash *= fnv_prime;
-        hash ^= (str[i]);
-    }
+//     for (i = 0; i < len; i++) {
+//         hash *= fnv_prime;
+//         hash ^= (str[i]);
+//     }
 
-    return hash;
-}
+//     return hash;
+// }
 
 namespace cpplox {
 
