@@ -1,6 +1,7 @@
 #include "Error.h"
 #include "Expr.hpp"
 #include "ExpressionInterpreter.h"
+#include "ExpressionPrinterVisitor.h"
 #include "ExpressionParser.h"
 #include "Resolver.h"
 #include "Scanner.h"
@@ -12,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 
 struct lox {
 
@@ -37,6 +39,8 @@ struct lox {
             std::cout << "parse error\n";
             return;
         }
+
+        cpplox::safeToReuse = true;
 
         try {
 
@@ -70,6 +74,8 @@ struct lox {
     }
 
     cpplox::Interpreter interpreter;
+    cpplox::ExpressionPrinterVisitor printer;
+
 };
 
 int main(int argumentCount, char* argumentValues[]) {
@@ -79,9 +85,15 @@ int main(int argumentCount, char* argumentValues[]) {
     std::cout.precision(17);
     lox l;
 
-    if (argumentCount > 2) {
+    if (argumentCount > 3) {
         std::cout << "Usage: cpplox [script] \n";
         return 0;
+    } else if (argumentCount == 3) {
+        if(strcmp(argumentValues[1],"-p") == 0){
+            std::cout << "printing AST\n";
+
+        }
+
     } else if (argumentCount == 2) {
         l.runFile(argumentValues[1]);
         if (hadError) {

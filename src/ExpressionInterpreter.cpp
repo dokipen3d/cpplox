@@ -4,6 +4,7 @@
 #include "Utilities.hpp"
 //#include "Object.h"
 #include "TokenTypes.h"
+#include "thirdparty/visit.hpp"
 
 #include <functional>
 #include <iostream>
@@ -15,6 +16,7 @@ namespace cpplox {
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
         TimeIt timer("interpreter");
+        std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         for (auto& statement : statements) {
             execute(statement);
         }
@@ -27,11 +29,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-    std::visit(*this, statementToExecute);
+    rollbear::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return std::visit(*this, static_cast<ExprVariant>(expression));
+    return rollbear::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -80,14 +82,14 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
 }
 
 void Interpreter::operator()(const ReturnStatement& returnStatement) {
-    Object value;
+    // Object value;
     if (returnStatement.value != nullptr) {
-        value = evaluate(returnStatement.value);
+        // value = evaluate(returnStatement.value);
+        //  throw Return(value);
+        // Object value = evaluate(returnStatement.value);
+        currentReturn = {evaluate(returnStatement.value)};
+        containsReturn = true;
     }
-
-    // throw Return(value);
-    currentReturn = {value};
-    containsReturn = true;
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
@@ -97,27 +99,76 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // to the same function.
     // Here we are taking a function syntax node (a compile time representation)
     // and converting it to its runtime representation
-    const FunctionObject functionObject(functionStatement, this->environment);
+    // const FunctionObject functionObject(&functionStatement,
+    // this->environment);
+    const Object& functionObject =
+        FunctionObject(&functionStatement, this->environment);
     environment->define(functionStatement.name.lexeme, functionObject);
+}
+
+plf::colony<Environment>::iterator
+Interpreter::getNewEnvironment(Environment* closure) {
+    // Environment ev(closure);
+    // auto index = Environments.push(
+    //     Environment(closure), [&](auto index, auto& environment) {
+    //     std::cout << "setting env to " << index << "\n";
+    //     environment.handle = index;
+    //     environment.values.clear();
+    // });
+
+    auto it = EnvironmentsColony.insert(Environment(closure));
+    // it->it = it;
+
+    return it;
+}
+
+Environment* Interpreter::retrieveEnvironment(Environment* closure) {
+
+    auto index = Environments.retrieve([&](auto index, auto& env) {
+        env->enclosing = closure;
+        env->handle = index;
+        env->values.clear();
+    });
+
+    return Environments[index].get();
+}
+
+void Interpreter::clearEnvironmentFromStack(size_t index) {
+    Environments.eraseAt(index);
+}
+
+void Interpreter::ClearEnvironment(Environment* environment) {
+    // environment->values.clear();
+    // Environments.eraseAt(environment->handle);
+
+    // delete self
+    // EnvironmentsColony.erase(environment->it);
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
 
-    auto newEnvironement = std::make_shared<Environment>(environment);
+    // auto newEnvironement = std::make_shared<Environment>(environment);
+    // auto newEnvironmentPtr = Interpreter::getNewEnvironment(environment);
+    auto newEnvironmentPtr = retrieveEnvironment(environment);
+
     executeBlock(blockStatement.statements,
-                 newEnvironement); // pass in current env as parent
+                 &(*newEnvironmentPtr)); // pass in current env as parent
+
+    // clean up env by marking it as free in the storage
+    // ClearEnvironment(newEnvironmentPtr);
+    // EnvironmentsColony.erase(newEnvironmentPtr);
+    clearEnvironmentFromStack(newEnvironmentPtr->handle);
     return;
 }
 
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
-void Interpreter::executeBlock(
-    const std::vector<Statement>& statements,
-    const std::shared_ptr<Environment>& newEnvironement) {
+void Interpreter::executeBlock(const std::vector<Statement>& statements,
+                               Environment* newEnvironment) {
 
     if (enableEnvironmentSwitching) {
         // this stack will take ownership
-        auto previous = environment;
+        const auto previous = environment;
         auto final = finally([&]() { this->environment = previous; });
 
         // main root will get a new one which stores a raw to prev itself. prev
@@ -125,11 +176,11 @@ void Interpreter::executeBlock(
         // still stay valid.
         // 2. if this is called by  operator()(BlockStatement) then the
         // enclosing of newEnv will be previous
-        this->environment = newEnvironement;
+        this->environment = newEnvironment;
 
         // these will go and possibly make env be moved/chagned but thats okay,
         // they will be taken over by lower stacks
-        for (auto& statement : statements) {
+        for (const auto& statement : statements) {
             execute(statement);
             // if we have encountered a return in this block then don't execute
             // any further statemenets (there could be multiple returns)
@@ -144,6 +195,9 @@ void Interpreter::executeBlock(
         enableEnvironmentSwitching = true;
         for (auto& statement : statements) {
             execute(statement);
+            if (containsReturn) {
+                break;
+            }
         }
         enableEnvironmentSwitching = false;
     }
@@ -183,7 +237,12 @@ Object Interpreter::operator()(const Binary& binary) {
             return std::get<double>(left) + std::get<double>(right);
         }
         if (left.is<std::string>() && right.is<std::string>()) {
-            return std::get<std::string>(left) + std::get<std::string>(right);
+
+            return left.get<std::string>() + right.get<std::string>();
+            // return
+            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
+            // +
+            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>());
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -255,6 +314,7 @@ Object Interpreter::operator()(const Unary& unary) {
         return !isTruthy(right);
     }
     }
+    return {};
 }
 
 Object Interpreter::operator()(const Logical& logical) {
@@ -273,10 +333,26 @@ Object Interpreter::operator()(const Logical& logical) {
     return evaluate(logical.right);
 }
 
+Interpreter::objVectorHelper Interpreter::getNewArgumentVector() {
+
+    auto sizet = argumentsStack.retrieve(
+        [](auto index, auto& objVector) { objVector.clear(); });
+    return {argumentsStack[sizet], sizet};
+}
+
+void Interpreter::clearArgumentVector(size_t index) {
+    argumentsStack.eraseAt(index);
+}
+
 Object Interpreter::operator()(const Call& call) {
     Object callee = evaluate(call.callee);
 
-    std::vector<Object> arguments;
+    // std::vector<Object> arguments;
+
+    auto objHelper = getNewArgumentVector();
+    auto& arguments = objHelper.objVector;
+    arguments.reserve(call.arguments.size());
+
     for (auto& argument : call.arguments) {
         arguments.push_back(evaluate(argument));
     }
@@ -301,7 +377,7 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    Object ret = std::visit(
+    Object ret = rollbear::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
@@ -314,7 +390,7 @@ Object Interpreter::operator()(const Call& call) {
                    [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
                 static_cast<ObjectVariant>(callee));
     // clang-format on
-
+    clearArgumentVector(objHelper.index);
     return ret;
 }
 
@@ -365,7 +441,7 @@ std::string Interpreter::stringify(const Object& object) {
 
     // must be a string.
     if (object.is<std::string>()) {
-        text = std::get<std::string>(object);
+        text = object.get<std::string>();
     }
     return text;
 }

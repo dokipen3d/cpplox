@@ -22,16 +22,16 @@ struct Call;
 struct ExprVoidType {};
 
 using ExprVariant =
-    std::variant<recursive_wrapper<Assign>, recursive_wrapper<Binary>,
-                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
-                 recursive_wrapper<Unary>, recursive_wrapper<Variable>,
-                 recursive_wrapper<Logical>, recursive_wrapper<Call>,
+    std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
+                 recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
+                 recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
+                 recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
                  ExprVoidType*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
 
-struct Expr : ExprVariant {
+struct Expr final : ExprVariant {
 
     using ExprVariant::ExprVariant;
     using ExprVariant::operator=;
@@ -51,8 +51,8 @@ struct Expr : ExprVariant {
     bool is() const { // function needs to be const  to make it callable
         // from a const ref
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
+                               recursive_wrapper2<T>, T>;
         return std::holds_alternative<actualTypeToGet>(*this);
     }
 
@@ -60,16 +60,16 @@ struct Expr : ExprVariant {
     inline const T& expr_get() { // function needs to be const  to make it
                                  // callable from a const ref
         constexpr bool isRecursive =
-            has_type<recursive_wrapper<T>, ExprVariant>::value;
+            has_type<recursive_wrapper2<T>, ExprVariant>::value;
 
-        return std::get<recursive_wrapper<T>>(*this);
+        return std::get<recursive_wrapper2<T>>(*this);
     }
 
     template <typename T> inline const T& get() {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
+                               recursive_wrapper2<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 };

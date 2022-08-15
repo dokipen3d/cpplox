@@ -17,12 +17,19 @@ struct TimeIt {
     }
 
     void time() const {
+        // std::cout << scopeName << " took "
+        //           << std::chrono::duration_cast<std::chrono::milliseconds>(
+        //                  std::chrono::high_resolution_clock::now() -
+        //                  m_StartTime)
+        //                  .count()
+        //           << " milliseconds\n";
         std::cout << scopeName << " took "
-                  << std::chrono::duration_cast<std::chrono::milliseconds>(
+                  <<   std::chrono::duration<double, std::milli>(
                          std::chrono::high_resolution_clock::now() -
                          m_StartTime)
                          .count()
                   << " milliseconds\n";
+
     }
     bool scope;
     std::string scopeName;

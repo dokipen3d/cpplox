@@ -10,9 +10,23 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     endif()
 endif()
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supported OUTPUT error)
 
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
-#target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
 
+if( supported )
+    message(STATUS "IPO / LTO enabled")
+    set_property(TARGET cpplox PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(STATUS "IPO / LTO not supported: <${error}>")
+endif()
+
+target_compile_options(cpplox PRIVATE -flto=thin)
+target_link_options(cpplox PRIVATE -flto=thin)
+
+
+#target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
+#target_compile_options(cpplox PRIVATE --param max-inline-recursive-depth=16)

@@ -9,6 +9,8 @@
 
 //#include "Object.h"
 #include "Utilities.hpp"
+#include "thirdparty/tsl/robin_map.h"
+#include "thirdparty/visit.hpp"
 
 namespace cpplox {
 enum class ETokenType {
@@ -121,14 +123,15 @@ struct Environment;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using ObjectVariant = std::variant<void*, double, std::string, bool,
+using ObjectVariant = std::variant<void*, double, recursive_wrapper<std::string>, bool,
                                    recursive_wrapper<NativeFunction>,
                                    recursive_wrapper<FunctionObject>>;
 
-struct Object : ObjectVariant {
+struct Object final : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
+
     // helper functions to make variant comparable to nullptr
     //////////////////////////////////////////////////////////////////////////
     inline bool operator==(std::nullptr_t)
@@ -169,15 +172,20 @@ struct Object : ObjectVariant {
         return std::get<recursive_wrapper<T>>(*this);
     }
     template <typename T>
-    inline const T& get() { // function needs to be const  to
-                            // make it callable from a const ref
+    inline const T& get() const { 
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
+    
 };
-
+inline std::ostream&
+    operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt)
+    {
+        os << dt.t[dt.index];
+        return os;
+    }
 struct Interpreter;
 
 struct NativeFunction {
@@ -185,6 +193,12 @@ struct NativeFunction {
         std::function<Object(const Interpreter&, const std::vector<Object>)>
             func,
         std::function<int()> arity);
+
+    // NativeFunction(NativeFunction const&) = default;
+    // NativeFunction(NativeFunction&&) = default; 
+
+    // NativeFunction& operator=(const NativeFunction& other) = default;
+    // NativeFunction& operator=(NativeFunction&& other) = default;
 
     Object operator()(const Interpreter& interpreter,
                       const std::vector<Object>& objects) {
@@ -199,32 +213,37 @@ struct NativeFunction {
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 
     // we store references to lambdas
-    std::function<Object(const Interpreter&, const std::vector<Object>&)>
+     std::function<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
-    std::function<int()> arity;
+     std::function<int()> arity;
 };
 
 struct FunctionStatement;
 
 struct FunctionObject {
-    FunctionObject(const FunctionStatement& functionStatement,
-                   const std::shared_ptr<Environment>& closure);
+    FunctionObject(const FunctionStatement* functionStatement,
+                   Environment* closure);
 
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
+
+    // FunctionObject(FunctionObject const&) = default;
+    // FunctionObject(FunctionObject&&) = default; 
+
+    // FunctionObject& operator=(const FunctionObject& other) = default;
+    // FunctionObject& operator=(FunctionObject&& other) = default;
 
     // inline bool operator==(const FunctionObject& other){
     //     return false;
     // }
 
-
-    int arity();
+    int arity() const;
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
-    const FunctionStatement& m_declaration;
-    std::shared_ptr<Environment> closure;
+    const FunctionStatement* m_declaration;
+    Environment* closure;
 };
 
 class Token {
@@ -249,7 +268,7 @@ class Token {
             stream << search->second;
         }
         stream << " " << lexeme << " ";
-        std::visit(
+        rollbear::visit(
             [&](auto&& arg) {
                 if (!(literal == nullptr)) { // not a void* so can print
                     stream << arg;
@@ -281,3 +300,4 @@ struct std::variant_size<cpplox::Object>
 template <std::size_t I>
 struct std::variant_alternative<I, cpplox::Object>
     : std::variant_alternative<I, cpplox::ObjectVariant> {};
+

@@ -1,3 +1,5 @@
+import time
+  
 def Fibonacci(n): 
     if n <= 1: 
         return n
@@ -5,5 +7,8 @@ def Fibonacci(n):
     return Fibonacci(n-1)+Fibonacci(n-2) 
   
 # Driver Program 
-for i in range(0,20):
-    print(Fibonacci(i)) 
+#for i in range(0,20):
+starttime = time.time()
+print(Fibonacci(35)) 
+lasttime = time.time()
+print("Time: "+str(lasttime - starttime ))
