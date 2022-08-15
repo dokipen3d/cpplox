@@ -73,15 +73,15 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         return {};
     }
 
-    void define(std::string name, const Object value) {
+    void define(const std::string& name, const Object& value) {
         values.insert_or_assign(name, value);
     }
 
     void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }
-    void assign(Token name, Object value) {
-        if (auto search = values.find(name.lexeme);
+    void assign(const Token& name, const Object& value) {
+        if (const auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
             values.insert_or_assign(name.lexeme, value);
             return;

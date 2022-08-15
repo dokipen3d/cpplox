@@ -17,7 +17,9 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
         TimeIt timer("interpreter");
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
-        for (auto& statement : statements) {
+        std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
+
+        for (const auto& statement : statements) {
             execute(statement);
         }
     } catch (const RuntimeError& error) {
@@ -395,12 +397,13 @@ Object Interpreter::operator()(const Call& call) {
 }
 
 bool Interpreter::isTruthy(const Object& object) {
-    if (object == nullptr) {
-        return false;
-    }
     if (object.is<bool>()) {
         return std::get<bool>(object);
     }
+    if (object == nullptr) {
+        return false;
+    }
+
     // fallback case, should be unreachablea
     return true;
 }
