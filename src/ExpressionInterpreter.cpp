@@ -40,6 +40,9 @@ Object Interpreter::evaluate(const Expr& expression) {
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
     if (expr.distance != -1) {
+        //inc ref count of environment being looked up
+        //Environment* anc = environment->ancestor(expr.distance);
+        //anc->refCount++;
         return environment->getAt(expr.distance, name.lexeme);
     } else {
         return globals->get(name);
@@ -104,7 +107,7 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // const FunctionObject functionObject(&functionStatement,
     // this->environment);
     const Object& functionObject =
-        FunctionObject(&functionStatement, this->environment);
+        FunctionObject(this, &functionStatement, this->environment);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 

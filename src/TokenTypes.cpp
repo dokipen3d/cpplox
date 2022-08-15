@@ -10,14 +10,25 @@ NativeFunction::NativeFunction(
     : m_func(func), arity(arity) {
 }
 
-FunctionObject::FunctionObject(const FunctionStatement* functionStatement,
+FunctionObject::FunctionObject(Interpreter* interpreter,
+                               const FunctionStatement* functionStatement,
                                Environment* closure)
-    : m_declaration(functionStatement), closure(closure) {
+    : interpreter(interpreter), m_declaration(functionStatement),
+      closure(closure) {
 }
 
 int FunctionObject::arity() const {
     return m_declaration->params.size();
 };
+
+FunctionObject::~FunctionObject() {
+    //  interpreter->clearEnvironmentFromStack(
+    //         closure->enclosing->handle); // <---- this was a big deal. i
+    //         moved from below
+    //                             // the return value and it was maybe 1.6x
+    //                             faster.
+    //                             // because the env weren't being cleared up!
+}
 
 Object FunctionObject::operator()(Interpreter& interpreter,
                                   const std::vector<Object>& arguments) {
@@ -29,7 +40,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
 
     // auto environment = std::make_shared<Environment>(closure);
     auto environment = interpreter.retrieveEnvironment(closure);
-
+    // sub = environment;
     for (int i = 0; i < m_declaration->params.size(); i++) {
         environment->define(m_declaration->params[i].lexeme, arguments[i]);
     }
@@ -37,19 +48,46 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // try {
     interpreter.executeBlock(m_declaration->body, environment);
     //} catch (Return returnValue) { // our custom exception type to embed a
-    //value
+    // value
     // and jump back to here
     //    return returnValue.value;
-    interpreter.clearEnvironmentFromStack(
-        environment->handle); // <---- this was a big deal. i moved from below
-                              // the return value and it was maybe 1.6x faster.
-                              // because the env weren't being cleared up!
-
+    // if(environment->refCount == 0){
+    // interpreter.clearEnvironmentFromStack(
+    //     environment->handle); // <---- this was a big deal. i moved from
+    //     below
+    //                         // the return value and it was maybe 1.6x faster.
+    //                         // because the env weren't being cleared up!
+    //}
     if (interpreter.containsReturn) {
+        // if we are returning a function object
+        // ie if value.is<functionObject>()
+        // then set a function on it to set an environment to clear when that
+        // one destroys. otherwise just clean it up. if holds func{
+        // value.setEnv(environment)
+        //} else {
+
+        //}
+        if (interpreter.currentReturn.value.is<FunctionObject>()) {
+            interpreter.currentReturn.value.get<FunctionObject>()
+                .setDelayed(environment);
+        } else {
+            interpreter.clearEnvironmentFromStack(
+            environment
+                ->handle); // <---- this was a big deal. i moved from below
+                           // the return value and it was maybe 1.6x faster.
+                           // because the env weren't being cleared up!
+        }
+
         interpreter.containsReturn = false;
         return interpreter.currentReturn.value;
+    } // if it doesnt return anything, need to clean up as well.
+    else {
+        interpreter.clearEnvironmentFromStack(
+            environment
+                ->handle); // <---- this was a big deal. i moved from below
+                           // the return value and it was maybe 1.6x faster.
+                           // because the env weren't being cleared up!
     }
-    //}
 
     return nullptr;
 }

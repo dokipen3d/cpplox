@@ -129,7 +129,7 @@ struct Interpreter {
     void ClearEnvironment (Environment* environment);
     Return currentReturn = Object{nullptr};
     bool containsReturn = false;
-    uniquestack<std::unique_ptr<Environment>> Environments;
+    uniquestack<std::shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
     
     plf::colony<Environment> EnvironmentsColony;

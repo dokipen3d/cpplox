@@ -123,9 +123,10 @@ struct Environment;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
-using ObjectVariant = std::variant<void*, double, recursive_wrapper<std::string>, bool,
-                                   recursive_wrapper<NativeFunction>,
-                                   recursive_wrapper<FunctionObject>>;
+using ObjectVariant =
+    std::variant<void*, double, recursive_wrapper<std::string>, bool,
+                 recursive_wrapper<NativeFunction>,
+                 recursive_wrapper<FunctionObject>>;
 
 struct Object final : ObjectVariant {
 
@@ -171,21 +172,25 @@ struct Object final : ObjectVariant {
                                            // make it callable from a const ref
         return std::get<recursive_wrapper<T>>(*this);
     }
-    template <typename T>
-    inline const T& get() const { 
+    template <typename T> inline const T& get() const {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
-    
+
+    template <typename T> inline T& get() {
+        using actualTypeToGet =
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
+                               recursive_wrapper<T>, T>;
+        return std::get<actualTypeToGet>(*this);
+    }
 };
 inline std::ostream&
-    operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt)
-    {
-        os << dt.t[dt.index];
-        return os;
-    }
+operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt) {
+    os << dt.t[dt.index];
+    return os;
+}
 struct Interpreter;
 
 struct NativeFunction {
@@ -195,7 +200,7 @@ struct NativeFunction {
         std::function<int()> arity);
 
     // NativeFunction(NativeFunction const&) = default;
-    // NativeFunction(NativeFunction&&) = default; 
+    // NativeFunction(NativeFunction&&) = default;
 
     // NativeFunction& operator=(const NativeFunction& other) = default;
     // NativeFunction& operator=(NativeFunction&& other) = default;
@@ -213,22 +218,24 @@ struct NativeFunction {
     operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
 
     // we store references to lambdas
-     std::function<Object(const Interpreter&, const std::vector<Object>&)>
+    std::function<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
-     std::function<int()> arity;
+    std::function<int()> arity;
 };
 
 struct FunctionStatement;
 
 struct FunctionObject {
-    FunctionObject(const FunctionStatement* functionStatement,
+    FunctionObject(Interpreter* interpreter,
+                   const FunctionStatement* functionStatement,
                    Environment* closure);
+    ~FunctionObject();
 
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
 
     // FunctionObject(FunctionObject const&) = default;
-    // FunctionObject(FunctionObject&&) = default; 
+    // FunctionObject(FunctionObject&&) = default;
 
     // FunctionObject& operator=(const FunctionObject& other) = default;
     // FunctionObject& operator=(FunctionObject&& other) = default;
@@ -238,12 +245,17 @@ struct FunctionObject {
     // }
 
     int arity() const;
+    void setDelayed(Environment* delayed) {
+        envToClearDelayed = delayed;
+    }
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
+    Interpreter* interpreter;
     const FunctionStatement* m_declaration;
     Environment* closure;
+    Environment* envToClearDelayed; // for closure
 };
 
 class Token {
@@ -300,4 +312,3 @@ struct std::variant_size<cpplox::Object>
 template <std::size_t I>
 struct std::variant_alternative<I, cpplox::Object>
     : std::variant_alternative<I, cpplox::ObjectVariant> {};
-
