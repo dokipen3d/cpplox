@@ -354,7 +354,7 @@ Object Interpreter::operator()(const Call& call) {
     arguments.reserve(call.arguments.size());
 
     for (auto& argument : call.arguments) {
-        arguments.push_back(evaluate(argument));
+        arguments.emplace_back(evaluate(argument));
     }
 
     // when we visit the callee (which should be a function object ie with a
