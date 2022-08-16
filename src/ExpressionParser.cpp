@@ -377,7 +377,7 @@ auto Parser::finishCall(Expr callee) -> Expr {
 auto Parser::multiplication() -> Expr {
     Expr expr = unary();
 
-    while (match({ETokenType::SLASH, ETokenType::STAR})) {
+    while (match({ETokenType::SLASH, ETokenType::STAR, ETokenType::MOD})) {
         Token _operator = previous();
         Expr right = unary();
         return Binary(expr, _operator, right);
