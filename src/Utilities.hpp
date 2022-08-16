@@ -69,7 +69,7 @@ template <typename T> struct recursive_wrapper {
     // store the value
     // static std::vector<T> t;
     static sparestack<T> t;
-    size_t index = -1;
+    int index = -1;
     // std::basic_string<T> t;
 };
 
@@ -126,7 +126,7 @@ template <typename T> struct recursive_wrapper2 {
     // store the value
     // static std::vector<T> t;
     static sparestack<T> t;
-    size_t index = -1;
+    int index = -1;
     // std::basic_string<T> t;
 };
 

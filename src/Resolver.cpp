@@ -48,7 +48,7 @@ void Resolver::endScope() {
 }
 
 void Resolver::resolveLocal(const Variable& expr, const Token& name) {
-    for (auto i = scopes.size(); i > 0; i--) {
+    for (int i = scopes.size(); i > 0; i--) {
         auto search = scopes[i - 1].find(name.lexeme);
         if (search != scopes[i - 1].end()) {
             expr.distance = scopes.size() - i;
@@ -60,7 +60,7 @@ void Resolver::resolveLocal(const Variable& expr, const Token& name) {
 }
 
 void Resolver::resolveLocal(const Assign& expr, const Token& name) {
-    for (auto i = scopes.size(); i > 0; i--) {
+    for (int i = scopes.size(); i > 0; i--) {
         auto search = scopes[i - 1].find(name.lexeme);
         if (search != scopes[i - 1].end()) {
             expr.distance = scopes.size() - i;

@@ -40,7 +40,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         : enclosing(environment) {
     }
 
-    Environment* ancestor(std::size_t distance) {
+    Environment* ancestor(int distance) {
         Environment* environmentLocal = this;
         for (int i = 0; i < distance; i++) {
 
@@ -63,7 +63,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    Object getAt(std::size_t distance, const std::string& name) {
+    Object getAt(int distance, const std::string& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
         auto env = varmap.find(name);
@@ -77,7 +77,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         values.insert_or_assign(name, value);
     }
 
-    void assignAt(std::size_t distance, const Token& name, const Object& value) {
+    void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }
     void assign(const Token& name, const Object& value) {

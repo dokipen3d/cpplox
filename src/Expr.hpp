@@ -89,7 +89,7 @@ struct Assign {
     }
     Token name;
     Expr value;
-    mutable std::size_t distance = -1;
+    mutable int distance = -1;
 
 
     // bool operator==(const Assign& other) const {
@@ -135,7 +135,7 @@ struct Variable {
     explicit Variable(Token name) : name(std::move(name)) {
     }
     Token name;
-    mutable std::size_t distance = -1;
+    mutable int distance = -1;
     // bool operator==(const Variable& other) const {
     //     return (name == other.name);
     // }
