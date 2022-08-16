@@ -102,7 +102,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     //ankerl::unordered_dense::map<std::string, Object> values;
 
-    std::size_t handle = -1;
+    int handle = -1;
     //int refCount = 0;
     // plf::colony<Environment>::iterator it;
     //ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
