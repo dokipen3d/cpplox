@@ -26,6 +26,7 @@ enum class ETokenType {
     SEMICOLON,
     SLASH,
     STAR,
+    MOD,
 
     // One or two character tokens.
     BANG,

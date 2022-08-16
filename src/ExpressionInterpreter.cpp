@@ -16,8 +16,8 @@ namespace cpplox {
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
         TimeIt timer("interpreter");
-        std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
-        std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
+        //std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
+        //std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
 
         for (const auto& statement : statements) {
             execute(statement);

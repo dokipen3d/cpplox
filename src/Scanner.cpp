@@ -147,6 +147,8 @@ std::vector<Token> scanTokens(const std::string& source) {
         case '+': addToken(ETokenType::PLUS); break;
         case ';': addToken(ETokenType::SEMICOLON); break;
         case '*': addToken(ETokenType::STAR); break;
+        case '%': addToken(ETokenType::MOD); break;
+
         case '!':
             addToken(match('=') ? ETokenType::BANG_EQUAL : ETokenType::BANG);
             break;
