@@ -256,7 +256,7 @@ struct FunctionObject {
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
     Environment* closure;
-    Environment* envToClearDelayed; // for closure
+    Environment* envToClearDelayed = nullptr; // for closure
 };
 
 class Token {

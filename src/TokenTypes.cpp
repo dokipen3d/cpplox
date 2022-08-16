@@ -22,12 +22,10 @@ std::size_t FunctionObject::arity() const {
 };
 
 FunctionObject::~FunctionObject() {
-    //  interpreter->clearEnvironmentFromStack(
-    //         closure->enclosing->handle); // <---- this was a big deal. i
-    //         moved from below
-    //                             // the return value and it was maybe 1.6x
-    //                             faster.
-    //                             // because the env weren't being cleared up!
+    if (envToClearDelayed != nullptr) {
+        interpreter->clearEnvironmentFromStack(
+            envToClearDelayed->enclosing->handle);
+    }
 }
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -68,14 +66,14 @@ Object FunctionObject::operator()(Interpreter& interpreter,
 
         //}
         if (interpreter.currentReturn.value.is<FunctionObject>()) {
-            interpreter.currentReturn.value.get<FunctionObject>()
-                .setDelayed(environment);
+            interpreter.currentReturn.value.get<FunctionObject>().setDelayed(
+                environment);
         } else {
             interpreter.clearEnvironmentFromStack(
-            environment
-                ->handle); // <---- this was a big deal. i moved from below
-                           // the return value and it was maybe 1.6x faster.
-                           // because the env weren't being cleared up!
+                environment
+                    ->handle); // <---- this was a big deal. i moved from below
+                               // the return value and it was maybe 1.6x faster.
+                               // because the env weren't being cleared up!
         }
 
         interpreter.containsReturn = false;

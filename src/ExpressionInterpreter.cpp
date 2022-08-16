@@ -157,7 +157,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
     auto newEnvironmentPtr = retrieveEnvironment(environment);
 
     executeBlock(blockStatement.statements,
-                 &(*newEnvironmentPtr)); // pass in current env as parent
+                 newEnvironmentPtr); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
     // ClearEnvironment(newEnvironmentPtr);
@@ -262,6 +262,10 @@ Object Interpreter::operator()(const Binary& binary) {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) * std::get<double>(right);
     }
+    // case ETokenType::MOD: {
+    //     checkNumberOperands(binary.op, left, right);
+    //     return std::fmod(std::get<double>(left), std::get<double>(right));
+    // }
     case ETokenType::BANG_EQUAL: {
         return !isEqual(left, right);
     }
