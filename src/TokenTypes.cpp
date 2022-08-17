@@ -68,6 +68,10 @@ Object FunctionObject::operator()(Interpreter& interpreter,
         if (interpreter.currentReturn.value.is<FunctionObject>()) {
             interpreter.currentReturn.value.get<FunctionObject>().setDelayed(
                 environment);
+        // if (auto foPtr = interpreter.currentReturn.value.get_if<FunctionObject>()) {
+        //     static_cast<FunctionObject>(*foPtr).setDelayed(
+        //         environment);
+
         } else {
             interpreter.clearEnvironmentFromStack(
                 environment

@@ -50,7 +50,7 @@ void Resolver::endScope() {
 void Resolver::resolveLocal(const Variable& expr, const Token& name) {
     for (int i = scopes.size(); i > 0; i--) {
         auto search = scopes[i - 1].find(name.lexeme);
-        if (search != scopes[i - 1].end()) {
+        if (search != scopes[i - 1 ].end()) {
             expr.distance = scopes.size() - i;
             return;
         }
@@ -92,11 +92,11 @@ void Resolver::operator()(const IfStatement& ifStatement) {
     }
 }
 void Resolver::operator()(const WhileStatement& whileStatement) {
-    enableEnvironmentSwitching = false;
+    //enableEnvironmentSwitching = false;
 
     resolve(whileStatement.condition);
     resolve(whileStatement.body);
-    enableEnvironmentSwitching = true;
+    //enableEnvironmentSwitching = true;
 }
 void Resolver::operator()(const FunctionStatement& functionStatement) {
     declare(functionStatement.name);
@@ -121,14 +121,14 @@ void Resolver::operator()(const ReturnStatement& returnStatement) {
 }
 
 void Resolver::operator()(const BlockStatement& blockStatement) {
-    if (enableEnvironmentSwitching) {
+    if (true) {
         beginScope();
         resolve(blockStatement.statements);
         endScope();
     } else {
-        enableEnvironmentSwitching = false;
+       // enableEnvironmentSwitching = false;
         resolve(blockStatement.statements);
-        enableEnvironmentSwitching = true;
+       // enableEnvironmentSwitching = true;
     }
 }
 void Resolver::operator()(const Assign& assign) {

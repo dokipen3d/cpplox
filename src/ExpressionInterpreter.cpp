@@ -16,8 +16,8 @@ namespace cpplox {
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
         TimeIt timer("interpreter");
-        //std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
-        //std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
+        // std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
+        // std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
 
         for (const auto& statement : statements) {
             execute(statement);
@@ -40,9 +40,9 @@ Object Interpreter::evaluate(const Expr& expression) {
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
     if (expr.distance != -1) {
-        //inc ref count of environment being looked up
-        //Environment* anc = environment->ancestor(expr.distance);
-        //anc->refCount++;
+        // inc ref count of environment being looked up
+        // Environment* anc = environment->ancestor(expr.distance);
+        // anc->refCount++;
         return environment->getAt(expr.distance, name.lexeme);
     } else {
         return globals->get(name);
@@ -171,7 +171,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
                                Environment* newEnvironment) {
 
-    if (enableEnvironmentSwitching) {
+    if (true) {
         // this stack will take ownership
         const auto previous = environment;
         auto final = finally([&]() { this->environment = previous; });
@@ -262,10 +262,10 @@ Object Interpreter::operator()(const Binary& binary) {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) * std::get<double>(right);
     }
-    // case ETokenType::MOD: {
-    //     checkNumberOperands(binary.op, left, right);
-    //     return std::fmod(std::get<double>(left), std::get<double>(right));
-    // }
+    case ETokenType::MOD: {
+        checkNumberOperands(binary.op, left, right);
+        return std::fmod(std::get<double>(left), std::get<double>(right));
+    }
     case ETokenType::BANG_EQUAL: {
         return !isEqual(left, right);
     }
@@ -416,6 +416,16 @@ bool Interpreter::isTruthy(const Object& object) {
 }
 bool Interpreter::isEqual(const Object& a, const Object& b) {
     // nil is only equal to nil
+    // if (a.is<double>() && b.is<double>()) {
+    //     return std::abs(std::get<double>(a) - std::get<double>(b)) <
+    //            std::numeric_limits<double>::epsilon();
+    // }
+    if (a.is<double>() && b.is<double>()) {
+        return std::get<double>(a) == std::get<double>(b);
+    }
+    if (a.is<std::string>() && b.is<std::string>()) {
+        return a.get<std::string>() == b.get<std::string>();
+    }
     return a == b;
 }
 // we could rely on the bad_variant_access but this way we throw based on

@@ -19,18 +19,18 @@ struct lox {
 
     void run(const std::string& code) {
 
-        std::cout << "scanning tokens\n";
+        //std::cout << "scanning tokens\n";
 
         auto tokens = cpplox::scanTokens(code);
         // for (auto& t : tokens){
         //         std::cout << t.lexeme << " ";
         // }
-        std::cout << "\n";
+        //std::cout << "\n";
 
-        std::cout << "parsing expressions\n";
+        //std::cout << "parsing expressions\n";
         cpplox::Parser parser(tokens);
         const std::vector<cpplox::Statement> statements = parser.parse();
-        std::cout << "resolving\n";
+        //std::cout << "resolving\n";
 
         cpplox::Resolver resolver;
         resolver.resolve(statements);
@@ -44,7 +44,7 @@ struct lox {
 
         try {
 
-            std::cout << "interpreting expression\n";
+            //std::cout << "interpreting expression\n";
 
             interpreter.interpret(statements);
 
@@ -55,7 +55,7 @@ struct lox {
 
     // dummy functions to make main run at this stage
     void runFile(const std::string& filePath) {
-        std::cout << "running file " << filePath << "\n";
+        //std::cout << "running file " << filePath << "\n";
         std::ifstream inputFileStream(filePath);
         std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
         run(code);

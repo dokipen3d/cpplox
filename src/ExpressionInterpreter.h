@@ -103,7 +103,7 @@ struct Interpreter {
                      // set
     // back
     bool enableEnvironmentSwitching =
-        true; // when looping, we dont need to push and pop environments so
+        false; // when looping, we dont need to push and pop environments so
               // we disable
 
     struct ExprComparitor {
@@ -129,7 +129,7 @@ struct Interpreter {
     void ClearEnvironment (Environment* environment);
     Return currentReturn = Object{nullptr};
     bool containsReturn = false;
-    uniquestack<std::shared_ptr<Environment>> Environments;
+    uniquestack<std::unique_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
     
     plf::colony<Environment> EnvironmentsColony;
