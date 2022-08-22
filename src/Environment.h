@@ -63,7 +63,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    Object getAt(int distance, const std::string& name) {
+    const Object& getAt(int distance, const std::string& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
         auto env = varmap.find(name);
