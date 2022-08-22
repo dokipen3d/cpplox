@@ -6,7 +6,7 @@ starttime = time.time()
 
 
 sum = 0.0
-for i in range(1,1100):
+for i in range(1,11000):
     if (i % 2 == 0):
         sum = sum + 1.0 / i
     else:

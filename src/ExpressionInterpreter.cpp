@@ -453,7 +453,7 @@ std::string Interpreter::stringify(const Object& object) {
         //text = std::to_string(std::get<double>(object));
         text = to_string_with_precision(std::get<double>(object), 11);
 
-        //stripZerosFromString(text);
+        stripZerosFromString(text);
     }
     if (object.is<bool>()) {
         text = std::get<bool>(object) ? "true" : "false";
