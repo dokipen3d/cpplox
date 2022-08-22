@@ -1,5 +1,8 @@
+var before = clock();
+
+
 var sum = 0.0;
-for (var i = 1; i <= 10; i = i + 1) {
+for (var i = 1; i < 1100; i = i + 1) {
     if (i % 2 == 0) {
         sum = sum + 1.0 / i;
     }
@@ -8,3 +11,7 @@ for (var i = 1; i <= 10; i = i + 1) {
     }
 }
 print(sum);
+
+
+var after = clock();
+print after - before;

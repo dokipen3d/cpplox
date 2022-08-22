@@ -44,7 +44,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     }
 
     // try {
-    interpreter.executeBlock(m_declaration->body, environment);
+    interpreter.executeBlock(m_declaration->body, environment, ExpressionStatement{nullptr});
     //} catch (Return returnValue) { // our custom exception type to embed a
     // value
     // and jump back to here

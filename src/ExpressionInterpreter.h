@@ -3,8 +3,8 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
-#include "thirdparty/sparestack.hpp"
 #include "thirdparty/plf_colony.h"
+#include "thirdparty/sparestack.hpp"
 #include <chrono>
 #include <exception>
 #include <map>
@@ -29,11 +29,10 @@ struct Return : std::exception {
 };
 
 struct Interpreter {
-    Interpreter() 
-         {
+    Interpreter() {
         globals = retrieveEnvironment();
-        
-        environment = globals; 
+
+        environment = globals;
         // should move this to cpp file....
         globals->define(
             "clock",
@@ -54,7 +53,6 @@ struct Interpreter {
     Object evaluate(const Expr& expression);
     Object lookUpVariable(const Token& name, const Variable& expr);
 
-
     void operator()(const ExpressionStatement& expressionStatement);
     void operator()(const IfStatement& ifStatement);
     void operator()(const WhileStatement& whileStatement);
@@ -69,7 +67,8 @@ struct Interpreter {
 
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements,
-                      Environment* newEnvironment);
+                      Environment* newEnvironment,
+                      const Statement& expressionStatement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -101,15 +100,15 @@ struct Interpreter {
     //     environment; // this maybe overriden temporarily by blocks and then
     //                  // set
 
-   
-                     // set
+    // set
     // back
     bool enableEnvironmentSwitching =
         false; // when looping, we dont need to push and pop environments so
-              // we disable
+               // we disable
 
     struct ExprComparitor {
-        bool operator()(const LookupVariableVariant& a, const LookupVariableVariant& b) const {
+        bool operator()(const LookupVariableVariant& a,
+                        const LookupVariableVariant& b) const {
             return &a < &b; // compare address of Expressions to see if they
                             // are equal?
         }
@@ -130,11 +129,12 @@ struct Interpreter {
     bool containsReturn = false;
     uniquestack<std::unique_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
-    
+
     plf::colony<Environment> EnvironmentsColony;
     Environment* globals; // place to store global native functions etc
 
-    Environment* environment; // this maybe overriden temporarily by blocks and then
-    //std::unordered_map<LookupVariableVariant, int> locals;
+    Environment*
+        environment; // this maybe overriden temporarily by blocks and then
+    // std::unordered_map<LookupVariableVariant, int> locals;
 };
 } // namespace cpplox

@@ -21,6 +21,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         TimeIt timer("interpreter");
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
+         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n"; 
         for (const auto& statement : statements) {
             execute(statement);
         }
@@ -135,7 +136,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
     auto newEnvironmentPtr = retrieveEnvironment(environment);
 
     executeBlock(blockStatement.statements,
-                 newEnvironmentPtr); // pass in current env as parent
+                 newEnvironmentPtr, blockStatement.increment); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
     // ClearEnvironment(newEnvironmentPtr);
@@ -147,8 +148,9 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               Environment* newEnvironment) {
+                               Environment* newEnvironment, const Statement& expressionStatement) {
 
+    bool inc = false;
     if (true) {
         // this stack will take ownership
         const auto previous = environment;
@@ -168,6 +170,11 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
             // if we have encountered a return in this block then don't execute
             // any further statemenets (there could be multiple returns)
             if (containsReturn) {
+                //execute(expressionStatement);
+                // if(performIncrement && !inc){
+                //     inc = true;
+                //     continue;
+                // }
                 return;
             }
         }
@@ -175,14 +182,14 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
         // interpreter env to its current parent
         // this->environment = std::move(previous);
     } else {
-        enableEnvironmentSwitching = true;
+       // enableEnvironmentSwitching = true;
         for (auto& statement : statements) {
             execute(statement);
             if (containsReturn) {
                 break;
             }
         }
-        enableEnvironmentSwitching = false;
+        //enableEnvironmentSwitching = false;
     }
 }
 
