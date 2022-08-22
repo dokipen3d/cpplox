@@ -136,7 +136,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
     auto newEnvironmentPtr = retrieveEnvironment(environment);
 
     executeBlock(blockStatement.statements,
-                 newEnvironmentPtr, blockStatement.increment); // pass in current env as parent
+                 newEnvironmentPtr, &blockStatement.increment); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
     // ClearEnvironment(newEnvironmentPtr);
@@ -148,7 +148,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               Environment* newEnvironment, const Statement& expressionStatement) {
+                               Environment* newEnvironment,const ExpressionStatement* expressionStatement) {
 
     bool inc = false;
     if (true) {
@@ -170,7 +170,9 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
             // if we have encountered a return in this block then don't execute
             // any further statemenets (there could be multiple returns)
             if (containsReturn) {
-                execute(expressionStatement);
+                if(expressionStatement){
+                    execute(*expressionStatement);
+                }
                 // if(performIncrement && !inc){
                 //     inc = true;
                 //     continue;

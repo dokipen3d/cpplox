@@ -68,7 +68,7 @@ struct Interpreter {
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements,
                       Environment* newEnvironment,
-                      const Statement& expressionStatement);
+                      const ExpressionStatement* expressionStatement);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
