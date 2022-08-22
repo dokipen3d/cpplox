@@ -80,6 +80,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
     void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }
+    
     void assign(const Token& name, const Object& value) {
         if (const auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
@@ -96,8 +97,8 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     // std::shared_ptr<Environment> enclosing;
     Environment* enclosing = nullptr;
-    // std::unordered_map<std::string, Object> values;
-    // robin_hood::unordered_map<std::string, Object> values;
+    //std::unordered_map<std::string, Object> values;
+    //robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<std::string, Object> values;
 
     //ankerl::unordered_dense::map<std::string, Object> values;

@@ -94,7 +94,7 @@ template <typename T> class sparestack {
         return _data[idx];
     }
 
-    T operator[](std::size_t idx) const {
+    T& operator[](std::size_t idx) const {
         return _data[idx];
     }
 
@@ -189,7 +189,7 @@ template <typename T> class uniquestack {
         return _data[idx];
     }
 
-    T operator[](std::size_t idx) const {
+    T& operator[](std::size_t idx) const {
         return _data[idx];
     }
 

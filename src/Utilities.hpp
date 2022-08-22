@@ -4,21 +4,44 @@
 #include <utility>
 #include <vector>
 
-// static unsigned int FNVHash(std::string str) {
-//     const unsigned int fnv_prime = 0x811C9DC5;
-//     unsigned int hash = 0;
-//     unsigned int i = 0;
-//     unsigned int len = str.length();
+static unsigned int FNVHash(std::string str) {
+    const unsigned int fnv_prime = 0x811C9DC5;
+    unsigned int hash = 0;
+    unsigned int i = 0;
+    unsigned int len = str.length();
 
-//     for (i = 0; i < len; i++) {
-//         hash *= fnv_prime;
-//         hash ^= (str[i]);
-//     }
+    for (i = 0; i < len; i++) {
+        hash *= fnv_prime;
+        hash ^= (str[i]);
+    }
 
-//     return hash;
-// }
+    return hash;
+}
 
 namespace cpplox {
+
+inline std::vector<std::string> split(std::string stringIn, char c = ' ') {
+    std::vector<std::string> result;
+    const char* str = stringIn.c_str();
+
+    do {
+        const char* begin = str;
+
+        while (*str != c && *str)
+            str++;
+
+        result.push_back(std::string(begin, str));
+    } while (0 != *str++);
+
+    return result;
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
 
 inline bool safeToReuse = false;
 
@@ -29,9 +52,9 @@ template <typename T> struct recursive_wrapper {
     recursive_wrapper(T&& t_) {
         // t.push_back(std::move(t_));
         index = t.push(std::forward<T>(t_));
-        //std::cout << "increasing\n";
-        // t.push_back(std::forward<T>(t_));
-        // index = t.size() - 1;
+        // std::cout << "increasing\n";
+        //  t.push_back(std::forward<T>(t_));
+        //  index = t.size() - 1;
     }
 
     // ~recursive_wrapper() {
@@ -43,7 +66,6 @@ template <typename T> struct recursive_wrapper {
     // recursive_wrapper(const recursive_wrapper& operand) = default;
 
     // recursive_wrapper(recursive_wrapper&& operand) = default;
-
 
     // recursive_wrapper& operator=(const recursive_wrapper& rhs)  = default;
     // recursive_wrapper& operator=(recursive_wrapper&& rhs) = default;
@@ -76,7 +98,6 @@ template <typename T> struct recursive_wrapper {
 // template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
 template <typename T> inline sparestack<T> recursive_wrapper<T>::t;
 
-
 // recursive wrapper with single vector for each type
 template <typename T> struct recursive_wrapper2 {
     // construct from an existing object
@@ -84,7 +105,7 @@ template <typename T> struct recursive_wrapper2 {
     recursive_wrapper2(T&& t_) {
         // t.push_back(std::move(t_));
         index = t.push(std::forward<T>(t_));
-       // std::cout << "increasing\n";
+        // std::cout << "increasing\n";
         // t.push_back(std::forward<T>(t_));
         // index = t.size() - 1;
     }
@@ -100,7 +121,6 @@ template <typename T> struct recursive_wrapper2 {
     // recursive_wrapper(const recursive_wrapper& operand) = default;
 
     // recursive_wrapper(recursive_wrapper&& operand) = default;
-
 
     // recursive_wrapper& operator=(const recursive_wrapper& rhs)  = default;
     // recursive_wrapper& operator=(recursive_wrapper&& rhs) = default;
@@ -190,3 +210,49 @@ template <class F> class finally {
 };
 
 } // namespace cpplox
+
+
+
+/*
+char key, key2, key3;
+
+            system("stty raw");
+
+            key = getchar();
+
+            system("stty cooked");
+
+            if (key == 27 && !backspace) {
+                system("stty raw");
+
+                key2 = getchar();
+                 std::cout << key2;
+                std::cout << key3;
+
+                key3 = getchar();
+                if (key3 == 65) {
+                    std::cout << "\r" << lastLine;
+                }
+                if(key3 == 8){
+                    backspace = true;
+                    std::cout << "BS\n";
+                }
+                system("stty cooked");
+                runLastLine = true;
+            } else if (key == 3) {
+                raise(SIGINT);
+            }
+
+            else {
+                // system("stty cooked");
+                if (runLastLine) {
+                    currentLine = lastLine;
+                    std::cout << "\r" << lastLine;
+                    std::cin >> lastLine;
+                    std::cin.ignore();
+
+                } else {
+
+                    std::cout << key;
+                }
+                */

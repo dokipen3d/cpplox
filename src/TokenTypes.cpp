@@ -55,7 +55,9 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     //     below
     //                         // the return value and it was maybe 1.6x faster.
     //                         // because the env weren't being cleared up!
+    
     //}
+    
     if (interpreter.containsReturn) {
         // if we are returning a function object
         // ie if value.is<functionObject>()
@@ -86,9 +88,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     else {
         interpreter.clearEnvironmentFromStack(
             environment
-                ->handle); // <---- this was a big deal. i moved from below
-                           // the return value and it was maybe 1.6x faster.
-                           // because the env weren't being cleared up!
+                ->handle);
     }
 
     return nullptr;

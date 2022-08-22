@@ -134,6 +134,12 @@ struct Object final : ObjectVariant {
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
 
+    // Object(Object const&) = default;
+    // Object(Object&&) = default;
+
+    // Object& operator=(const Object& other) = default;
+    // Object& operator=(Object&& other) = default;
+
     // helper functions to make variant comparable to nullptr
     //////////////////////////////////////////////////////////////////////////
     inline bool operator==(std::nullptr_t)

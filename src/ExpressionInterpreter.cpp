@@ -8,6 +8,8 @@
 
 #include <functional>
 #include <iostream>
+#include <sstream>
+
 #include <iterator> //for std::next()
 #include <vector>
 
@@ -16,9 +18,8 @@ namespace cpplox {
 void Interpreter::interpret(const std::vector<Statement>& statements) {
     try {
         TimeIt timer("interpreter");
-        // std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
-        // std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
-
+        std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
+        std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
         for (const auto& statement : statements) {
             execute(statement);
         }
@@ -71,7 +72,7 @@ void Interpreter::operator()(const WhileStatement& whileStatement) {
 }
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
-    Object value = evaluate(printStatement.expression);
+    const Object& value = evaluate(printStatement.expression);
     std::cout << std::fixed << stringify(value) << "\n";
     return;
 }
@@ -92,7 +93,7 @@ void Interpreter::operator()(const ReturnStatement& returnStatement) {
         // value = evaluate(returnStatement.value);
         //  throw Return(value);
         // Object value = evaluate(returnStatement.value);
-        currentReturn = {evaluate(returnStatement.value)};
+        currentReturn = evaluate(returnStatement.value);
         containsReturn = true;
     }
 }
@@ -129,7 +130,7 @@ Interpreter::getNewEnvironment(Environment* closure) {
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
 
-    auto index = Environments.retrieve([&](auto index, auto& env) {
+    const auto index = Environments.retrieve([&](auto index, auto& env) {
         env->enclosing = closure;
         env->handle = index;
         env->values.clear();
@@ -211,8 +212,8 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
 Object Interpreter::operator()(const Binary& binary) {
     // Object returnValue;
 
-    Object left = evaluate(binary.left);
-    Object right = evaluate(binary.right);
+    const Object& left = evaluate(binary.left);
+    const Object& right = evaluate(binary.right);
 
     switch (binary.op.eTokenType) {
     case ETokenType::GREATER: {
@@ -277,7 +278,7 @@ Object Interpreter::operator()(const Binary& binary) {
 }
 
 Object Interpreter::operator()(const Assign& assign) {
-    Object value = evaluate(assign.value);
+    const Object& value = evaluate(assign.value);
 
     // auto search = locals.find(assign);
     // if (search != locals.end()) {
@@ -287,7 +288,7 @@ Object Interpreter::operator()(const Assign& assign) {
     //     globals->assign(assign.name, value);
     // }
     if (assign.distance != -1) {
-        int offset = enableEnvironmentSwitching == false;
+        //int offset = enableEnvironmentSwitching == false;
         environment->assignAt(assign.distance, assign.name, value);
     } else {
         globals->assign(assign.name, value);
@@ -307,7 +308,7 @@ Object Interpreter::operator()(const Grouping& grouping) {
     return evaluate(grouping.expr);
 }
 Object Interpreter::operator()(const Unary& unary) {
-    Object right = evaluate(unary.expr);
+    const Object& right = evaluate(unary.expr);
 
     switch (unary.token.eTokenType) {
     case ETokenType::MINUS: {
@@ -327,7 +328,7 @@ Object Interpreter::operator()(const Unary& unary) {
 }
 
 Object Interpreter::operator()(const Logical& logical) {
-    Object left = evaluate(logical.left);
+    const Object& left = evaluate(logical.left);
 
     if (logical.op.eTokenType == ETokenType::OR) {
         if (isTruthy(left)) {
@@ -354,7 +355,7 @@ void Interpreter::clearArgumentVector(size_t index) {
 }
 
 Object Interpreter::operator()(const Call& call) {
-    Object callee = evaluate(call.callee);
+    const Object& callee = evaluate(call.callee);
 
     // std::vector<Object> arguments;
 
@@ -386,7 +387,7 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    Object ret = rollbear::visit(
+    const Object ret = rollbear::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
@@ -394,7 +395,7 @@ Object Interpreter::operator()(const Call& call) {
                        return checkArityAndCallFunction(func);
                    },
                    [&](const bool b) -> Object { throwIfWrongType(); return {};},
-                   [&](const std::string s) -> Object { throwIfWrongType(); return {}; },
+                   [&](const std::string& s) -> Object { throwIfWrongType(); return {}; },
                    [&](const double d) -> Object { throwIfWrongType();  return {};},
                    [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
                 static_cast<ObjectVariant>(callee));
@@ -445,6 +446,17 @@ void Interpreter::checkNumberOperands(const Token& token, const Object& left,
     }
     throw RuntimeError(token, "Operands must be a number.");
 }
+
+
+template <typename T>
+std::string to_string_with_precision(const T a_value, const int n = 6)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return out.str();
+}
+
 std::string Interpreter::stringify(const Object& object) {
     std::string text; // for rvo
     if (object == nullptr) {
@@ -452,8 +464,10 @@ std::string Interpreter::stringify(const Object& object) {
     }
 
     if (object.is<double>()) {
-        text = std::to_string(std::get<double>(object));
-        stripZerosFromString(text);
+        //text = std::to_string(std::get<double>(object));
+        text = to_string_with_precision(std::get<double>(object), 11);
+
+        //stripZerosFromString(text);
     }
     if (object.is<bool>()) {
         text = std::get<bool>(object) ? "true" : "false";
