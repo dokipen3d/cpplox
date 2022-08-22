@@ -45,7 +45,7 @@ struct ReturnStatement {
 };
 
 using Statement =
-    std::variant<ExpressionStatement, PrintStatement, VariableStatement,
+    mpark::variant<ExpressionStatement, PrintStatement, VariableStatement,
                  ReturnStatement, recursive_wrapper<BlockStatement>,
                  recursive_wrapper<IfStatement>,
                  recursive_wrapper<WhileStatement>,
@@ -58,7 +58,7 @@ inline bool operator==(
     std::nullptr_t) { // needs to be inline because its a free function that
                       // it included in multiple translation units. needs to
                       // be marked inline so linker knows its the same one
-    return std::holds_alternative<VoidType*>(other);
+    return mpark::holds_alternative<VoidType*>(other);
 }
 
 inline bool operator!=(const Statement& other, std::nullptr_t ptr) {
@@ -69,13 +69,13 @@ inline bool operator!=(const Statement& other, std::nullptr_t ptr) {
 template <typename T>
 bool is(const Statement& statement) { // function needs to be const  to make it
                                       // callable from a const ref
-    return std::holds_alternative<recursive_wrapper<T>>(statement);
+    return mpark::holds_alternative<recursive_wrapper<T>>(statement);
 }
 
 template <typename T>
 T& getAs(Statement& statement) { // function needs to be const  to make it
                                  // callable from a const ref
-    return std::get<recursive_wrapper<T>>(statement);
+    return mpark::get<recursive_wrapper<T>>(statement);
 }
 
 template <typename T> T& get(Statement& statement) {
@@ -83,7 +83,7 @@ template <typename T> T& get(Statement& statement) {
     using actualTypeToGet =
         std::conditional_t<has_type_v<recursive_wrapper<T>, Statement>,
                            recursive_wrapper<T>, T>;
-    return std::get<actualTypeToGet>(statement);
+    return mpark::get<actualTypeToGet>(statement);
 }
 
 //////////////////////////////////////////////////////////////////////////

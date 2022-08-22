@@ -34,11 +34,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-    std::visit(*this, statementToExecute);
+    mpark::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return std::visit(*this, static_cast<ExprVariant>(expression));
+    return mpark::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -204,29 +204,29 @@ Object Interpreter::operator()(const Binary& binary) {
     switch (binary.op.eTokenType) {
     case ETokenType::GREATER: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) > std::get<double>(right);
+        return mpark::get<double>(left) > mpark::get<double>(right);
     }
     case ETokenType::GREATER_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) >= std::get<double>(right);
+        return mpark::get<double>(left) >= mpark::get<double>(right);
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) < std::get<double>(right);
+        return mpark::get<double>(left) < mpark::get<double>(right);
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) <= std::get<double>(right);
+        return mpark::get<double>(left) <= mpark::get<double>(right);
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) - std::get<double>(right);
+        return mpark::get<double>(left) - mpark::get<double>(right);
     }
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            return std::get<double>(left) + std::get<double>(right);
+            return mpark::get<double>(left) + mpark::get<double>(right);
         }
         if (left.is<std::string>() && right.is<std::string>()) {
 
@@ -243,15 +243,15 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::SLASH: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) / std::get<double>(right);
+        return mpark::get<double>(left) / mpark::get<double>(right);
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) * std::get<double>(right);
+        return mpark::get<double>(left) * mpark::get<double>(right);
     }
     case ETokenType::MOD: {
         checkNumberOperands(binary.op, left, right);
-        return std::fmod(std::get<double>(left), std::get<double>(right));
+        return std::fmod(mpark::get<double>(left), mpark::get<double>(right));
     }
     case ETokenType::BANG_EQUAL: {
         return !isEqual(left, right);
@@ -304,7 +304,7 @@ Object Interpreter::operator()(const Unary& unary) {
         // type, an exception will get thrown. this is equivalent to the
         // cast in java failing and throwing
 
-        return -std::get<double>(right);
+        return -mpark::get<double>(right);
     }
     case ETokenType::BANG: {
         return !isTruthy(right);
@@ -373,7 +373,7 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    const Object ret = rollbear::visit(
+    const Object ret = mpark::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
@@ -392,7 +392,7 @@ Object Interpreter::operator()(const Call& call) {
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
-        return std::get<bool>(object);
+        return mpark::get<bool>(object);
     }
     if (object == nullptr) {
         return false;
@@ -408,7 +408,7 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     //            std::numeric_limits<double>::epsilon();
     // }
     if (a.is<double>() && b.is<double>()) {
-        return std::get<double>(a) == std::get<double>(b);
+        return mpark::get<double>(a) == mpark::get<double>(b);
     }
     if (a.is<std::string>() && b.is<std::string>()) {
         return a.get<std::string>() == b.get<std::string>();
@@ -451,12 +451,12 @@ std::string Interpreter::stringify(const Object& object) {
 
     if (object.is<double>()) {
         //text = std::to_string(std::get<double>(object));
-        text = to_string_with_precision(std::get<double>(object), 11);
+        text = to_string_with_precision(mpark::get<double>(object), 11);
 
         stripZerosFromString(text);
     }
     if (object.is<bool>()) {
-        text = std::get<bool>(object) ? "true" : "false";
+        text = mpark::get<bool>(object) ? "true" : "false";
     }
 
     // must be a string.

@@ -23,7 +23,7 @@ struct Call;
 struct ExprVoidType {};
 
 using ExprVariant =
-    std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
+    mpark::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
                  recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
                  recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
                  recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
@@ -41,7 +41,7 @@ struct Expr final : ExprVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        return std::holds_alternative<ExprVoidType*>(*this);
+        return mpark::holds_alternative<ExprVoidType*>(*this);
     }
 
     inline bool operator!=(std::nullptr_t ptr) const {
@@ -54,7 +54,7 @@ struct Expr final : ExprVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
                                recursive_wrapper2<T>, T>;
-        return std::holds_alternative<actualTypeToGet>(*this);
+        return mpark::holds_alternative<actualTypeToGet>(*this);
     }
 
     template <typename T>
@@ -63,7 +63,7 @@ struct Expr final : ExprVariant {
         constexpr bool isRecursive =
             has_type<recursive_wrapper2<T>, ExprVariant>::value;
 
-        return std::get<recursive_wrapper2<T>>(*this);
+        return mpark::get<recursive_wrapper2<T>>(*this);
     }
 
     template <typename T> inline const T& get() {
@@ -71,7 +71,7 @@ struct Expr final : ExprVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
                                recursive_wrapper2<T>, T>;
-        return std::get<actualTypeToGet>(*this);
+        return mpark::get<actualTypeToGet>(*this);
     }
 };
 
@@ -170,7 +170,7 @@ struct Call {
     // }
 };
 
-using LookupVariableVariant = std::variant<Variable, Assign>;
+using LookupVariableVariant = mpark::variant<Variable, Assign>;
 
 static_assert(std::is_move_constructible_v<Expr>,
               "Expr is not move contructible");
@@ -181,12 +181,12 @@ static_assert(std::is_move_assignable_v<Expr>, "Expr is not move contructible");
 // these are needed for gcc to be able to visit exprs
 
 template <>
-struct std::variant_size<cpplox::Expr>
-    : std::variant_size<cpplox::ExprVariant> {};
+struct mpark::variant_size<cpplox::Expr>
+    : mpark::variant_size<cpplox::ExprVariant> {};
 
 template <std::size_t I>
-struct std::variant_alternative<I, cpplox::Expr>
-    : std::variant_alternative<I, cpplox::ExprVariant> {};
+struct mpark::variant_alternative<I, cpplox::Expr>
+    : mpark::variant_alternative<I, cpplox::ExprVariant> {};
 
 // //custom specialization of std::hash can be injected in namespace std
 // namespace std {

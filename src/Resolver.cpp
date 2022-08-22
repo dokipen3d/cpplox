@@ -8,7 +8,7 @@ namespace cpplox {
 
 
 void Resolver::resolve(const Statement& statement) {
-    std::visit(*this, statement);
+    mpark::visit(*this, statement);
 }
 
 void Resolver::resolve(const std::vector<Statement>& statements) {
@@ -21,7 +21,7 @@ void Resolver::resolve(const std::vector<Statement>& statements) {
 }
 
 void Resolver::resolve(const Expr& expr) {
-    std::visit(*this, static_cast<ExprVariant>(expr));
+    mpark::visit(*this, static_cast<ExprVariant>(expr));
 }
 
 void Resolver::declare(const Token& name) {

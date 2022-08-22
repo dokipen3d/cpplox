@@ -125,7 +125,7 @@ struct Environment;
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant =
-    std::variant<void*, double, recursive_wrapper<std::string>, bool,
+    mpark::variant<void*, double, recursive_wrapper<std::string>, bool,
                  recursive_wrapper<NativeFunction>,
                  recursive_wrapper<FunctionObject>>;
 
@@ -146,15 +146,15 @@ struct Object final : ObjectVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        return std::holds_alternative<void*>(*this);
+        return mpark::holds_alternative<void*>(*this);
     }
 
     inline bool operator==(const Object& other)
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        if (std::holds_alternative<recursive_wrapper<NativeFunction>>(other) ||
-            std::holds_alternative<recursive_wrapper<NativeFunction>>(*this)) {
+        if (mpark::holds_alternative<recursive_wrapper<NativeFunction>>(other) ||
+            mpark::holds_alternative<recursive_wrapper<NativeFunction>>(*this)) {
             return false;
         } else {
             return *this == other;
@@ -171,7 +171,7 @@ struct Object final : ObjectVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        return std::holds_alternative<actualTypeToGet>(*this);
+        return mpark::holds_alternative<actualTypeToGet>(*this);
     }
 
     template <typename T>
@@ -183,21 +183,21 @@ struct Object final : ObjectVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        return std::get<actualTypeToGet>(*this);
+        return mpark::get<actualTypeToGet>(*this);
     }
 
     template <typename T> inline recursive_wrapper<T>* get_if() {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        return std::get_if<actualTypeToGet>(this);
+        return mpark::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T& get() {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        return std::get<actualTypeToGet>(*this);
+        return mpark::get<actualTypeToGet>(*this);
     }
 };
 inline std::ostream&
@@ -294,7 +294,7 @@ class Token {
             stream << search->second;
         }
         stream << " " << lexeme << " ";
-        std::visit(
+        mpark::visit(
             [&](auto&& arg) {
                 if (!(literal == nullptr)) { // not a void* so can print
                     stream << arg;
@@ -320,9 +320,9 @@ static_assert(std::is_move_assignable_v<Token>, "token  not move contructible");
 } // namespace cpplox
 
 template <>
-struct std::variant_size<cpplox::Object>
-    : std::variant_size<cpplox::ObjectVariant> {};
+struct mpark::variant_size<cpplox::Object>
+    : mpark::variant_size<cpplox::ObjectVariant> {};
 
 template <std::size_t I>
-struct std::variant_alternative<I, cpplox::Object>
-    : std::variant_alternative<I, cpplox::ObjectVariant> {};
+struct mpark::variant_alternative<I, cpplox::Object>
+    : mpark::variant_alternative<I, cpplox::ObjectVariant> {};
