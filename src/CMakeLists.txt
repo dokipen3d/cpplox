@@ -15,6 +15,7 @@ endif()
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supported OUTPUT error)
 
+find_package(absl REQUIRED)
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
@@ -28,9 +29,10 @@ endif()
 
 if (MSVC)
 else()
-target_compile_options(cpplox PRIVATE -flto=thin)
+target_compile_options(cpplox PRIVATE -flto=thin )
 target_link_options(cpplox PRIVATE -flto=thin)
 endif()
 
+#target_link_libraries(cpplox PRIVATE absl::node_hash_map)
 #target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
 #target_compile_options(cpplox PRIVATE --param max-inline-recursive-depth=16)

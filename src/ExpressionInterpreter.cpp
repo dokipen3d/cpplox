@@ -4,6 +4,7 @@
 #include "Utilities.hpp"
 //#include "Object.h"
 #include "TokenTypes.h"
+#include "thirdparty/mvariant.hpp"
 #include "thirdparty/visit.hpp"
 
 #include <functional>
@@ -32,11 +33,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-    rollbear::visit(*this, statementToExecute);
+    std::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-    return rollbear::visit(*this, static_cast<ExprVariant>(expression));
+    return std::visit(*this, static_cast<ExprVariant>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -64,11 +65,11 @@ void Interpreter::operator()(const IfStatement& ifStatement) {
 }
 
 void Interpreter::operator()(const WhileStatement& whileStatement) {
-    enableEnvironmentSwitching = false;
+    //enableEnvironmentSwitching = false;
     while (isTruthy(evaluate(whileStatement.condition))) {
         execute(whileStatement.body);
     }
-    enableEnvironmentSwitching = true;
+    //enableEnvironmentSwitching = true;
 }
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
@@ -112,22 +113,6 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
-plf::colony<Environment>::iterator
-Interpreter::getNewEnvironment(Environment* closure) {
-    // Environment ev(closure);
-    // auto index = Environments.push(
-    //     Environment(closure), [&](auto index, auto& environment) {
-    //     std::cout << "setting env to " << index << "\n";
-    //     environment.handle = index;
-    //     environment.values.clear();
-    // });
-
-    auto it = EnvironmentsColony.insert(Environment(closure));
-    // it->it = it;
-
-    return it;
-}
-
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
 
     const auto index = Environments.retrieve([&](auto index, auto& env) {
@@ -141,14 +126,6 @@ Environment* Interpreter::retrieveEnvironment(Environment* closure) {
 
 void Interpreter::clearEnvironmentFromStack(size_t index) {
     Environments.eraseAt(index);
-}
-
-void Interpreter::ClearEnvironment(Environment* environment) {
-    // environment->values.clear();
-    // Environments.eraseAt(environment->handle);
-
-    // delete self
-    // EnvironmentsColony.erase(environment->it);
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {

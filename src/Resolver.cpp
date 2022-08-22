@@ -1,6 +1,8 @@
 #include "Resolver.h"
 #include "Error.h"
-#include <variant>
+//#include <variant>
+#include "thirdparty/mvariant.hpp"
+
 
 namespace cpplox {
 

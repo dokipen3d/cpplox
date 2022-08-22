@@ -2,7 +2,9 @@
 #include "Expr.hpp"
 #include <sstream>
 #include <string>
-#include <variant>
+//#include <variant>
+#include "thirdparty/mvariant.hpp"
+
 
 // class Expr;
 // class Binary;

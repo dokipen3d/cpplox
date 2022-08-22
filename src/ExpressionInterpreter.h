@@ -10,7 +10,9 @@
 #include <map>
 #include <memory>
 #include <unordered_map>
-#include <variant>
+//#include <variant>
+#include "thirdparty/mvariant.hpp"
+
 #include <vector>
 
 struct Object;
@@ -118,15 +120,12 @@ struct Interpreter {
         size_t index;
     };
 
-    plf::colony<Environment>::iterator getNewEnvironment(Environment* closure = nullptr);
     Environment* retrieveEnvironment(Environment* closure = nullptr);
     void clearEnvironmentFromStack(size_t index);
 
     objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
 
-
-    void ClearEnvironment (Environment* environment);
     Return currentReturn = Object{nullptr};
     bool containsReturn = false;
     uniquestack<std::unique_ptr<Environment>> Environments;

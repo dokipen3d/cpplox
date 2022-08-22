@@ -7,7 +7,9 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
-#include <variant>
+//#include <variant>
+#include "thirdparty/mvariant.hpp"
+
 #include <vector>
 
 namespace cpplox {

@@ -13,6 +13,9 @@
 #include "thirdparty/robin_hood_map.h"
 #include "thirdparty/unordered_dense.h"
 
+//#include "absl/container/flat_hash_map.h"
+//#include "absl/container/node_hash_map.h"
+
 #include "thirdparty/tsl/robin_map.h"
 
 #include "ExceptionError.h"
@@ -63,11 +66,10 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    const Object& getAt(int distance, const std::string& name) {
+    Object getAt(int distance, const std::string& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
-        auto env = varmap.find(name);
-        if (env != varmap.end()) {
+        if (auto env = varmap.find(name); env != varmap.end()) {
             return env->second;
         }
         return {};
@@ -80,7 +82,7 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
     void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }
-    
+
     void assign(const Token& name, const Object& value) {
         if (const auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
@@ -97,17 +99,24 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     // std::shared_ptr<Environment> enclosing;
     Environment* enclosing = nullptr;
-    //std::unordered_map<std::string, Object> values;
-    //robin_hood::unordered_map<std::string, Object> values;
+    // std::unordered_map<std::string, Object> values;
+     //robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<std::string, Object> values;
 
-    //ankerl::unordered_dense::map<std::string, Object> values;
+    // tsl::robin_map<std::string, Object, std::hash<std::string>, 
+    //                std::equal_to<std::string>,
+    //                std::allocator<std::pair<std::string, Object>>,
+    //                true> values;
+
+    // ankerl::unordered_dense::map<std::string, Object> values;
+    //absl::flat_hash_map<std::string, Object> values;
+    // absl::node_hash_map<std::string, Object> values;
 
     int handle = -1;
-    //int refCount = 0;
-    // plf::colony<Environment>::iterator it;
-    //ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
-    // ska::flat_hash_map<std::string, Object> values;
+    // int refCount = 0;
+    //  plf::colony<Environment>::iterator it;
+    // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
+    //ska::flat_hash_map<std::string, Object> values;
 };
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");

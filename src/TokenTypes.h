@@ -5,12 +5,13 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <variant>
+//#include <variant>
+#include "thirdparty/mvariant.hpp"
 
 //#include "Object.h"
 #include "Utilities.hpp"
 #include "thirdparty/tsl/robin_map.h"
-#include "thirdparty/visit.hpp"
+//#include "thirdparty/visit.hpp"
 
 namespace cpplox {
 enum class ETokenType {
@@ -294,7 +295,7 @@ class Token {
             stream << search->second;
         }
         stream << " " << lexeme << " ";
-        rollbear::visit(
+        std::visit(
             [&](auto&& arg) {
                 if (!(literal == nullptr)) { // not a void* so can print
                     stream << arg;
