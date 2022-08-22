@@ -6,8 +6,8 @@
 #include "Utilities.hpp"
 #include <functional>
 #include <iostream>
-//#include <variant>
-#include "thirdparty/mvariant.hpp"
+#include <variant>
+//#include "thirdparty/mvariant.hpp"
 #include <vector>
 
 namespace cpplox {

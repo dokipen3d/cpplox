@@ -29,7 +29,7 @@ endif()
 
 if (MSVC)
 else()
-target_compile_options(cpplox PRIVATE -flto=thin )
+target_compile_options(cpplox PRIVATE -flto=thin)
 target_link_options(cpplox PRIVATE -flto=thin)
 endif()
 
