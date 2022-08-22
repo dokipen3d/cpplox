@@ -170,7 +170,7 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
             // if we have encountered a return in this block then don't execute
             // any further statemenets (there could be multiple returns)
             if (containsReturn) {
-                //execute(expressionStatement);
+                execute(expressionStatement);
                 // if(performIncrement && !inc){
                 //     inc = true;
                 //     continue;
