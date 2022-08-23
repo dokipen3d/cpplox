@@ -87,6 +87,7 @@ struct Literal {
 
 struct Assign {
     Assign(Token name, Expr value) : name(std::move(name)), value(value) {
+      
     }
     Token name;
     Expr value;
@@ -111,10 +112,9 @@ struct Binary {
     Binary(Expr left, Token op, Expr right)
         : left{left}, right{right}, op(std::move(op)) {
     }
-
+    Token op;
     Expr left;
     Expr right;
-    Token op;
     // bool operator==(const Binary& other) const {
     //     return ((left == other.left) && (right == other.right) &&
     //             (op == other.op));
@@ -134,6 +134,7 @@ struct Unary {
 
 struct Variable {
     explicit Variable(Token name) : name(std::move(name)) {
+        
     }
     Token name;
     mutable int distance = -1;
@@ -146,10 +147,9 @@ struct Logical {
     Logical(Expr left, Token op, Expr right)
         : left{left}, right{right}, op(std::move(op)) {
     }
-
+    Token op;
     Expr left;
     Expr right;
-    Token op;
     // bool operator==(const Logical& other) const {
     //     return ((left == other.left) && (right == other.right) &&
     //             (op == other.op));
@@ -160,10 +160,9 @@ struct Call {
     Call(Expr callee, Token paren, std::vector<Expr> arguments)
         : callee{callee}, paren{paren}, arguments(std::move(arguments)) {
     }
-
-    Expr callee;
     Token paren;
     std::vector<Expr> arguments;
+    Expr callee;
     // bool operator==(const Call& other) const {
     //     return ((callee == other.callee) && (paren == other.paren) &&
     //             (arguments == other.arguments));

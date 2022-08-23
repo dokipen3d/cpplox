@@ -21,7 +21,9 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         TimeIt timer("interpreter");
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
-         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n"; 
+        std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";
+        std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
+  
         for (const auto& statement : statements) {
             execute(statement);
         }
@@ -46,7 +48,7 @@ Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
         // inc ref count of environment being looked up
         // Environment* anc = environment->ancestor(expr.distance);
         // anc->refCount++;
-        return environment->getAt(expr.distance, name.lexeme);
+        return environment->getAt(expr.distance, name);
     } else {
         return globals->get(name);
     }
@@ -66,11 +68,11 @@ void Interpreter::operator()(const IfStatement& ifStatement) {
 }
 
 void Interpreter::operator()(const WhileStatement& whileStatement) {
-    //enableEnvironmentSwitching = false;
+    // enableEnvironmentSwitching = false;
     while (isTruthy(evaluate(whileStatement.condition))) {
         execute(whileStatement.body);
     }
-    //enableEnvironmentSwitching = true;
+    // enableEnvironmentSwitching = true;
 }
 
 void Interpreter::operator()(const PrintStatement& printStatement) {
@@ -135,8 +137,8 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
     // auto newEnvironmentPtr = Interpreter::getNewEnvironment(environment);
     auto newEnvironmentPtr = retrieveEnvironment(environment);
 
-    executeBlock(blockStatement.statements,
-                 newEnvironmentPtr, &blockStatement.increment); // pass in current env as parent
+    executeBlock(blockStatement.statements, newEnvironmentPtr,
+                 &blockStatement.increment); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
     // ClearEnvironment(newEnvironmentPtr);
@@ -148,50 +150,36 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               Environment* newEnvironment,const ExpressionStatement* expressionStatement) {
+                               Environment* newEnvironment,
+                               const ExpressionStatement* expressionStatement) {
 
-    bool inc = false;
-    if (true) {
-        // this stack will take ownership
-        const auto previous = environment;
-        auto final = finally([&]() { this->environment = previous; });
+    // this stack will take ownership
+    const auto previous = environment;
+    auto final = finally([&]() { this->environment = previous; });
 
-        // main root will get a new one which stores a raw to prev itself. prev
-        // will not be moved as it remains on this stack. so pointer should
-        // still stay valid.
-        // 2. if this is called by  operator()(BlockStatement) then the
-        // enclosing of newEnv will be previous
-        this->environment = newEnvironment;
+    // main root will get a new one which stores a raw to prev itself. prev
+    // will not be moved as it remains on this stack. so pointer should
+    // still stay valid.
+    // 2. if this is called by  operator()(BlockStatement) then the
+    // enclosing of newEnv will be previous
+    this->environment = newEnvironment;
 
-        // these will go and possibly make env be moved/chagned but thats okay,
-        // they will be taken over by lower stacks
-        for (const auto& statement : statements) {
-            execute(statement);
-            // if we have encountered a return in this block then don't execute
-            // any further statemenets (there could be multiple returns)
-            if (containsReturn) {
-                if(expressionStatement){
-                    execute(*expressionStatement);
-                }
-                // if(performIncrement && !inc){
-                //     inc = true;
-                //     continue;
-                // }
-                return;
+    // these will go and possibly make env be moved/chagned but thats okay,
+    // they will be taken over by lower stacks
+    for (const auto& statement : statements) {
+        execute(statement);
+        // if we have encountered a return in this block then don't execute
+        // any further statemenets (there could be multiple returns)
+        if (containsReturn) {
+            if (expressionStatement) {
+                execute(*expressionStatement);
             }
+            // if(performIncrement && !inc){
+            //     inc = true;
+            //     continue;
+            // }
+            return;
         }
-        // destructor of the environment argument will reset the top level
-        // interpreter env to its current parent
-        // this->environment = std::move(previous);
-    } else {
-       // enableEnvironmentSwitching = true;
-        for (auto& statement : statements) {
-            execute(statement);
-            if (containsReturn) {
-                break;
-            }
-        }
-        //enableEnvironmentSwitching = false;
     }
 }
 
@@ -274,7 +262,7 @@ Object Interpreter::operator()(const Assign& assign) {
     //     globals->assign(assign.name, value);
     // }
     if (assign.distance != -1) {
-        //int offset = enableEnvironmentSwitching == false;
+        // int offset = enableEnvironmentSwitching == false;
         environment->assignAt(assign.distance, assign.name, value);
     } else {
         globals->assign(assign.name, value);
@@ -433,10 +421,8 @@ void Interpreter::checkNumberOperands(const Token& token, const Object& left,
     throw RuntimeError(token, "Operands must be a number.");
 }
 
-
 template <typename T>
-std::string to_string_with_precision(const T a_value, const int n = 6)
-{
+std::string to_string_with_precision(const T a_value, const int n = 6) {
     std::ostringstream out;
     out.precision(n);
     out << std::fixed << a_value;
@@ -450,7 +436,7 @@ std::string Interpreter::stringify(const Object& object) {
     }
 
     if (object.is<double>()) {
-        //text = std::to_string(std::get<double>(object));
+        // text = std::to_string(std::get<double>(object));
         text = to_string_with_precision(std::get<double>(object), 11);
 
         stripZerosFromString(text);

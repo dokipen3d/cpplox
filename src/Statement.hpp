@@ -30,6 +30,7 @@ struct PrintStatement {
 struct VariableStatement {
     VariableStatement(const Token& name, const Expr& initializer)
         : name(name), initializer(initializer) {
+    
     }
     Token name;
     Expr initializer;
@@ -38,6 +39,7 @@ struct VariableStatement {
 struct ReturnStatement {
     ReturnStatement(const Token& name, const Expr& value)
         : name(name), value(value) {
+       
     }
     Token name;
     // an expression that resolves to the value that we want to return
@@ -103,6 +105,7 @@ struct FunctionStatement {
                       const std::vector<Statement>& body)
         : name(p_name), params(params),
           body(body) {
+
     }
 
     Token name;

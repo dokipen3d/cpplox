@@ -13,7 +13,7 @@
 //#include "thirdparty/visit.hpp"
 
 namespace cpplox {
-enum class ETokenType {
+enum class ETokenType : uint8_t {
     // Single-character tokens
     LEFT_PARENTHESIS,
     RIGHT_PARENTHESIS,
@@ -307,10 +307,12 @@ class Token {
 
     friend struct Error;
 
+    std::string lexeme;
+    int16_t line;
     ETokenType eTokenType;
     Object literal;
-    std::string lexeme;
-    int line;
+
+
 };
 
 static_assert(std::is_move_constructible_v<Token>,

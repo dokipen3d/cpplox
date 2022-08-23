@@ -15,7 +15,7 @@ endif()
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supported OUTPUT error)
 
-find_package(absl REQUIRED)
+#find_package(absl REQUIRED)
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)

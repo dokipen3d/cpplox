@@ -57,7 +57,8 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         if (auto search = values.find(name.lexeme);
             search != values.end()) { // if init version of contains()
             return search->second;
-        } else if (enclosing != nullptr) {
+        } 
+        else if (enclosing != nullptr) {
             // if not in current scope, check parent
             return enclosing->get(name);
         } else {
@@ -66,10 +67,10 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    Object getAt(int distance, const std::string& name) {
+    Object getAt(int distance, const Token& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
-        if (auto env = varmap.find(name); env != varmap.end()) {
+        if (auto env = varmap.find(name.lexeme); env != varmap.end()) {
             return env->second;
         }
         return {};
@@ -99,8 +100,8 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
 
     // std::shared_ptr<Environment> enclosing;
     Environment* enclosing = nullptr;
-    // std::unordered_map<std::string, Object> values;
-     //robin_hood::unordered_map<std::string, Object> values;
+    //std::unordered_map<std::string, Object> values;
+    //robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<std::string, Object> values;
 
     // tsl::robin_map<std::string, Object, std::hash<std::string>, 
@@ -108,14 +109,14 @@ struct Environment { //}: std::enable_shared_from_this<Environment> {
     //                std::allocator<std::pair<std::string, Object>>,
     //                true> values;
 
-    // ankerl::unordered_dense::map<std::string, Object> values;
+    //ankerl::unordered_dense::map<std::string, Object> values;
     //absl::flat_hash_map<std::string, Object> values;
     // absl::node_hash_map<std::string, Object> values;
 
     int handle = -1;
     // int refCount = 0;
     //  plf::colony<Environment>::iterator it;
-    // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
+    //ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
     //ska::flat_hash_map<std::string, Object> values;
 };
 
