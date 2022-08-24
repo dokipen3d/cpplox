@@ -46,6 +46,15 @@ struct Interpreter {
                     return s;
                 },
                 /*arity*/ []() { return 0; }});
+
+            globals->define(
+            "str",
+            NativeFunction{
+                /*call*/ [](const Interpreter& interpreter,
+                            const std::vector<Object> arguments) -> Object {
+                    return std::to_string(arguments[0].get<double>());
+                },
+                /*arity*/ []() { return 1; }});
     }
 
     void interpret(const std::vector<Statement>& statements);

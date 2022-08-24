@@ -117,14 +117,15 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
-
+    
+    Environment* set;
     const auto index = Environments.retrieve([&](auto index, auto& env) {
         env->enclosing = closure;
         env->handle = index;
         env->values.clear();
+        set = env.get();
     });
-
-    return Environments[index].get();
+    return set;
 }
 
 void Interpreter::clearEnvironmentFromStack(size_t index) {
