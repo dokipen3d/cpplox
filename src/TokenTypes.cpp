@@ -14,18 +14,47 @@ FunctionObject::FunctionObject(Interpreter* interpreter,
                                const FunctionStatement* functionStatement,
                                Environment* closure)
     : interpreter(interpreter), m_declaration(functionStatement),
-      closure(closure) {
+      closure2(interpreter->Environments[closure->handle]) {
+    //closure2 = interpreter->Environments[closure->handle];
+    //   std::cout << "inc\n";
+    //this->closure->refCount++;
+    //this->closure->enclosing->refCount++;
+
 }
+
+// FunctionObject::FunctionObject(FunctionObject const& other)
+//     : m_declaration(other.m_declaration) {
+//     //std::cout << "copy\n";
+//     interpreter = other.interpreter;
+//     closure = other.closure;
+//     this->closure->refCount++;
+//     envToClearDelayed = other.envToClearDelayed; // for closure
+// }
+
+// FunctionObject& FunctionObject::operator=(const FunctionObject& other)
+// {
+//          interpreter = other.interpreter;
+//     m_declaration = other.m_declaration;
+//     //std::cout << "assign\n";
+
+//     closure = other.closure;
+//     //this->closure->refCount++;
+//     envToClearDelayed = other.envToClearDelayed; // for closure
+//     return *this;
+// }
+
 
 std::size_t FunctionObject::arity() const {
     return m_declaration->params.size();
 };
 
 FunctionObject::~FunctionObject() {
-    if (envToClearDelayed != nullptr) {
-        interpreter->clearEnvironmentFromStack(
-            envToClearDelayed->enclosing->handle);
-    }
+    // there maybe more than 1 ref to this environment as we may have copied the function object out as a closure
+    // we want to still take advangtage of the re-use stack though so we get the handle, relinquish this ptr to it to 
+    // decrement the count and then call clear with the index to make sure its gets reused.
+    auto index = closure2->handle;
+    closure2.reset();
+    interpreter->clearEnvironmentFromStack(index);
 }
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -37,59 +66,21 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     // of a seperate env
 
     // auto environment = std::make_shared<Environment>(closure);
-    auto environment = interpreter.retrieveEnvironment(closure);
+    auto environment = interpreter.retrieveEnvironment(closure2.get());
     // sub = environment;
     for (int i = 0; i < m_declaration->params.size(); i++) {
         environment->define(m_declaration->params[i].lexeme, arguments[i]);
     }
 
-    // try {
-    interpreter.executeBlock(m_declaration->body, environment, nullptr);
-    //} catch (Return returnValue) { // our custom exception type to embed a
-    // value
-    // and jump back to here
-    //    return returnValue.value;
-    // if(environment->refCount == 0){
-    // interpreter.clearEnvironmentFromStack(
-    //     environment->handle); // <---- this was a big deal. i moved from
-    //     below
-    //                         // the return value and it was maybe 1.6x faster.
-    //                         // because the env weren't being cleared up!
-    
-    //}
-    
-    if (interpreter.containsReturn) {
-        // if we are returning a function object
-        // ie if value.is<functionObject>()
-        // then set a function on it to set an environment to clear when that
-        // one destroys. otherwise just clean it up. if holds func{
-        // value.setEnv(environment)
-        //} else {
+    interpreter.executeBlock(m_declaration->body, environment);
 
-        //}
-        if (interpreter.currentReturn.value.is<FunctionObject>()) {
-            interpreter.currentReturn.value.get<FunctionObject>().setDelayed(
+    interpreter.clearEnvironmentFromStack(
                 environment);
-        // if (auto foPtr = interpreter.currentReturn.value.get_if<FunctionObject>()) {
-        //     static_cast<FunctionObject>(*foPtr).setDelayed(
-        //         environment);
 
-        } else {
-            interpreter.clearEnvironmentFromStack(
-                environment
-                    ->handle); // <---- this was a big deal. i moved from below
-                               // the return value and it was maybe 1.6x faster.
-                               // because the env weren't being cleared up!
-        }
-
+    if (interpreter.containsReturn) {
         interpreter.containsReturn = false;
         return interpreter.currentReturn.value;
-    } // if it doesnt return anything, need to clean up as well.
-    else {
-        interpreter.clearEnvironmentFromStack(
-            environment
-                ->handle);
-    }
+    } 
 
     return nullptr;
 }

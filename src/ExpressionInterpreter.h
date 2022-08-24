@@ -47,7 +47,7 @@ struct Interpreter {
                 },
                 /*arity*/ []() { return 0; }});
 
-            globals->define(
+        globals->define(
             "str",
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
@@ -78,8 +78,7 @@ struct Interpreter {
 
     void operator()(const BlockStatement& blockStatement);
     void executeBlock(const std::vector<Statement>& statements,
-                      Environment* newEnvironment,
-                      const ExpressionStatement* expressionStatement);
+                      Environment* newEnvironment);
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
@@ -131,14 +130,15 @@ struct Interpreter {
     };
 
     Environment* retrieveEnvironment(Environment* closure = nullptr);
-    void clearEnvironmentFromStack(size_t index);
+    void clearEnvironmentFromStack(Environment* environment);
+    void clearEnvironmentFromStack(int handle);
 
     objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
 
     Return currentReturn = Object{nullptr};
     bool containsReturn = false;
-    uniquestack<std::unique_ptr<Environment>> Environments;
+    uniquestack<std::shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
 
     plf::colony<Environment> EnvironmentsColony;

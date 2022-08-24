@@ -1,9 +1,33 @@
-fun fib(n) {
-  if (n < 2) return n;
-  return fib(n - 2) + fib(n - 1);
+var f1;
+var f2;
+var f3;
+print "glob";
+
+for (var i = 1; i < 4; i = i + 1) {
+    print "for";
+  var j = i;
+  fun f() {
+    print i;
+    print j;
+  }
+
+  if (j == 1) {
+    print "ass";
+    f1 = f;
+  }
+  else if (j == 2) {
+    f2 = f;
+    }
+  else {
+    f3 = f;
+    }
+        print "end loop";
+
 }
 
-var start = clock();
-print fib(35) == 9227465;
-print "elapsed:";
-print clock() - start;
+f1(); // expect: 4
+      // expect: 1
+f2(); // expect: 4
+      // expect: 2
+f3(); // expect: 4
+      // expect: 3

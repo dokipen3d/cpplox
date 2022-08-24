@@ -143,7 +143,7 @@ auto Parser::statement() -> Statement {
         return whileStatement();
     }
     if (match({ETokenType::LEFT_BRACE})) {
-        return BlockStatement(block(), ExpressionStatement{nullptr});
+        return BlockStatement(block());
     }
     return expressionStatement();
 }
@@ -180,12 +180,11 @@ auto Parser::forStatement() -> Statement {
         if (is<BlockStatement>(body)) {
             getAs<BlockStatement>(body).statements.emplace_back(
                 ExpressionStatement{increment});
-            getAs<BlockStatement>(body).increment = ExpressionStatement{increment};
         } else {
             // if it was just a single statement (no { } ) then make a block
             // statment. there will still be no env push due to while statements
             // knowing not to do that.
-            body = BlockStatement({body, ExpressionStatement{increment}}, ExpressionStatement{increment});
+            body = BlockStatement({body, ExpressionStatement{increment}});
         }
     }
 
@@ -200,7 +199,7 @@ auto Parser::forStatement() -> Statement {
 
     // if there is an init statement, then we have to prepend the while with it.
     if (initializer != nullptr) {
-        body = BlockStatement({initializer, body}, ExpressionStatement{nullptr});
+        body = BlockStatement({initializer, body});
     }
 
     return body;

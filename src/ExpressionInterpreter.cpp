@@ -23,7 +23,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
-  
+
         for (const auto& statement : statements) {
             execute(statement);
         }
@@ -111,48 +111,64 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // and converting it to its runtime representation
     // const FunctionObject functionObject(&functionStatement,
     // this->environment);
-    const Object& functionObject =
+    Object functionObject =
         FunctionObject(this, &functionStatement, this->environment);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
-    
+
     Environment* set;
     const auto index = Environments.retrieve([&](auto index, auto& env) {
-        env->enclosing = closure;
+        if (closure) {
+            env->enclosing = Environments[closure->handle];
+        }
         env->handle = index;
         env->values.clear();
         set = env.get();
+        env->refCount = 0;
     });
+    // std::cout << "got " << index << std::endl;
+
     return set;
 }
 
-void Interpreter::clearEnvironmentFromStack(size_t index) {
-    Environments.eraseAt(index);
+void Interpreter::clearEnvironmentFromStack(Environment* environment) {
+    // only clear if the count is 1 (ie in the sparestack)
+    // if the count is higher, then it means a function object is holding on to
+    // it and will clear it eventually in its destructor
+    if (Environments[environment->handle].use_count() == 1) {
+        // std::cout << "erasing " << environment->handle << "\n";
+        Environments.eraseAt(environment->handle);
+    }
+}
+
+void Interpreter::clearEnvironmentFromStack(int handle) {
+    // only clear if the count is 1 (ie in the sparestack)
+    // if the count is higher, then it means a function object is holding on to
+    // it and will clear it eventually in its destructor
+    if (Environments[handle].use_count() == 1) {
+        // std::cout << "erasing " << environment->handle << "\n";
+        Environments.eraseAt(handle);
+    }
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
 
-    // auto newEnvironement = std::make_shared<Environment>(environment);
-    // auto newEnvironmentPtr = Interpreter::getNewEnvironment(environment);
     auto newEnvironmentPtr = retrieveEnvironment(environment);
 
-    executeBlock(blockStatement.statements, newEnvironmentPtr,
-                 &blockStatement.increment); // pass in current env as parent
+    executeBlock(blockStatement.statements,
+                 newEnvironmentPtr); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
-    // ClearEnvironment(newEnvironmentPtr);
-    // EnvironmentsColony.erase(newEnvironmentPtr);
-    clearEnvironmentFromStack(newEnvironmentPtr->handle);
+    clearEnvironmentFromStack(newEnvironmentPtr);
     return;
 }
 
 // this is also called by function objects, so the env might not be the one
 // created by operator()(BlockStatement) above
 void Interpreter::executeBlock(const std::vector<Statement>& statements,
-                               Environment* newEnvironment,
-                               const ExpressionStatement* expressionStatement) {
+                               Environment* newEnvironment) {
 
     // this stack will take ownership
     const auto previous = environment;
@@ -172,14 +188,6 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
         // if we have encountered a return in this block then don't execute
         // any further statemenets (there could be multiple returns)
         if (containsReturn) {
-            //if (expressionStatement != nullptr) {
-            //    std::cout << "incrementing\n";
-                //execute(*expressionStatement);
-            //}
-            // if(performIncrement && !inc){
-            //     inc = true;
-            //     continue;
-            // }
             return;
         }
     }

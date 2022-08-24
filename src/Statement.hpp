@@ -91,13 +91,10 @@ template <typename T> T& get(Statement& statement) {
 //////////////////////////////////////////////////////////////////////////
 
 struct BlockStatement {
-    explicit BlockStatement(const std::vector<Statement>& statements, const ExpressionStatement& increment)
-        : statements(statements), increment(increment) {
+    explicit BlockStatement(const std::vector<Statement>& statements)
+        : statements(statements) {
     }
     std::vector<Statement> statements;
-    ExpressionStatement increment;
-    bool containsIncrement = false;
-
 };
 
 struct FunctionStatement {

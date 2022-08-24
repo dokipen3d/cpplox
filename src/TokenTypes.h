@@ -248,11 +248,11 @@ struct FunctionObject {
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
 
-    // FunctionObject(FunctionObject const&) = default;
-    // FunctionObject(FunctionObject&&) = default;
+    //FunctionObject(FunctionObject const& other );
+    // //FunctionObject(FunctionObject&&) = delete;
 
-    // FunctionObject& operator=(const FunctionObject& other) = default;
-    // FunctionObject& operator=(FunctionObject&& other) = default;
+    // FunctionObject& operator=(const FunctionObject& other);
+    //FunctionObject& operator=(FunctionObject&& other) = delete;
 
     // inline bool operator==(const FunctionObject& other){
     //     return false;
@@ -266,9 +266,9 @@ struct FunctionObject {
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
+    std::shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
-    Environment* closure;
     Environment* envToClearDelayed = nullptr; // for closure
 };
 

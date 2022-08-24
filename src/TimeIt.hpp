@@ -5,7 +5,7 @@
 #include <string>
 
 struct TimeIt {
-    TimeIt(std::string scopeName = "scope", bool scope = true)
+    TimeIt(const char* scopeName = "scope", bool scope = true)
         : m_StartTime(std::chrono::high_resolution_clock::now()), scope(scope),
           scopeName(scopeName) {
     }
@@ -23,15 +23,16 @@ struct TimeIt {
         //                  m_StartTime)
         //                  .count()
         //           << " milliseconds\n";
-        std::cout << scopeName << " took "
-                  <<   std::chrono::duration<double, std::milli>(
+        auto end = std::chrono::duration<double, std::milli>(
                          std::chrono::high_resolution_clock::now() -
                          m_StartTime)
-                         .count()
+                         .count();
+        std::cout << scopeName << " took "
+                  <<   end
                   << " milliseconds\n";
 
     }
     bool scope;
-    std::string scopeName;
+    const char* scopeName;
     std::chrono::high_resolution_clock::time_point m_StartTime;
 };

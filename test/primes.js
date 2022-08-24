@@ -7,10 +7,10 @@ fun isprime(m)
             //print "nope";
             return false; 
         }
-        print "inc " + str(j);
+        //print "inc " + str(j);
     }
 
-    print "done";
+    //print "done";
 
     return true;
 }
@@ -34,7 +34,7 @@ fun primes(n)
 
 var before = clock();
 
-var N = 7;
+var N = 5000;
 
 print(primes(N));
 
