@@ -4,10 +4,12 @@ fun isprime(m)
         //print j;
         //print m;
         if (m % j == 0) { 
+            //print "nope";
             return false; 
         }
     }
 
+    //print "true";
 
     return true;
 }
@@ -19,12 +21,13 @@ fun primes(n)
     //print("in primes");
     //print(n);
     for (var i = 2; i <= n; i = i + 1) {
+        //print i;
         if (isprime(i)) { 
             //print i;
             count = count + 1; 
         } 
     }
-    print "finished";
+    //print "finished";
     return count;
 }
 

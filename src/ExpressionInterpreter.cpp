@@ -69,7 +69,7 @@ void Interpreter::operator()(const IfStatement& ifStatement) {
 
 void Interpreter::operator()(const WhileStatement& whileStatement) {
     // enableEnvironmentSwitching = false;
-    while (isTruthy(evaluate(whileStatement.condition))) {
+    while (isTruthy(evaluate(whileStatement.condition)) && !containsReturn) {
         execute(whileStatement.body);
     }
     // enableEnvironmentSwitching = true;
@@ -171,9 +171,10 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
         // if we have encountered a return in this block then don't execute
         // any further statemenets (there could be multiple returns)
         if (containsReturn) {
-            if (expressionStatement) {
-                execute(*expressionStatement);
-            }
+            //if (expressionStatement != nullptr) {
+            //    std::cout << "incrementing\n";
+                //execute(*expressionStatement);
+            //}
             // if(performIncrement && !inc){
             //     inc = true;
             //     continue;
