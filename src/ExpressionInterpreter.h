@@ -52,7 +52,9 @@ struct Interpreter {
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object> arguments) -> Object {
-                    return std::to_string(arguments[0].get<double>());
+                    std::string s = std::to_string(arguments[0].get<double>());
+                    stripZerosFromString(s);
+                    return s;
                 },
                 /*arity*/ []() { return 1; }});
     }
