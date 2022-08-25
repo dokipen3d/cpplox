@@ -7,11 +7,11 @@
 #include <type_traits>
 #include <unordered_map>
 
-#include "thirdparty/bytell_hash_map.hpp"
+//#include "thirdparty/bytell_hash_map.hpp"
 #include "thirdparty/flat_hash_map.hpp"
 #include "thirdparty/robin_hood.h"
 #include "thirdparty/robin_hood_map.h"
-#include "thirdparty/unordered_dense.h"
+//#include "thirdparty/unordered_dense.h"
 
 //#include "absl/container/flat_hash_map.h"
 //#include "absl/container/node_hash_map.h"
@@ -20,8 +20,9 @@
 
 #include "ExceptionError.h"
 #include "Utilities.hpp"
-#include "thirdparty/plf_colony.h"
+//#include "boost/smart_ptr/local_shared_ptr.hpp"
 
+//#include "thirdparty/shared_ptr.hpp"
 template <typename S> struct hasher {
     size_t operator()(const S& x) const {
         /* your code here, e.g. "return hash<int>()(x.value);" */
@@ -99,8 +100,8 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
 
     std::shared_ptr<Environment> enclosing;
     // Environment* enclosing = nullptr;
-    // std::unordered_map<std::string, Object> values;
-    // robin_hood::unordered_map<std::string, Object> values;
+    //std::unordered_map<std::string, Object> values;
+    //robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<std::string, Object> values;
 
     // tsl::robin_map<std::string, Object, std::hash<std::string>,
@@ -113,12 +114,11 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     //  absl::node_hash_map<std::string, Object> values;
 
     int handle = -1;
-    int refCount = 0;
 
     // int refCount = 0;
     //  plf::colony<Environment>::iterator it;
     // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
-    // ska::flat_hash_map<std::string, Object> values;
+    //ska::flat_hash_map<std::string, Object> values;
 };
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");

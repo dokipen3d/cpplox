@@ -3,8 +3,9 @@
 #include "Expr.hpp"
 #include "Statement.hpp"
 #include "TimeIt.hpp"
-#include "thirdparty/plf_colony.h"
 #include "thirdparty/sparestack.hpp"
+//#include "thirdparty/shared_ptr.hpp"
+//#include "boost/smart_ptr/local_shared_ptr.hpp"
 #include <chrono>
 #include <exception>
 #include <map>
@@ -141,7 +142,6 @@ struct Interpreter {
     uniquestack<std::shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
 
-    plf::colony<Environment> EnvironmentsColony;
     Environment* globals; // place to store global native functions etc
 
     Environment*

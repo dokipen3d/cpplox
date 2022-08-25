@@ -1,33 +1,21 @@
-var f1;
-var f2;
-var f3;
-print "glob";
+// Single-expression body.
+var c = 0;
+while (c < 3) print c = c + 1;
+// expect: 1
+// expect: 2
+// expect: 3
 
-for (var i = 1; i < 4; i = i + 1) {
-    print "for";
-  var j = i;
-  fun f() {
-    print i;
-    print j;
-  }
-
-  if (j == 1) {
-    print "ass";
-    f1 = f;
-  }
-  else if (j == 2) {
-    f2 = f;
-    }
-  else {
-    f3 = f;
-    }
-        print "end loop";
-
+// Block body.
+var a = 0;
+while (a < 3) {
+  print a;
+  a = a + 1;
 }
+// expect: 0
+// expect: 1
+// expect: 2
 
-f1(); // expect: 4
-      // expect: 1
-f2(); // expect: 4
-      // expect: 2
-f3(); // expect: 4
-      // expect: 3
+// Statement bodies.
+while (false) if (true) 1; else 2;
+while (false) while (true) 1;
+while (false) for (;;) 1;

@@ -92,7 +92,7 @@ template <typename T> T& get(Statement& statement) {
 
 struct BlockStatement {
     explicit BlockStatement(const std::vector<Statement>& statements)
-        : statements(statements) {
+        : statements(std::move(statements)) {
     }
     std::vector<Statement> statements;
 };

@@ -4,9 +4,8 @@
 #include "Utilities.hpp"
 //#include "Object.h"
 #include "TokenTypes.h"
-//#include "thirdparty/mvariant.hpp"
 #include "thirdparty/visit.hpp"
-
+#include "thirdparty/visit2.hpp"
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -36,7 +35,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-    std::visit(*this, statementToExecute);
+    cpplox::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
@@ -126,7 +125,6 @@ Environment* Interpreter::retrieveEnvironment(Environment* closure) {
         env->handle = index;
         env->values.clear();
         set = env.get();
-        env->refCount = 0;
     });
     // std::cout << "got " << index << std::endl;
 
@@ -200,26 +198,6 @@ Object Interpreter::operator()(const Binary& binary) {
     const Object& right = evaluate(binary.right);
 
     switch (binary.op.eTokenType) {
-    case ETokenType::GREATER: {
-        checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) > std::get<double>(right);
-    }
-    case ETokenType::GREATER_EQUAL: {
-        checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) >= std::get<double>(right);
-    }
-    case ETokenType::LESS: {
-        checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) < std::get<double>(right);
-    }
-    case ETokenType::LESS_EQUAL: {
-        checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) <= std::get<double>(right);
-    }
-    case ETokenType::MINUS: {
-        checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) - std::get<double>(right);
-    }
     case ETokenType::PLUS: {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
@@ -239,14 +217,36 @@ Object Interpreter::operator()(const Binary& binary) {
         // the error directly which the check would have done
         throw RuntimeError(binary.op, "Operands must be a number.");
     }
-    case ETokenType::SLASH: {
+    case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) / std::get<double>(right);
+        return std::get<double>(left) - std::get<double>(right);
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) * std::get<double>(right);
     }
+    case ETokenType::SLASH: {
+        checkNumberOperands(binary.op, left, right);
+        return std::get<double>(left) / std::get<double>(right);
+    }
+
+    case ETokenType::GREATER: {
+        checkNumberOperands(binary.op, left, right);
+        return std::get<double>(left) > std::get<double>(right);
+    }
+    case ETokenType::GREATER_EQUAL: {
+        checkNumberOperands(binary.op, left, right);
+        return std::get<double>(left) >= std::get<double>(right);
+    }
+    case ETokenType::LESS: {
+        checkNumberOperands(binary.op, left, right);
+        return std::get<double>(left) < std::get<double>(right);
+    }
+    case ETokenType::LESS_EQUAL: {
+        checkNumberOperands(binary.op, left, right);
+        return std::get<double>(left) <= std::get<double>(right);
+    }
+
     case ETokenType::MOD: {
         checkNumberOperands(binary.op, left, right);
         return std::fmod(std::get<double>(left), std::get<double>(right));
@@ -339,15 +339,15 @@ void Interpreter::clearArgumentVector(size_t index) {
 }
 
 Object Interpreter::operator()(const Call& call) {
-    const Object& callee = evaluate(call.callee);
+    const Object callee = evaluate(call.callee);
 
     // std::vector<Object> arguments;
 
-    auto objHelper = getNewArgumentVector();
+    const auto objHelper = getNewArgumentVector();
     auto& arguments = objHelper.objVector;
     arguments.reserve(call.arguments.size());
 
-    for (auto& argument : call.arguments) {
+    for (const auto& argument : call.arguments) {
         arguments.emplace_back(evaluate(argument));
     }
 
@@ -360,7 +360,7 @@ Object Interpreter::operator()(const Call& call) {
 
     // this is a lambda which will also be called when we visit to prevent
     // the need writing this twice
-    auto checkArityAndCallFunction = [&](auto func) -> Object {
+    const auto checkArityAndCallFunction = [&](auto func) -> Object {
         if (arguments.size() != func.arity()) {
             std::stringstream stream;
             stream << "Expected " << func.arity() << " arguments but got "
@@ -371,7 +371,7 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    const Object ret = rollbear::visit(
+    const Object ret = cpplox::visit(
         overloaded{[&](const NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },

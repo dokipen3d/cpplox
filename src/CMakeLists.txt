@@ -16,9 +16,16 @@ include(CheckIPOSupported)
 check_ipo_supported(RESULT supported OUTPUT error)
 
 #find_package(absl REQUIRED)
+#find_package(Boost 1.79.0) 
+
+
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
+
+#if(Boost_FOUND)
+#    target_include_directories(cpplox PUBLIC ${Boost_INCLUDE_DIRS}) 
+#endif()
 
 if( supported )
     message(STATUS "IPO / LTO enabled")

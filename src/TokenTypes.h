@@ -11,6 +11,7 @@
 #include "Utilities.hpp"
 #include "thirdparty/tsl/robin_map.h"
 //#include "thirdparty/visit.hpp"
+//#include "boost/smart_ptr/local_shared_ptr.hpp"
 
 namespace cpplox {
 enum class ETokenType : uint8_t {
@@ -259,9 +260,9 @@ struct FunctionObject {
     // }
 
     std::size_t arity() const;
-    void setDelayed(Environment* delayed) {
-        envToClearDelayed = delayed;
-    }
+    // void setDelayed(Environment* delayed) {
+    //     envToClearDelayed = delayed;
+    // }
 
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
@@ -269,7 +270,7 @@ struct FunctionObject {
     std::shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
-    Environment* envToClearDelayed = nullptr; // for closure
+    //Environment* envToClearDelayed = nullptr; // for closure
 };
 
 class Token {
@@ -308,9 +309,10 @@ class Token {
     friend struct Error;
 
     std::string lexeme;
+    Object literal;
     int16_t line;
     ETokenType eTokenType;
-    Object literal;
+
 
 
 };
