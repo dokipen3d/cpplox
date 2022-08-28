@@ -14,11 +14,7 @@ FunctionObject::FunctionObject(Interpreter* interpreter,
                                const FunctionStatement* functionStatement,
                                Environment* closure)
     : interpreter(interpreter), m_declaration(functionStatement),
-      closure2(interpreter->Environments[closure->handle]) {
-    //closure2 = interpreter->Environments[closure->handle];
-    //   std::cout << "inc\n";
-    //this->closure->refCount++;
-    //this->closure->enclosing->refCount++;
+    closure2(interpreter->Environments[closure->handle]) {
 
 }
 
@@ -54,7 +50,11 @@ FunctionObject::~FunctionObject() {
     // decrement the count and then call clear with the index to make sure its gets reused.
     auto index = closure2->handle;
     closure2.reset();
-    interpreter->clearEnvironmentFromStack(index);
+    //std::cout << "FO going " << index << "\n";
+    if (closure2) {
+        interpreter->clearEnvironmentFromStack(index);
+    }
+    
 }
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -79,7 +79,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
 
     if (interpreter.containsReturn) {
         interpreter.containsReturn = false;
-        return interpreter.currentReturn.value;
+        return interpreter.currentReturn;
     } 
 
     return nullptr;

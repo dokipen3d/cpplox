@@ -13,9 +13,12 @@
 #include <iterator> //for std::next()
 #include <vector>
 
+
+
 namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
+
     try {
         TimeIt timer("interpreter");
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
@@ -26,6 +29,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         for (const auto& statement : statements) {
             execute(statement);
         }
+
+        std::cout << "fin\n";
     } catch (const RuntimeError& error) {
         std::cout << "Caught Runtime error"
                   << "\n";
@@ -34,11 +39,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
     }
 }
 
-void Interpreter::execute(const Statement& statementToExecute) {
+void Interpreter::execute(const Statement& statementToExecute)  {
     cpplox::visit(*this, statementToExecute);
 }
 
-Object Interpreter::evaluate(const Expr& expression) {
+Object Interpreter::evaluate(const Expr& expression)  {
     return std::visit(*this, static_cast<ExprVariant>(expression));
 }
 
@@ -148,6 +153,8 @@ void Interpreter::clearEnvironmentFromStack(int handle) {
     if (Environments[handle].use_count() == 1) {
         // std::cout << "erasing " << environment->handle << "\n";
         Environments.eraseAt(handle);
+    } else {
+        //std::cout << " somthing is holding onto " << handle << "\n";
     }
 }
 
@@ -204,6 +211,12 @@ Object Interpreter::operator()(const Binary& binary) {
         if (left.is<double>() && right.is<double>()) {
             return std::get<double>(left) + std::get<double>(right);
         }
+        // const auto* a = left.get_if<double>();
+        // const auto* b = right.get_if<double>();
+        // if(a && b){
+        //     return *a + *b;
+        // }
+
         if (left.is<std::string>() && right.is<std::string>()) {
 
             return left.get<std::string>() + right.get<std::string>();
@@ -360,7 +373,7 @@ Object Interpreter::operator()(const Call& call) {
 
     // this is a lambda which will also be called when we visit to prevent
     // the need writing this twice
-    const auto checkArityAndCallFunction = [&](auto func) -> Object {
+    const auto checkArityAndCallFunction = [&](auto& func) -> Object {
         if (arguments.size() != func.arity()) {
             std::stringstream stream;
             stream << "Expected " << func.arity() << " arguments but got "
@@ -372,10 +385,10 @@ Object Interpreter::operator()(const Call& call) {
     };
     // clang-format off
     const Object ret = cpplox::visit(
-        overloaded{[&](const NativeFunction& func) -> Object {
+        overloaded{[&](NativeFunction& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
-                   [&](const FunctionObject& func) -> Object {
+                   [&](FunctionObject& func) -> Object {
                        return checkArityAndCallFunction(func);
                    },
                    [&](const bool b) -> Object { throwIfWrongType(); return {};},

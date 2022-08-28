@@ -11,7 +11,7 @@
 #include "Utilities.hpp"
 #include "thirdparty/tsl/robin_map.h"
 //#include "thirdparty/visit.hpp"
-//#include "boost/smart_ptr/local_shared_ptr.hpp"
+#include "boost/smart_ptr/local_shared_ptr.hpp"
 
 namespace cpplox {
 enum class ETokenType : uint8_t {
@@ -187,7 +187,7 @@ struct Object final : ObjectVariant {
         return std::get<actualTypeToGet>(*this);
     }
 
-    template <typename T> inline recursive_wrapper<T>* get_if() {
+    template <typename T> inline const T* get_if() const {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;

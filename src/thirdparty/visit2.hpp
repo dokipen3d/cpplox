@@ -3,6 +3,14 @@
 #include <type_traits>
 #include <utility>
 
+#ifdef __GNUC__ // GCC 4.8+, Clang, Intel and other compilers compatible with GCC (-std=c++0x or above)
+[[noreturn]] inline __attribute__((always_inline)) void unreachable() {__builtin_unreachable();}
+#elif defined(_MSC_VER) // MSVC
+[[noreturn]] __forceinline void unreachable() {__assume(false);}
+#else // ???
+inline void unreachable() {}
+#endif
+
 namespace std {
 
 template< class T >
@@ -21,12 +29,12 @@ template <bool IsValid, typename R> struct dispatcher;
 template <typename R> struct dispatcher<false, R> {
     template <std::size_t I, typename F, typename V>
     static constexpr R case_(F&&, V&&) {
-        __builtin_unreachable();
+        unreachable();
     }
 
     template <std::size_t B, typename F, typename V>
     static constexpr R switch_(F&&, V&&) {
-        __builtin_unreachable();
+       unreachable();
     }
 };
 

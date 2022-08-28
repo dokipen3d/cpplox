@@ -20,7 +20,7 @@
 
 #include "ExceptionError.h"
 #include "Utilities.hpp"
-//#include "boost/smart_ptr/local_shared_ptr.hpp"
+#include "boost/smart_ptr/local_shared_ptr.hpp"
 
 //#include "thirdparty/shared_ptr.hpp"
 template <typename S> struct hasher {

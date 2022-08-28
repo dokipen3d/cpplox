@@ -5,7 +5,7 @@
 #include "TimeIt.hpp"
 #include "thirdparty/sparestack.hpp"
 //#include "thirdparty/shared_ptr.hpp"
-//#include "boost/smart_ptr/local_shared_ptr.hpp"
+#include "boost/smart_ptr/local_shared_ptr.hpp"
 #include <chrono>
 #include <exception>
 #include <map>
@@ -32,7 +32,7 @@ struct Return : std::exception {
 struct Interpreter {
     Interpreter() {
         globals = retrieveEnvironment();
-
+        
         environment = globals;
         // should move this to cpp file....
         globals->define(
@@ -137,8 +137,14 @@ struct Interpreter {
     objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
 
-    Return currentReturn = Object{nullptr};
+
+    Object currentReturn = Object{nullptr};
     bool containsReturn = false;
+
+
+    std::shared_ptr<Environment>
+    globalsHold; // place to store global native functions etc
+
     uniquestack<std::shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
 
@@ -147,5 +153,7 @@ struct Interpreter {
     Environment*
         environment; // this maybe overriden temporarily by blocks and then
     // std::unordered_map<LookupVariableVariant, int> locals;
+
+
 };
 } // namespace cpplox

@@ -110,6 +110,10 @@ template <typename T> class uniquestack {
         _data.reserve(count);
     }
 
+    ~uniquestack(){
+        std::cout << "going! bye!\n";
+    }
+
     // returns the position the item was inserted into
 
     template <typename Callable>
@@ -131,7 +135,7 @@ template <typename T> class uniquestack {
 
             std::size_t accessElement = spareIds.back();
 
-            _data[accessElement] = env;
+            _data[accessElement].reset(env);
             //_data.at(accessElement) = env;
 
             spareIds.pop_back();
