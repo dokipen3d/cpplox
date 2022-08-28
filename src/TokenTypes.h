@@ -242,8 +242,7 @@ struct FunctionStatement;
 
 struct FunctionObject {
     FunctionObject(Interpreter* interpreter,
-                   const FunctionStatement* functionStatement,
-                   Environment* closure);
+                   const FunctionStatement* functionStatement);
     ~FunctionObject();
 
     Object operator()(Interpreter& interpreter,

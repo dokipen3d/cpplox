@@ -36,7 +36,12 @@ struct lox {
 
         // std::cout << "parsing expressions\n";
         cpplox::Parser parser(tokens);
-        const std::vector<cpplox::Statement> statements = parser.parse();
+        std::vector<cpplox::Statement> statements;
+        {
+            TimeIt timer("parser");
+
+            statements = parser.parse();
+        }
         // std::cout << "resolving\n";
 
         cpplox::Resolver resolver;
@@ -114,7 +119,6 @@ int main(int argumentCount, char* argumentValues[]) {
     // std::cin
     // std::string currentLine;
     // std::getline(std::cin, currentLine, '\n');
-
 
     std::cout.precision(18);
     lox l;

@@ -13,18 +13,18 @@
 #include <iterator> //for std::next()
 #include <vector>
 
-
-
 namespace cpplox {
 
 void Interpreter::interpret(const std::vector<Statement>& statements) {
 
     try {
-        TimeIt timer("interpreter");
+
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
+
+        TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
             execute(statement);
@@ -39,12 +39,43 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
     }
 }
 
-void Interpreter::execute(const Statement& statementToExecute)  {
+void Interpreter::execute(const Statement& statementToExecute) {
     cpplox::visit(*this, statementToExecute);
 }
 
-Object Interpreter::evaluate(const Expr& expression)  {
+// struct Assign;
+// struct Binary;
+// struct Grouping;
+// struct Variable;
+// struct Unary;
+// struct Literal;
+// struct Logical;
+// struct Call;
+// struct ExprVoidType {};
+
+Object Interpreter::evaluate(const Expr& expression) {
     return std::visit(*this, static_cast<const ExprVariant&>(expression));
+    // return [&]() -> Object {
+    //     if (expression.is<Assign>()) {
+    //         return (*this)(expression.get<Assign>());
+    //     } else if (expression.is<Binary>()) {
+    //         return (*this)(expression.get<Binary>());
+    //     } else if (expression.is<Grouping>()) {
+    //         return (*this)(expression.get<Grouping>());
+    //     } else if (expression.is<Variable>()) {
+    //         return (*this)(expression.get<Variable>());
+    //     } else if (expression.is<Unary>()) {
+    //         return (*this)(expression.get<Unary>());
+    //     } else if (expression.is<Literal>()) {
+    //         return (*this)(expression.get<Literal>());
+    //     } else if (expression.is<Logical>()) {
+    //         return (*this)(expression.get<Logical>());
+    //     } else if (expression.is<Call>()) {
+    //         return (*this)(expression.get<Call>());
+    //     } else {
+    //         return {};
+    //     }
+    // }();
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -115,8 +146,7 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // and converting it to its runtime representation
     // const FunctionObject functionObject(&functionStatement,
     // this->environment);
-    Object functionObject =
-        FunctionObject(this, &functionStatement, this->environment);
+    Object functionObject = FunctionObject(this, &functionStatement);
     environment->define(functionStatement.name.lexeme, functionObject);
 }
 
@@ -154,7 +184,7 @@ void Interpreter::clearEnvironmentFromStack(int handle) {
         // std::cout << "erasing " << environment->handle << "\n";
         Environments.eraseAt(handle);
     } else {
-        //std::cout << " somthing is holding onto " << handle << "\n";
+        // std::cout << " somthing is holding onto " << handle << "\n";
     }
 }
 
@@ -242,7 +272,9 @@ Object Interpreter::operator()(const Binary& binary) {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) / std::get<double>(right);
     }
-
+    case ETokenType::EQUAL_EQUAL: {
+        return isEqual(left, right);
+    }
     case ETokenType::GREATER: {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) > std::get<double>(right);
@@ -266,9 +298,6 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::BANG_EQUAL: {
         return !isEqual(left, right);
-    }
-    case ETokenType::EQUAL_EQUAL: {
-        return isEqual(left, right);
     }
     }
     return {};
@@ -352,7 +381,7 @@ void Interpreter::clearArgumentVector(size_t index) {
 }
 
 Object Interpreter::operator()(const Call& call) {
-    const Object callee = evaluate(call.callee);
+    Object callee = evaluate(call.callee);
 
     // std::vector<Object> arguments;
 
@@ -384,18 +413,27 @@ Object Interpreter::operator()(const Call& call) {
         return func(*this, arguments);
     };
     // clang-format off
-    const Object ret = cpplox::visit(
-        overloaded{[&](NativeFunction& func) -> Object {
-                       return checkArityAndCallFunction(func);
-                   },
-                   [&](FunctionObject& func) -> Object {
-                       return checkArityAndCallFunction(func);
-                   },
-                   [&](const bool b) -> Object { throwIfWrongType(); return {};},
-                   [&](const std::string& s) -> Object { throwIfWrongType(); return {}; },
-                   [&](const double d) -> Object { throwIfWrongType();  return {};},
-                   [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
-                static_cast<ObjectVariant>(callee));
+    // const Object ret = std::visit(
+    //     overloaded{[&](NativeFunction& func) -> Object {
+    //                    return checkArityAndCallFunction(func);
+    //                },
+    //                [&](FunctionObject& func) -> Object {
+    //                    return checkArityAndCallFunction(func);
+    //                },
+    //                [&](const bool b) -> Object { throwIfWrongType(); return {};},
+    //                [&](const std::string& s) -> Object { throwIfWrongType(); return {}; },
+    //                [&](const double d) -> Object { throwIfWrongType();  return {};},
+    //                [&](const void* vs) -> Object { throwIfWrongType();  return {};}},
+    //             static_cast<ObjectVariant>(callee));
+    const Object ret = [&]() -> Object {
+        if(callee.is<FunctionObject>()){
+            return checkArityAndCallFunction(callee.get<FunctionObject>());
+        } else if (callee.is<NativeFunction>()){
+            return checkArityAndCallFunction(callee.get<NativeFunction>());
+        } else {
+            throwIfWrongType();  return {};
+        }
+    }();
     // clang-format on
     clearArgumentVector(objHelper.index);
     return ret;

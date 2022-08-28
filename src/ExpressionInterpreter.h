@@ -32,14 +32,14 @@ struct Return : std::exception {
 struct Interpreter {
     Interpreter() {
         globals = retrieveEnvironment();
-        
+
         environment = globals;
         // should move this to cpp file....
         globals->define(
             "clock",
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
-                            const std::vector<Object> arguments) -> Object {
+                            const std::vector<Object>& arguments) -> Object {
                     using namespace std::chrono;
                     double s =
                         duration<double>(system_clock::now().time_since_epoch())
@@ -52,7 +52,7 @@ struct Interpreter {
             "str",
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
-                            const std::vector<Object> arguments) -> Object {
+                            const std::vector<Object>& arguments) -> Object {
                     std::string s = std::to_string(arguments[0].get<double>());
                     stripZerosFromString(s);
                     return s;
@@ -117,13 +117,13 @@ struct Interpreter {
         false; // when looping, we dont need to push and pop environments so
                // we disable
 
-    struct ExprComparitor {
-        bool operator()(const LookupVariableVariant& a,
-                        const LookupVariableVariant& b) const {
-            return &a < &b; // compare address of Expressions to see if they
-                            // are equal?
-        }
-    };
+    // struct ExprComparitor {
+    //     bool operator()(const LookupVariableVariant& a,
+    //                     const LookupVariableVariant& b) const {
+    //         return &a < &b; // compare address of Expressions to see if they
+    //                         // are equal?
+    //     }
+    // };
 
     struct objVectorHelper {
         std::vector<Object>& objVector;
@@ -137,13 +137,11 @@ struct Interpreter {
     objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
 
-
     Object currentReturn = Object{nullptr};
     bool containsReturn = false;
 
-
     std::shared_ptr<Environment>
-    globalsHold; // place to store global native functions etc
+        globalsHold; // place to store global native functions etc
 
     uniquestack<std::shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
@@ -153,7 +151,5 @@ struct Interpreter {
     Environment*
         environment; // this maybe overriden temporarily by blocks and then
     // std::unordered_map<LookupVariableVariant, int> locals;
-
-
 };
 } // namespace cpplox

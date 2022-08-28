@@ -11,10 +11,9 @@ NativeFunction::NativeFunction(
 }
 
 FunctionObject::FunctionObject(Interpreter* interpreter,
-                               const FunctionStatement* functionStatement,
-                               Environment* closure)
+                               const FunctionStatement* functionStatement)
     : interpreter(interpreter), m_declaration(functionStatement),
-    closure2(interpreter->Environments[closure->handle]) {
+    closure2(interpreter->Environments[interpreter->environment->handle]) {
 
 }
 

@@ -66,7 +66,15 @@ struct Expr final : ExprVariant {
         return std::get<recursive_wrapper2<T>>(*this);
     }
 
-    template <typename T> inline const T& get() {
+    template <typename T> inline const T& get() const  {
+        // constexpr bool isRecursive = ;
+        using actualTypeToGet =
+            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
+                               recursive_wrapper2<T>, T>;
+        return std::get<actualTypeToGet>(*this);
+    }
+
+        template <typename T> inline T& get() {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
