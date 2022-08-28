@@ -53,29 +53,67 @@ void Interpreter::execute(const Statement& statementToExecute) {
 // struct Call;
 // struct ExprVoidType {};
 
+std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
+             recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
+             recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
+             recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
+             ExprVoidType*>;
+
 Object Interpreter::evaluate(const Expr& expression) {
-    return std::visit(*this, static_cast<const ExprVariant&>(expression));
+     return std::visit(*this, static_cast<const ExprVariant&>(expression));
     // return [&]() -> Object {
-    //     if (expression.is<Assign>()) {
+    //     auto index = static_cast<const ExprVariant&>(expression).index();
+
+    //     switch (index) {
+    //     case 0: {
     //         return (*this)(expression.get<Assign>());
-    //     } else if (expression.is<Binary>()) {
+    //     }
+    //     case 1: {
     //         return (*this)(expression.get<Binary>());
-    //     } else if (expression.is<Grouping>()) {
+    //     }
+    //     case 2: {
     //         return (*this)(expression.get<Grouping>());
-    //     } else if (expression.is<Variable>()) {
-    //         return (*this)(expression.get<Variable>());
-    //     } else if (expression.is<Unary>()) {
-    //         return (*this)(expression.get<Unary>());
-    //     } else if (expression.is<Literal>()) {
+    //     }
+    //     case 3: {
     //         return (*this)(expression.get<Literal>());
-    //     } else if (expression.is<Logical>()) {
+    //     }
+    //     case 4: {
+    //         return (*this)(expression.get<Unary>());
+    //     }
+    //     case 5: {
+    //         return (*this)(expression.get<Variable>());
+    //     }
+    //     case 6: {
     //         return (*this)(expression.get<Logical>());
-    //     } else if (expression.is<Call>()) {
+    //     }
+    //     case 7: {
     //         return (*this)(expression.get<Call>());
-    //     } else {
+    //     }
+    //     default: {
     //         return {};
     //     }
-    // }();
+    //     }
+
+        // if (expression.is<Assign>()) {
+        //     return (*this)(expression.get<Assign>());
+        // } else if (expression.is<Binary>()) {
+        //     return (*this)(expression.get<Binary>());
+        // } else if (expression.is<Grouping>()) {
+        //     return (*this)(expression.get<Grouping>());
+        // } else if (expression.is<Variable>()) {
+        //     return (*this)(expression.get<Variable>());
+        // } else if (expression.is<Unary>()) {
+        //     return (*this)(expression.get<Unary>());
+        // } else if (expression.is<Literal>()) {
+        //     return (*this)(expression.get<Literal>());
+        // } else if (expression.is<Logical>()) {
+        //     return (*this)(expression.get<Logical>());
+        // } else if (expression.is<Call>()) {
+        //     return (*this)(expression.get<Call>());
+        // } else {
+        //     return {};
+        // }
+    //}();
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
@@ -138,16 +176,16 @@ void Interpreter::operator()(const ReturnStatement& returnStatement) {
 }
 
 void Interpreter::operator()(const FunctionStatement& functionStatement) {
-    // Each function call gets its own environment. Otherwise, recursion would
-    // break. If there are multiple calls to the same function in play at the
-    // same time, each needs its own environment, even though they are all calls
-    // to the same function.
-    // Here we are taking a function syntax node (a compile time representation)
-    // and converting it to its runtime representation
-    // const FunctionObject functionObject(&functionStatement,
-    // this->environment);
-    //Object functionObject = FunctionObject(this, &functionStatement);
-    environment->defineVal(functionStatement.name.lexeme, FunctionObject(this, &functionStatement));
+    // Each function call gets its own environment. Otherwise, recursion
+    // would break. If there are multiple calls to the same function in play
+    // at the same time, each needs its own environment, even though they
+    // are all calls to the same function. Here we are taking a function
+    // syntax node (a compile time representation) and converting it to its
+    // runtime representation const FunctionObject
+    // functionObject(&functionStatement, this->environment);
+    // Object functionObject = FunctionObject(this, &functionStatement);
+    environment->defineVal(functionStatement.name.lexeme,
+                           FunctionObject(this, &functionStatement));
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
@@ -168,9 +206,9 @@ Environment* Interpreter::retrieveEnvironment(Environment* closure) {
 
 void Interpreter::clearEnvironmentFromStack(Environment* environment) {
     // only clear if the count is 1 (ie in the sparestack)
-    // if the count is higher, then it means a function object is holding on to
-    // it and will clear it eventually in its destructor
-    if (Environments[environment->handle].use_count() == 1) {
+    // if the count is higher, then it means a function object is holding on
+    // to it and will clear it eventually in its destructor
+    if (Environments[environment->handle].local_use_count() == 1) {
         // std::cout << "erasing " << environment->handle << "\n";
         Environments.eraseAt(environment->handle);
     }
@@ -178,9 +216,9 @@ void Interpreter::clearEnvironmentFromStack(Environment* environment) {
 
 void Interpreter::clearEnvironmentFromStack(int handle) {
     // only clear if the count is 1 (ie in the sparestack)
-    // if the count is higher, then it means a function object is holding on to
-    // it and will clear it eventually in its destructor
-    if (Environments[handle].use_count() == 1) {
+    // if the count is higher, then it means a function object is holding on
+    // to it and will clear it eventually in its destructor
+    if (Environments[handle].local_use_count() == 1) {
         // std::cout << "erasing " << environment->handle << "\n";
         Environments.eraseAt(handle);
     } else {

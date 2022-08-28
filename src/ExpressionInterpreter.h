@@ -143,7 +143,7 @@ struct Interpreter {
     std::shared_ptr<Environment>
         globalsHold; // place to store global native functions etc
 
-    uniquestack<std::shared_ptr<Environment>> Environments;
+    uniquestack<boost::local_shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
 
     Environment* globals; // place to store global native functions etc

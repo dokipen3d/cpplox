@@ -103,7 +103,9 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
         }
     }
 
-    std::shared_ptr<Environment> enclosing;
+    //std::shared_ptr<Environment> enclosing;
+    boost::local_shared_ptr<Environment> enclosing;
+
     // Environment* enclosing = nullptr;
     //std::unordered_map<std::string, Object> values;
     //robin_hood::unordered_map<std::string, Object> values;

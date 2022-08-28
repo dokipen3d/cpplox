@@ -273,7 +273,7 @@ struct FunctionObject {
     friend std::ostream&
     operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
 
-    std::shared_ptr<Environment> closure2 = nullptr;
+    boost::local_shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
     //Environment* envToClearDelayed = nullptr; // for closure
