@@ -146,8 +146,8 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // and converting it to its runtime representation
     // const FunctionObject functionObject(&functionStatement,
     // this->environment);
-    Object functionObject = FunctionObject(this, &functionStatement);
-    environment->define(functionStatement.name.lexeme, functionObject);
+    //Object functionObject = FunctionObject(this, &functionStatement);
+    environment->defineVal(functionStatement.name.lexeme, FunctionObject(this, &functionStatement));
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {

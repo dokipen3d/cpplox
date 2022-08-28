@@ -191,7 +191,14 @@ struct Object final : ObjectVariant {
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
                                recursive_wrapper<T>, T>;
-        return std::get_if<actualTypeToGet>(this);
+        return (const T*)std::get_if<actualTypeToGet>(this);
+    }
+
+    template <typename T> inline T* get_if() {
+        using actualTypeToGet =
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
+                               recursive_wrapper<T>, T>;
+        return (T*)std::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T& get() {

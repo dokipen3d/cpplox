@@ -80,6 +80,11 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
         values.insert_or_assign(name, value);
     }
 
+    template <typename T>
+    void defineVal(const std::string& name, T&& value) {
+        values.insert_or_assign(name, std::forward<T>(value));
+    }
+
     void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.lexeme, value);
     }

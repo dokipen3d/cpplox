@@ -94,8 +94,8 @@ struct Interpreter {
         return nullptr;
     }
 
-    bool isTruthy(const Object& object);
-    bool isEqual(const Object& a, const Object& b);
+    bool isTruthy(const Object& object) ;
+    bool isEqual(const Object& a, const Object& b) ;
     // we could rely on the bad_variant_access but this way we throw based
     // on type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
