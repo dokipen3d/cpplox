@@ -44,7 +44,7 @@ void Interpreter::execute(const Statement& statementToExecute)  {
 }
 
 Object Interpreter::evaluate(const Expr& expression)  {
-    return std::visit(*this, static_cast<ExprVariant>(expression));
+    return std::visit(*this, static_cast<const ExprVariant&>(expression));
 }
 
 Object Interpreter::lookUpVariable(const Token& name, const Variable& expr) {
