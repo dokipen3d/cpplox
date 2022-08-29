@@ -1,0 +1,19 @@
+fun var_test(n)
+{
+    for (var i = 0; i < n; i = i + 1)   {
+        var j = 0;
+    }
+}
+
+fun sum_test(n)
+{
+    var sum = 0;
+    for (var i = 0; i < n;  i= i + 1)   {
+        sum = sum + i;
+    }
+    return sum;
+}
+
+var n = 1000000;
+print var_test(n); // takes 2.6 s
+print sum_test(n); // takes 0.24 s

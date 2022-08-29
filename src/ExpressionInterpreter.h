@@ -82,13 +82,13 @@ struct Interpreter {
                       Environment* newEnvironment);
 
     Object operator()(const Assign& assign);
-    Object operator()(const Binary& binary);
+    Object operator()(const Binary& binary) ;
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
     Object operator()(const Logical& logical);
-    Object operator()(const Call& call);
+    Object operator()(const Call& call) ;
 
     Object operator()(const void*) {
         return nullptr;

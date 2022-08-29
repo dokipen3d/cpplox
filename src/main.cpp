@@ -142,6 +142,4 @@ int main(int argumentCount, char* argumentValues[]) {
     } else {
         l.runPrompt();
     }
-
-    std::cout << "done!" << std::endl;
 }

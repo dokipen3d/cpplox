@@ -110,10 +110,6 @@ template <typename T> class uniquestack {
         _data.reserve(count);
     }
 
-    ~uniquestack(){
-        std::cout << "going! bye!\n";
-    }
-
     // returns the position the item was inserted into
 
     template <typename Callable>
