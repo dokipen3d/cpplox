@@ -23,7 +23,7 @@ struct TimeIt {
         //                  m_StartTime)
         //                  .count()
         //           << " milliseconds\n";
-        auto end = std::chrono::duration<double, std::milli>(
+        auto end = std::chrono::duration<double>(
                          std::chrono::high_resolution_clock::now() -
                          m_StartTime)
                          .count();

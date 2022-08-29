@@ -1,1 +1,3 @@
-print "hello: " + str(3);
+for (var i = 0; i < 100000; i = i + 1){
+    var s = "hello: " + str(3);
+} 

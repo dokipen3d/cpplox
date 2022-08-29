@@ -24,13 +24,11 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
 
-        TimeIt timer("interpreter");
+        //TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
             execute(statement);
         }
-
-        std::cout << "fin\n";
     } catch (const RuntimeError& error) {
         std::cout << "Caught Runtime error"
                   << "\n";
@@ -53,48 +51,49 @@ void Interpreter::execute(const Statement& statementToExecute) {
 // struct Call;
 // struct ExprVoidType {};
 
-std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
-             recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
-             recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
-             recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
-             ExprVoidType*>;
+// std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
+//              recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
+//              recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
+//              recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
+//              ExprVoidType*>;
 
 Object Interpreter::evaluate(const Expr& expression) {
      return std::visit(*this, static_cast<const ExprVariant&>(expression));
     // return [&]() -> Object {
-    //     auto index = static_cast<const ExprVariant&>(expression).index();
-
-    //     switch (index) {
-    //     case 0: {
-    //         return (*this)(expression.get<Assign>());
-    //     }
-    //     case 1: {
-    //         return (*this)(expression.get<Binary>());
-    //     }
-    //     case 2: {
-    //         return (*this)(expression.get<Grouping>());
-    //     }
-    //     case 3: {
-    //         return (*this)(expression.get<Literal>());
-    //     }
-    //     case 4: {
-    //         return (*this)(expression.get<Unary>());
-    //     }
-    //     case 5: {
-    //         return (*this)(expression.get<Variable>());
-    //     }
-    //     case 6: {
-    //         return (*this)(expression.get<Logical>());
-    //     }
-    //     case 7: {
-    //         return (*this)(expression.get<Call>());
-    //     }
-    //     default: {
-    //         return {};
-    //     }
-    //     }
-
-        // if (expression.is<Assign>()) {
+        // const auto index = static_cast<const ExprVariant&>(expression).index();
+        // switch (index) {
+        // case 0: {
+        //     return (*this)(expression.get<Assign>());
+        // }
+        // case 1: {
+        //     return (*this)(expression.get<Binary>());
+        // }
+        // case 2: {
+        //     return (*this)(expression.get<Grouping>());
+        // }
+        // case 3: {
+        //     return (*this)(expression.get<Literal>());
+        // }
+        // case 4: {
+        //     return (*this)(expression.get<Unary>());
+        // }
+        // case 5: {
+        //     return (*this)(expression.get<Variable>());
+        // }
+        // case 6: {
+        //     return (*this)(expression.get<Logical>());
+        // }
+        // case 7: {
+        //     return (*this)(expression.get<Call>());
+        // }
+        // default: {
+        //     return {};
+        // }
+        // }
+    //}();
+        // if (expression.is<Call>()) {
+        //     return (*this)(expression.get<Call>());
+        // } else if (expression.is<Assign>()) {
         //     return (*this)(expression.get<Assign>());
         // } else if (expression.is<Binary>()) {
         //     return (*this)(expression.get<Binary>());
@@ -108,8 +107,6 @@ Object Interpreter::evaluate(const Expr& expression) {
         //     return (*this)(expression.get<Literal>());
         // } else if (expression.is<Logical>()) {
         //     return (*this)(expression.get<Logical>());
-        // } else if (expression.is<Call>()) {
-        //     return (*this)(expression.get<Call>());
         // } else {
         //     return {};
         // }
@@ -277,7 +274,8 @@ Object Interpreter::operator()(const Binary& binary) {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            return std::get<double>(left) + std::get<double>(right);
+            //return std::get<double>(left) + std::get<double>(right);
+            return *left.get_if<double>() + *right.get_if<double>();
         }
         // const auto* a = left.get_if<double>();
         // const auto* b = right.get_if<double>();
@@ -288,6 +286,7 @@ Object Interpreter::operator()(const Binary& binary) {
         if (left.is<std::string>() && right.is<std::string>()) {
 
             return left.get<std::string>() + right.get<std::string>();
+            //return *left.get_if<std::string>() + *right.get_if<std::string>();
             // return
             // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
             // +
@@ -300,7 +299,9 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) - std::get<double>(right);
+        //return std::get<double>(left) - std::get<double>(right);
+        return *left.get_if<double>() - *right.get_if<double>();
+
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
@@ -323,13 +324,14 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        return std::get<double>(left) < std::get<double>(right);
+        //return std::get<double>(left) < std::get<double>(right);
+        return *left.get_if<double>() < *right.get_if<double>();
+
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
         return std::get<double>(left) <= std::get<double>(right);
     }
-
     case ETokenType::MOD: {
         checkNumberOperands(binary.op, left, right);
         return std::fmod(std::get<double>(left), std::get<double>(right));
@@ -434,7 +436,7 @@ Object Interpreter::operator()(const Call& call) {
     // when we visit the callee (which should be a function object ie with a
     // callable member ) we want to call this if it is one of the other
     // types
-    auto throwIfWrongType = [&]() -> Object {
+    const auto throwIfWrongType = [&]() -> Object {
         throw RuntimeError(call.paren, "Can only call functions and classes");
     };
 
@@ -465,7 +467,8 @@ Object Interpreter::operator()(const Call& call) {
     //             static_cast<ObjectVariant>(callee));
     const Object ret = [&]() -> Object {
         if(callee.is<FunctionObject>()){
-            return checkArityAndCallFunction(callee.get<FunctionObject>());
+            //return checkArityAndCallFunction(callee.get<FunctionObject>());
+            return checkArityAndCallFunction(static_cast<FunctionObject&>(*callee.get_if<recursive_wrapper<FunctionObject>>()));
         } else if (callee.is<NativeFunction>()){
             return checkArityAndCallFunction(callee.get<NativeFunction>());
         } else {
@@ -506,18 +509,18 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
 // type. might be slower. worth investigating in future.
 void Interpreter::checkNumberOperand(const Token& token,
                                      const Object& operand) {
-    if (operand.is<double>()) {
-        return;
-    }
-    throw RuntimeError(token, "Operand must be a number.");
+    // if (operand.is<double>()) {
+    //     return;
+    // }
+    // throw RuntimeError(token, "Operand must be a number.");
 }
 // version of the fuction for binary operators
 void Interpreter::checkNumberOperands(const Token& token, const Object& left,
                                       const Object& right) {
-    if (left.is<double>() && right.is<double>()) {
-        return;
-    }
-    throw RuntimeError(token, "Operands must be a number.");
+    // if (left.is<double>() && right.is<double>()) {
+    //     return;
+    // }
+    // throw RuntimeError(token, "Operands must be a number.");
 }
 
 template <typename T>

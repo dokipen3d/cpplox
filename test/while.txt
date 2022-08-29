@@ -1,6 +1,16 @@
 var i = 0;
+
+var before = clock();
+
+
+
+
 while(i < 2000000) {
     //print i;
     i = i*4 + 1;
 }
 print i;
+
+
+var after = clock();
+print after - before;

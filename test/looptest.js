@@ -7,3 +7,4 @@ for (var i = 1.0; i <= 100000; i = i + 1) {
         sum = sum + (1.0 / (i * i));
     }
 }
+print sum;
