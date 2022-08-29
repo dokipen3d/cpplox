@@ -43,24 +43,13 @@ void Interpreter::execute(const Statement& statementToExecute) {
     cpplox::visit(*this, statementToExecute);
 }
 
-// struct Assign;
-// struct Binary;
-// struct Grouping;
-// struct Variable;
-// struct Unary;
-// struct Literal;
-// struct Logical;
-// struct Call;
-// struct ExprVoidType {};
-
-std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
-             recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
-             recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
-             recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
-             ExprVoidType*>;
-
 Object Interpreter::evaluate(const Expr& expression) {
+#if(_MSC_VER)
+     return cpplox::visit(*this, static_cast<const ExprVariant&>(expression));
+#else
      return std::visit(*this, static_cast<const ExprVariant&>(expression));
+#endif
+
     // return [&]() -> Object {
     //     auto index = static_cast<const ExprVariant&>(expression).index();
 
@@ -423,7 +412,7 @@ Object Interpreter::operator()(const Call& call) {
 
     // std::vector<Object> arguments;
 
-    const auto objHelper = getNewArgumentVector();
+    const auto& objHelper = getNewArgumentVector();
     auto& arguments = objHelper.objVector;
     arguments.reserve(call.arguments.size());
 

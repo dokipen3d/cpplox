@@ -107,3 +107,6 @@ if (auto* front = std::get_if<Scanner::Token>(from); front && front->isKeyword()
 {
 	// ongoing use of front
 }
+
+
+C:\Users\dokipenWS\Documents\Projects\cpplox\test\fibonacciValue.txt
