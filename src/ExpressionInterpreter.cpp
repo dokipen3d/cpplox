@@ -38,7 +38,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
-    cpplox::visit(*this, statementToExecute);
+    std::visit(*this, statementToExecute);
 }
 
 Object Interpreter::evaluate(const Expr& expression) {

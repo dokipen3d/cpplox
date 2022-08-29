@@ -3,6 +3,9 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+
+#include "boost/smart_ptr/make_local_shared.hpp"
+
 template <typename T> class sparestack {
 
   public:
@@ -143,7 +146,9 @@ template <typename T> class uniquestack {
     template <typename Callable> std::size_t retrieve(Callable&& callable) {
         if (spareIds.size() == 0) {
 
-            _data.push_back(std::make_unique<typename T::element_type>());
+            _data.emplace_back(std::make_unique<typename T::element_type>());
+            // _data.push_back(
+            //     boost::make_local_shared_noinit<typename T::element_type>());
             //_data.push_back(env);
 
             std::size_t existing_size = _data.size() - 1;
