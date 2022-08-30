@@ -8,6 +8,9 @@ fun makeCounter() {
   return count;
 }
 
+print "glob";
 var counter = makeCounter();
+
+print "made counter";
 counter(); // "1".
 counter(); // "2".

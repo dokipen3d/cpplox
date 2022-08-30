@@ -170,8 +170,11 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // runtime representation const FunctionObject
     // functionObject(&functionStatement, this->environment);
     // Object functionObject = FunctionObject(this, &functionStatement);
+    //std::cout << "start of F block " << this->environment->handle << "\n";
+
     environment->defineVal(functionStatement.name.lexeme,
                            FunctionObject(this, &functionStatement));
+    //std::cout << "end of F block " << this->environment->handle << "\n";
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
@@ -194,22 +197,22 @@ void Interpreter::clearEnvironmentFromStack(Environment* environment) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    if (Environments[environment->handle].local_use_count() < 3) {
+    //if (Environments[environment->handle].local_use_count() == 1) {
         //std::cout << "erasing1 " << environment->handle << "\n";
+        //environment->values.clear();
         Environments.eraseAt(environment->handle);
-    }
+    //}
 }
 
 void Interpreter::clearEnvironmentFromStack(int handle) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    if (Environments[handle].local_use_count() < 3) {
+    //if (Environments[handle].local_use_count() == 1) {
         //std::cout << "erasing2 " << environment->handle << "\n";
+        //Environments[handle]->values.clear();
         Environments.eraseAt(handle);
-    } else {
-        // std::cout << " somthing is holding onto " << handle << "\n";
-    }
+    //} 
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
@@ -220,6 +223,7 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
                  newEnvironmentPtr); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
+   // std::cout << "cleaning env at end of block " << newEnvironmentPtr->handle << "\n";
     clearEnvironmentFromStack(newEnvironmentPtr);
     return;
 }

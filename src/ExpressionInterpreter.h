@@ -58,6 +58,8 @@ struct Interpreter {
                     return s;
                 },
                 /*arity*/ []() { return 1; }});
+
+        std::cout << "bye i\n";
     }
 
     void interpret(const std::vector<Statement>& statements);
@@ -143,8 +145,9 @@ struct Interpreter {
     std::shared_ptr<Environment>
         globalsHold; // place to store global native functions etc
 
-    uniquestack<boost::local_shared_ptr<Environment>> Environments;
     sparestack<std::vector<Object>> argumentsStack;
+    uniquestack<boost::local_shared_ptr<Environment>> Environments;
+
 
     Environment* globals; // place to store global native functions etc
 

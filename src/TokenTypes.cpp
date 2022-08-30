@@ -13,17 +13,17 @@ NativeFunction::NativeFunction(
 FunctionObject::FunctionObject(Interpreter* interpreter,
                                const FunctionStatement* functionStatement)
     : interpreter(interpreter), m_declaration(functionStatement),
-    closure2(interpreter->Environments[interpreter->environment->handle]) {
-
+      closure2(interpreter->Environments[interpreter->environment->handle]) {
+    // std::cout << "making FO, getting parent env "
+    //           << interpreter->environment->handle << "with uc "
+    //           << closure2.local_use_count() << "\n";
 }
 
 // FunctionObject::FunctionObject(FunctionObject const& other)
-//     : m_declaration(other.m_declaration) {
-//     //std::cout << "copy\n";
+//     : m_declaration(other.m_declaration){
+//     std::cout << "copy\n";
 //     interpreter = other.interpreter;
-//     closure = other.closure;
-//     this->closure->refCount++;
-//     envToClearDelayed = other.envToClearDelayed; // for closure
+//     closure2 = other.closure2;
 // }
 
 // FunctionObject& FunctionObject::operator=(const FunctionObject& other)
@@ -38,22 +38,63 @@ FunctionObject::FunctionObject(Interpreter* interpreter,
 //     return *this;
 // }
 
-
 std::size_t FunctionObject::arity() const {
     return m_declaration->params.size();
 };
 
 FunctionObject::~FunctionObject() {
-    // there maybe more than 1 ref to this environment as we may have copied the function object out as a closure
-    // we want to still take advangtage of the re-use stack though so we get the handle, relinquish this ptr to it to 
-    // decrement the count and then call clear with the index to make sure its gets reused.
-    auto index = closure2->handle;
+    // there maybe more than 1 ref to this environment as we may have copied the
+    // function object out as a closure we want to still take advangtage of the
+    // re-use stack though so we get the handle, relinquish this ptr to it to
+    // decrement the count and then call clear with the index to make sure its
+    // gets reused.
+
+    // if (!interpreter) {
+    //     std::cout << "nope\n";
+    // }
+    // this prevents double free. for some reason an object is kept around and
+    // is valid but has a use count of 0
+
+    // if(closure2->handle == 0){
+    //     std::cout << closure2->handle << " "
+    //           <<
+    //           interpreter->Environments[closure2->handle].local_use_count()
+    //           << " going\n";
+    //      //std::cout << "going\n";
+    //     return;
+    // }
+
+    std::size_t index = closure2->handle;
+
+    // if (interpreter->Environments[index].local_use_count() == 0) {
+    //     return;
+    // }
+    // std::cout << closure2->handle << " "
+    //           << interpreter->Environments[index].local_use_count()
+    //           << " going\n";
+    // if (closure2.local_use_count() > 0) {
+
+    // std::cout << " about to reset\n";
     closure2.reset();
-    //std::cout << "FO going " << index << "\n";
-    if (closure2) {
+
+    // std::cout << " after to reset\n";
+
+    // } else {
+    //     return;
+    // }
+
+    // std::cout << "-> " <<  interpreter->Environments[index].local_use_count()
+    // << "\n";
+
+    // std::cout << "end\n";
+
+    if (interpreter->Environments[index].local_use_count() == 1) {
+
+        // std::cout << "after reset " << index << " lc: "
+        //           << interpreter->Environments[index].local_use_count() <<
+        //           "\n";
         interpreter->clearEnvironmentFromStack(index);
     }
-    
 }
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -73,13 +114,16 @@ Object FunctionObject::operator()(Interpreter& interpreter,
 
     interpreter.executeBlock(m_declaration->body, environment);
 
-    interpreter.clearEnvironmentFromStack(
-                environment);
+    // std::cout << "exec\n";
 
     if (interpreter.containsReturn) {
+        if (!interpreter.currentReturn.is<FunctionObject>()) {
+            interpreter.clearEnvironmentFromStack(environment);
+        }
+
         interpreter.containsReturn = false;
         return interpreter.currentReturn;
-    } 
+    }
 
     return nullptr;
 }
