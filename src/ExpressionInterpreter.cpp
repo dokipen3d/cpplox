@@ -185,7 +185,7 @@ Environment* Interpreter::retrieveEnvironment(Environment* closure) {
         env->values.clear();
         set = env.get();
     });
-    // std::cout << "got " << index << std::endl;
+    //std::cout << "got " << index << std::endl;
 
     return set;
 }
@@ -194,8 +194,8 @@ void Interpreter::clearEnvironmentFromStack(Environment* environment) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    if (Environments[environment->handle].local_use_count() == 1) {
-        // std::cout << "erasing " << environment->handle << "\n";
+    if (Environments[environment->handle].local_use_count() < 3) {
+        //std::cout << "erasing1 " << environment->handle << "\n";
         Environments.eraseAt(environment->handle);
     }
 }
@@ -204,8 +204,8 @@ void Interpreter::clearEnvironmentFromStack(int handle) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    if (Environments[handle].local_use_count() == 1) {
-        // std::cout << "erasing " << environment->handle << "\n";
+    if (Environments[handle].local_use_count() < 3) {
+        //std::cout << "erasing2 " << environment->handle << "\n";
         Environments.eraseAt(handle);
     } else {
         // std::cout << " somthing is holding onto " << handle << "\n";
