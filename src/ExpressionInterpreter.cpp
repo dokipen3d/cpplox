@@ -35,6 +35,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 
         Error::runtimeError(error);
     }
+    finishing = true;
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {

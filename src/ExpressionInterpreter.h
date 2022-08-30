@@ -59,7 +59,6 @@ struct Interpreter {
                 },
                 /*arity*/ []() { return 1; }});
 
-        std::cout << "bye i\n";
     }
 
     void interpret(const std::vector<Statement>& statements);
@@ -141,7 +140,7 @@ struct Interpreter {
 
     Object currentReturn = Object{nullptr};
     bool containsReturn = false;
-
+    bool finishing = false;
     std::shared_ptr<Environment>
         globalsHold; // place to store global native functions etc
 

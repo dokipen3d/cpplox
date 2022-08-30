@@ -50,7 +50,6 @@ FunctionObject::~FunctionObject() {
     // gets reused.
 
     // if (!interpreter) {
-    //     std::cout << "nope\n";
     // }
     // this prevents double free. for some reason an object is kept around and
     // is valid but has a use count of 0
@@ -88,7 +87,7 @@ FunctionObject::~FunctionObject() {
 
     // std::cout << "end\n";
 
-    if (interpreter->Environments[index].local_use_count() == 1) {
+    if (!interpreter->finishing && interpreter->Environments[index].local_use_count() == 1) {
 
         // std::cout << "after reset " << index << " lc: "
         //           << interpreter->Environments[index].local_use_count() <<
