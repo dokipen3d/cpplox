@@ -1,6 +1,6 @@
 fun isprime(m)
 {
-    for (var j = 2; j < m; j = (j + 1)) {
+    for (var j = 2; j < m; j = j + 1) {
         //print j;
         //print m;
         if (m % j == 0) { 

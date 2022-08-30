@@ -328,7 +328,10 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::MOD: {
         checkNumberOperands(binary.op, left, right);
-        return std::fmod(std::get<double>(left), std::get<double>(right));
+        // int a = *left.get_if<double>();
+        // int b = *right.get_if<double>();
+        // return double(a % b);
+        return std::fmod(*left.get_if<double>(), *right.get_if<double>());
     }
     case ETokenType::BANG_EQUAL: {
         return !isEqual(left, right);
@@ -476,7 +479,7 @@ Object Interpreter::operator()(const Call& call) {
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
-        return std::get<bool>(object);
+        return *object.get_if<bool>();
     }
     if (object == nullptr) {
         return false;
@@ -492,7 +495,7 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     //            std::numeric_limits<double>::epsilon();
     // }
     if (a.is<double>() && b.is<double>()) {
-        return std::get<double>(a) == std::get<double>(b);
+        return *a.get_if<double>() == *b.get_if<double>();
     }
     if (a.is<std::string>() && b.is<std::string>()) {
         return a.get<std::string>() == b.get<std::string>();
@@ -503,18 +506,18 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
 // type. might be slower. worth investigating in future.
 void Interpreter::checkNumberOperand(const Token& token,
                                      const Object& operand) {
-    // if (operand.is<double>()) {
-    //     return;
-    // }
-    // throw RuntimeError(token, "Operand must be a number.");
+    if (operand.is<double>()) {
+        return;
+    }
+    throw RuntimeError(token, "Operand must be a number.");
 }
 // version of the fuction for binary operators
 void Interpreter::checkNumberOperands(const Token& token, const Object& left,
                                       const Object& right) {
-    // if (left.is<double>() && right.is<double>()) {
-    //     return;
-    // }
-    // throw RuntimeError(token, "Operands must be a number.");
+    if (left.is<double>() && right.is<double>()) {
+        return;
+    }
+    throw RuntimeError(token, "Operands must be a number.");
 }
 
 template <typename T>
