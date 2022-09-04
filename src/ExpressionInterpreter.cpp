@@ -23,6 +23,9 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
+        std::cout << "size of Literal = " << sizeof(Literal) << " bytes.\n";
+        std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
+
 
         //TimeIt timer("interpreter");
 

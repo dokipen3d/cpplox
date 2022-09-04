@@ -1,0 +1,10 @@
+fun main(){
+    var xyz = 0;
+
+    while(xyz < 1000000){
+        xyz = xyz + 1;
+    }
+    print xyz;
+} 
+
+main();

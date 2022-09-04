@@ -17,17 +17,23 @@ struct Binary;
 struct Grouping;
 struct Variable;
 struct Unary;
-struct Literal;
 struct Logical;
 struct Call;
 struct ExprVoidType {};
 
+struct Literal {
+    Literal(Object val) : val(std::move(val)) {
+    }
+    Object val;
+   
+};
+
 using ExprVariant =
-    std::variant<recursive_wrapper2<Assign>, recursive_wrapper2<Binary>,
-                 recursive_wrapper2<Grouping>, recursive_wrapper2<Literal>,
-                 recursive_wrapper2<Unary>, recursive_wrapper2<Variable>,
-                 recursive_wrapper2<Logical>, recursive_wrapper2<Call>,
-                 ExprVoidType*>;
+    std::variant<void*, recursive_wrapper<Assign>, recursive_wrapper<Binary>,
+                 recursive_wrapper<Grouping>, Literal,
+                 recursive_wrapper<Unary>, recursive_wrapper<Variable>,
+                 recursive_wrapper<Logical>, recursive_wrapper<Call>
+                 >;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -41,7 +47,7 @@ struct Expr final : ExprVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        return std::holds_alternative<ExprVoidType*>(*this);
+        return std::holds_alternative<void*>(*this);
     }
 
     inline bool operator!=(std::nullptr_t ptr) const {
@@ -52,8 +58,8 @@ struct Expr final : ExprVariant {
     bool is() const { // function needs to be const  to make it callable
         // from a const ref
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
-                               recursive_wrapper2<T>, T>;
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
+                               recursive_wrapper<T>, T>;
         return std::holds_alternative<actualTypeToGet>(*this);
     }
 
@@ -61,37 +67,30 @@ struct Expr final : ExprVariant {
     inline const T& expr_get() { // function needs to be const  to make it
                                  // callable from a const ref
         constexpr bool isRecursive =
-            has_type<recursive_wrapper2<T>, ExprVariant>::value;
+            has_type<recursive_wrapper<T>, ExprVariant>::value;
 
-        return std::get<recursive_wrapper2<T>>(*this);
+        return std::get<recursive_wrapper<T>>(*this);
     }
 
     template <typename T> inline const T& get() const  {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
-                               recursive_wrapper2<T>, T>;
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
+                               recursive_wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 
         template <typename T> inline T& get() {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper2<T>, ExprVariant>,
-                               recursive_wrapper2<T>, T>;
+            std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
+                               recursive_wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 };
 
 /////////////////////////////////////////////////////////////////////
-struct Literal {
-    explicit Literal(Object val) : val(std::move(val)) {
-    }
-    Object val;
-    // bool operator==(const Literal& other) const {
-    //     return (val == other.val);
-    // }
-};
+
 
 struct Assign {
     Assign(Token name, Expr value) : name(std::move(name)), value(value) {
@@ -100,20 +99,12 @@ struct Assign {
     Token name;
     Expr value;
     mutable int distance = -1;
-
-
-    // bool operator==(const Assign& other) const {
-    //     return ((name == other.name) && (value == other.value));
-    // }
 };
 
 struct Grouping {
     explicit Grouping(Expr expr) : expr(expr) {
     }
     Expr expr;
-    // bool operator==(const Grouping& other) const {
-    //     return (expr == other.expr);
-    // }
 };
 
 struct Binary {
@@ -123,10 +114,6 @@ struct Binary {
     Token op;
     Expr left;
     Expr right;
-    // bool operator==(const Binary& other) const {
-    //     return ((left == other.left) && (right == other.right) &&
-    //             (op == other.op));
-    // }
 };
 
 struct Unary {
@@ -134,10 +121,6 @@ struct Unary {
     }
     Token token;
     Expr expr;
-
-    // bool operator==(const Unary& other) const {
-    //     return ((token == other.token) && (expr == other.expr));
-    // }
 };
 
 struct Variable {
@@ -146,9 +129,6 @@ struct Variable {
     }
     Token name;
     mutable int distance = -1;
-    // bool operator==(const Variable& other) const {
-    //     return (name == other.name);
-    // }
 };
 
 struct Logical {
@@ -158,10 +138,6 @@ struct Logical {
     Token op;
     Expr left;
     Expr right;
-    // bool operator==(const Logical& other) const {
-    //     return ((left == other.left) && (right == other.right) &&
-    //             (op == other.op));
-    // }
 };
 
 struct Call {
@@ -171,10 +147,6 @@ struct Call {
     Token paren;
     std::vector<Expr> arguments;
     Expr callee;
-    // bool operator==(const Call& other) const {
-    //     return ((callee == other.callee) && (paren == other.paren) &&
-    //             (arguments == other.arguments));
-    // }
 };
 
 using LookupVariableVariant = std::variant<Variable, Assign>;

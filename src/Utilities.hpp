@@ -51,10 +51,10 @@ template <typename T> struct recursive_wrapper {
 
     recursive_wrapper(T&& t_) {
         // t.push_back(std::move(t_));
-        index = t.push(std::forward<T>(t_));
+        t.emplace_back(std::forward<T>(t_));
         // std::cout << "increasing\n";
         //  t.push_back(std::forward<T>(t_));
-        //  index = t.size() - 1;
+        index = t.size() - 1;
     }
 
     // ~recursive_wrapper() {
@@ -89,69 +89,14 @@ template <typename T> struct recursive_wrapper {
     // }
 
     // store the value
-    // static std::vector<T> t;
-    static sparestack<T> t;
+    static std::vector<T> t;
+    //static sparestack<T> t;
     int index = -1;
     // std::basic_string<T> t;
 };
 
 // template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
-template <typename T> inline sparestack<T> recursive_wrapper<T>::t;
-
-// recursive wrapper with single vector for each type
-template <typename T> struct recursive_wrapper2 {
-    // construct from an existing object
-
-    recursive_wrapper2(T&& t_) {
-        // t.push_back(std::move(t_));
-        index = t.push(std::forward<T>(t_));
-        // std::cout << "increasing\n";
-        // t.push_back(std::forward<T>(t_));
-        // index = t.size() - 1;
-    }
-
-    // ~recursive_wrapper2() {
-
-    //     if (safeToReuse) [[likely]] {
-    //         //std::cout << "erasing\n";
-
-    //         t.eraseAt(index);
-    //     }
-    // }
-    // recursive_wrapper(const recursive_wrapper& operand) = default;
-
-    // recursive_wrapper(recursive_wrapper&& operand) = default;
-
-    // recursive_wrapper& operator=(const recursive_wrapper& rhs)  = default;
-    // recursive_wrapper& operator=(recursive_wrapper&& rhs) = default;
-
-    // cast back to wrapped type
-    // operator const T &()  { return t.front(); }
-    operator const T&() const {
-        return t[index];
-    }
-    operator T&() {
-        return t[index];
-    }
-
-    // bool operator==(const recursive_wrapper<T>& other) const {
-    //     return (t[index] == static_cast<T>(other)) ;
-    // }
-
-    // if we ever need a non const ref back
-    // operator T&() {
-    //     return t[index];
-    // }
-
-    // store the value
-    // static std::vector<T> t;
-    static sparestack<T> t;
-    int index = -1;
-    // std::basic_string<T> t;
-};
-
-// template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
-template <typename T> inline sparestack<T> recursive_wrapper2<T>::t;
+template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);
