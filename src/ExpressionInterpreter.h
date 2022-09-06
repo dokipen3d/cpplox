@@ -58,7 +58,6 @@ struct Interpreter {
                     return s;
                 },
                 /*arity*/ []() { return 1; }});
-
     }
 
     void interpret(const std::vector<Statement>& statements);
@@ -83,20 +82,22 @@ struct Interpreter {
                       Environment* newEnvironment);
 
     Object operator()(const Assign& assign);
-    Object operator()(const Binary& binary) ;
+    Object operator()(const Binary& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
     Object operator()(const Variable& variable);
     Object operator()(const Logical& logical);
-    Object operator()(const Call& call) ;
+    Object operator()(const Call& call);
+    Object operator()(const Increment& inc);
+    Object operator()(const Decrement& inc);
 
     Object operator()(const void*) {
         return nullptr;
     }
 
-    bool isTruthy(const Object& object) ;
-    bool isEqual(const Object& a, const Object& b) ;
+    bool isTruthy(const Object& object);
+    bool isEqual(const Object& a, const Object& b);
     // we could rely on the bad_variant_access but this way we throw based
     // on type. might be slower. worth investigating in future.
     void checkNumberOperand(const Token& token, const Object& operand);
@@ -146,7 +147,6 @@ struct Interpreter {
 
     sparestack<std::vector<Object>> argumentsStack;
     uniquestack<boost::local_shared_ptr<Environment>> Environments;
-
 
     Environment* globals; // place to store global native functions etc
 

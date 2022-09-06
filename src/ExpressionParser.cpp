@@ -472,4 +472,19 @@ auto Parser::assignment() -> Expr {
     return expr;
 };
 
+auto Parser::prefix() -> Expr {
+    if(match({ETokenType::PLUS_PLUS})){
+        Token op = previous();
+        // call to the next as prefix to set the right precedence. we'll also check that we dont chain these 
+        Expr right = prefix();
+
+
+    }
+}
+
+
+auto Parser::postfix() -> Expr {
+    
+}
+
 } // namespace cpplox

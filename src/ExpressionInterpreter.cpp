@@ -480,6 +480,14 @@ Object Interpreter::operator()(const Call& call) {
     return ret;
 }
 
+Object Interpreter::operator()(const Increment& inc) {
+
+}
+
+Object Interpreter::operator()(const Decrement& dec) {
+
+}
+
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
         return *object.get_if<bool>();

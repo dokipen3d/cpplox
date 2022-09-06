@@ -176,4 +176,12 @@ void Resolver::operator()(const Call& call) {
     }
 }
 
+void Resolver::operator()(const Increment& inc) {
+   
+}
+
+void Resolver::operator()(const Decrement& dec) {
+   
+}
+
 } // namespace cpplox

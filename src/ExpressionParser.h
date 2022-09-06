@@ -60,7 +60,8 @@ class Parser {
     Expr logicalAnd();
     Expr call();
     Expr finishCall(Expr callee);
-
+    Expr prefix();
+    Expr postfix();
 
     std::vector<Token>& tokens;
 

@@ -19,21 +19,23 @@ struct Variable;
 struct Unary;
 struct Logical;
 struct Call;
+struct Increment;
+struct Decrement;
+
 struct ExprVoidType {};
 
 struct Literal {
     Literal(Object val) : val(std::move(val)) {
     }
     Object val;
-   
 };
 
 using ExprVariant =
     std::variant<void*, recursive_wrapper<Assign>, recursive_wrapper<Binary>,
-                 recursive_wrapper<Grouping>, Literal,
-                 recursive_wrapper<Unary>, recursive_wrapper<Variable>,
-                 recursive_wrapper<Logical>, recursive_wrapper<Call>
-                 >;
+                 recursive_wrapper<Grouping>, Literal, recursive_wrapper<Unary>,
+                 recursive_wrapper<Variable>, recursive_wrapper<Logical>,
+                 recursive_wrapper<Call>, recursive_wrapper<Increment>,
+                 recursive_wrapper<Decrement>>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +74,7 @@ struct Expr final : ExprVariant {
         return std::get<recursive_wrapper<T>>(*this);
     }
 
-    template <typename T> inline const T& get() const  {
+    template <typename T> inline const T& get() const {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
@@ -80,7 +82,7 @@ struct Expr final : ExprVariant {
         return std::get<actualTypeToGet>(*this);
     }
 
-        template <typename T> inline T& get() {
+    template <typename T> inline T& get() {
         // constexpr bool isRecursive = ;
         using actualTypeToGet =
             std::conditional_t<has_type_v<recursive_wrapper<T>, ExprVariant>,
@@ -91,10 +93,8 @@ struct Expr final : ExprVariant {
 
 /////////////////////////////////////////////////////////////////////
 
-
 struct Assign {
     Assign(Token name, Expr value) : name(std::move(name)), value(value) {
-      
     }
     Token name;
     Expr value;
@@ -125,7 +125,6 @@ struct Unary {
 
 struct Variable {
     explicit Variable(Token name) : name(std::move(name)) {
-        
     }
     Token name;
     mutable int distance = -1;
@@ -147,6 +146,21 @@ struct Call {
     Token paren;
     std::vector<Expr> arguments;
     Expr callee;
+};
+
+struct Increment {
+    enum class Type { POSTFIX, PREFIX };
+
+    Expr variable;
+    Increment::Type type;
+};
+
+class Decrement {
+  public:
+    enum class Type { POSTFIX, PREFIX };
+
+    Expr variable;
+    Increment::Type type;
 };
 
 using LookupVariableVariant = std::variant<Variable, Assign>;
@@ -172,8 +186,8 @@ struct std::variant_alternative<I, cpplox::Expr>
 // template <> struct hash<cpplox::LookupVariableVariant> {
 //     std::size_t operator()(cpplox::LookupVariableVariant const& luv) const
 //         noexcept {
-//         std::string hs = std::visit([](auto&& arg){ return arg.name.lexeme;}, luv);
-//         return std::hash<std::string>{}(hs);
+//         std::string hs = std::visit([](auto&& arg){ return arg.name.lexeme;},
+//         luv); return std::hash<std::string>{}(hs);
 //     }
 // };
 //} // namespace std
