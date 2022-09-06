@@ -26,8 +26,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of Literal = " << sizeof(Literal) << " bytes.\n";
         std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
 
-
-        //TimeIt timer("interpreter");
+        // TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
             execute(statement);
@@ -46,63 +45,63 @@ void Interpreter::execute(const Statement& statementToExecute) {
 }
 
 Object Interpreter::evaluate(const Expr& expression) {
-#if(_MSC_VER)
-     return cpplox::visit(*this, static_cast<const ExprVariant&>(expression));
+#if (_MSC_VER)
+    return cpplox::visit(*this, static_cast<const ExprVariant&>(expression));
 #else
-     return std::visit(*this, static_cast<const ExprVariant&>(expression));
+    return std::visit(*this, static_cast<const ExprVariant&>(expression));
 #endif
 
     // return [&]() -> Object {
-        // const auto index = static_cast<const ExprVariant&>(expression).index();
-        // switch (index) {
-        // case 0: {
-        //     return (*this)(expression.get<Assign>());
-        // }
-        // case 1: {
-        //     return (*this)(expression.get<Binary>());
-        // }
-        // case 2: {
-        //     return (*this)(expression.get<Grouping>());
-        // }
-        // case 3: {
-        //     return (*this)(expression.get<Literal>());
-        // }
-        // case 4: {
-        //     return (*this)(expression.get<Unary>());
-        // }
-        // case 5: {
-        //     return (*this)(expression.get<Variable>());
-        // }
-        // case 6: {
-        //     return (*this)(expression.get<Logical>());
-        // }
-        // case 7: {
-        //     return (*this)(expression.get<Call>());
-        // }
-        // default: {
-        //     return {};
-        // }
-        // }
+    // const auto index = static_cast<const ExprVariant&>(expression).index();
+    // switch (index) {
+    // case 0: {
+    //     return (*this)(expression.get<Assign>());
+    // }
+    // case 1: {
+    //     return (*this)(expression.get<Binary>());
+    // }
+    // case 2: {
+    //     return (*this)(expression.get<Grouping>());
+    // }
+    // case 3: {
+    //     return (*this)(expression.get<Literal>());
+    // }
+    // case 4: {
+    //     return (*this)(expression.get<Unary>());
+    // }
+    // case 5: {
+    //     return (*this)(expression.get<Variable>());
+    // }
+    // case 6: {
+    //     return (*this)(expression.get<Logical>());
+    // }
+    // case 7: {
+    //     return (*this)(expression.get<Call>());
+    // }
+    // default: {
+    //     return {};
+    // }
+    // }
     //}();
-        // if (expression.is<Call>()) {
-        //     return (*this)(expression.get<Call>());
-        // } else if (expression.is<Assign>()) {
-        //     return (*this)(expression.get<Assign>());
-        // } else if (expression.is<Binary>()) {
-        //     return (*this)(expression.get<Binary>());
-        // } else if (expression.is<Grouping>()) {
-        //     return (*this)(expression.get<Grouping>());
-        // } else if (expression.is<Variable>()) {
-        //     return (*this)(expression.get<Variable>());
-        // } else if (expression.is<Unary>()) {
-        //     return (*this)(expression.get<Unary>());
-        // } else if (expression.is<Literal>()) {
-        //     return (*this)(expression.get<Literal>());
-        // } else if (expression.is<Logical>()) {
-        //     return (*this)(expression.get<Logical>());
-        // } else {
-        //     return {};
-        // }
+    // if (expression.is<Call>()) {
+    //     return (*this)(expression.get<Call>());
+    // } else if (expression.is<Assign>()) {
+    //     return (*this)(expression.get<Assign>());
+    // } else if (expression.is<Binary>()) {
+    //     return (*this)(expression.get<Binary>());
+    // } else if (expression.is<Grouping>()) {
+    //     return (*this)(expression.get<Grouping>());
+    // } else if (expression.is<Variable>()) {
+    //     return (*this)(expression.get<Variable>());
+    // } else if (expression.is<Unary>()) {
+    //     return (*this)(expression.get<Unary>());
+    // } else if (expression.is<Literal>()) {
+    //     return (*this)(expression.get<Literal>());
+    // } else if (expression.is<Logical>()) {
+    //     return (*this)(expression.get<Logical>());
+    // } else {
+    //     return {};
+    // }
     //}();
 }
 
@@ -174,11 +173,11 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // runtime representation const FunctionObject
     // functionObject(&functionStatement, this->environment);
     // Object functionObject = FunctionObject(this, &functionStatement);
-    //std::cout << "start of F block " << this->environment->handle << "\n";
+    // std::cout << "start of F block " << this->environment->handle << "\n";
 
     environment->defineVal(functionStatement.name.lexeme,
                            FunctionObject(this, &functionStatement));
-    //std::cout << "end of F block " << this->environment->handle << "\n";
+    // std::cout << "end of F block " << this->environment->handle << "\n";
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
@@ -192,7 +191,7 @@ Environment* Interpreter::retrieveEnvironment(Environment* closure) {
         env->values.clear();
         set = env.get();
     });
-    //std::cout << "got " << index << std::endl;
+    // std::cout << "got " << index << std::endl;
 
     return set;
 }
@@ -201,10 +200,10 @@ void Interpreter::clearEnvironmentFromStack(Environment* environment) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    //if (Environments[environment->handle].local_use_count() == 1) {
-        //std::cout << "erasing1 " << environment->handle << "\n";
-        //environment->values.clear();
-        Environments.eraseAt(environment->handle);
+    // if (Environments[environment->handle].local_use_count() == 1) {
+    // std::cout << "erasing1 " << environment->handle << "\n";
+    // environment->values.clear();
+    Environments.eraseAt(environment->handle);
     //}
 }
 
@@ -212,11 +211,11 @@ void Interpreter::clearEnvironmentFromStack(int handle) {
     // only clear if the count is 1 (ie in the sparestack)
     // if the count is higher, then it means a function object is holding on
     // to it and will clear it eventually in its destructor
-    //if (Environments[handle].local_use_count() == 1) {
-        //std::cout << "erasing2 " << environment->handle << "\n";
-        //Environments[handle]->values.clear();
-        Environments.eraseAt(handle);
-    //} 
+    // if (Environments[handle].local_use_count() == 1) {
+    // std::cout << "erasing2 " << environment->handle << "\n";
+    // Environments[handle]->values.clear();
+    Environments.eraseAt(handle);
+    //}
 }
 
 void Interpreter::operator()(const BlockStatement& blockStatement) {
@@ -227,7 +226,8 @@ void Interpreter::operator()(const BlockStatement& blockStatement) {
                  newEnvironmentPtr); // pass in current env as parent
 
     // clean up env by marking it as free in the storage
-   // std::cout << "cleaning env at end of block " << newEnvironmentPtr->handle << "\n";
+    // std::cout << "cleaning env at end of block " << newEnvironmentPtr->handle
+    // << "\n";
     clearEnvironmentFromStack(newEnvironmentPtr);
     return;
 }
@@ -271,7 +271,7 @@ Object Interpreter::operator()(const Binary& binary) {
         // this is dynamically checking the type and also making sure both
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
-            //return std::get<double>(left) + std::get<double>(right);
+            // return std::get<double>(left) + std::get<double>(right);
             return *left.get_if<double>() + *right.get_if<double>();
         }
         // const auto* a = left.get_if<double>();
@@ -283,11 +283,12 @@ Object Interpreter::operator()(const Binary& binary) {
         if (left.is<std::string>() && right.is<std::string>()) {
 
             return left.get<std::string>() + right.get<std::string>();
-            //return *left.get_if<std::string>() + *right.get_if<std::string>();
-            // return
-            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
-            // +
-            // static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>());
+            // return *left.get_if<std::string>() +
+            // *right.get_if<std::string>();
+            //  return
+            //  static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
+            //  +
+            //  static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>());
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -296,9 +297,8 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
-        //return std::get<double>(left) - std::get<double>(right);
+        // return std::get<double>(left) - std::get<double>(right);
         return *left.get_if<double>() - *right.get_if<double>();
-
     }
     case ETokenType::STAR: {
         checkNumberOperands(binary.op, left, right);
@@ -321,9 +321,8 @@ Object Interpreter::operator()(const Binary& binary) {
     }
     case ETokenType::LESS: {
         checkNumberOperands(binary.op, left, right);
-        //return std::get<double>(left) < std::get<double>(right);
+        // return std::get<double>(left) < std::get<double>(right);
         return *left.get_if<double>() < *right.get_if<double>();
-
     }
     case ETokenType::LESS_EQUAL: {
         checkNumberOperands(binary.op, left, right);
@@ -482,11 +481,71 @@ Object Interpreter::operator()(const Call& call) {
 
 Object Interpreter::operator()(const Increment& inc) {
 
+    Object prev = evaluate(inc.variable);
+    checkNumberOperand(inc.op, prev);
+
+    double incLocal = prev.get<double>() + 1;
+
+    const Variable& variableExpr = inc.variable.get<Variable>();
+
+    if (variableExpr.distance != -1) {
+        environment->assignAt(variableExpr.distance, variableExpr.name,
+                              incLocal);
+    }
+
+    else {
+        globals->assign(variableExpr.name, incLocal);
+    }
+
+    if (inc.type == Increment::Type::POSTFIX) {
+        return prev;
+    }
+
+    return incLocal;
 }
 
 Object Interpreter::operator()(const Decrement& dec) {
+    Object prev = evaluate(dec.variable);
+    checkNumberOperand(dec.op, prev);
 
+    double decLocal = prev.get<double>() + 1;
+
+    const Variable& variableExpr = dec.variable.get<Variable>();
+
+    if (variableExpr.distance != -1) {
+        environment->assignAt(variableExpr.distance, variableExpr.name,
+                              decLocal);
+    }
+    else {
+        globals->assign(variableExpr.name, decLocal);
+    }
+
+    if (dec.type == Increment::Type::POSTFIX) {
+        return prev;
+    }
+
+    return decLocal;
 }
+
+
+
+// LoxObject Interpreter::visit(const DecrementExpr* decrementExpr) {
+//     LoxObject prev = interpret(decrementExpr->variable.get());
+//     LoxObject dec = prev - LoxObject(1.0);
+
+//     const VariableExpr* variableExpr = decrementExpr->variable.get();
+//     if (localsDistances.find(variableExpr) != localsDistances.end()) {
+//         environment->assignAt(variableExpr->identifier, dec,
+//                               localsDistances[variableExpr]);
+//     } else {
+//         globalEnv->assign(variableExpr->identifier, dec);
+//     }
+
+//     if (decrementExpr->type == DecrementExpr::Type::POSTFIX) {
+//         return prev;
+//     }
+//     return dec;
+// }
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {

@@ -177,10 +177,12 @@ void Resolver::operator()(const Call& call) {
 }
 
 void Resolver::operator()(const Increment& inc) {
-   
+    resolveLocal(inc.variable.get<Variable>(), inc.variable.get<Variable>().name);
 }
 
 void Resolver::operator()(const Decrement& dec) {
+    resolveLocal(dec.variable.get<Variable>(), dec.variable.get<Variable>().name);
+
    
 }
 

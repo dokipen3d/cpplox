@@ -341,7 +341,7 @@ auto Parser::unary() -> Expr {
         return Unary(_operator, right);
     }
 
-    return call();
+    return prefix();
 };
 
 auto Parser::call() -> Expr {
@@ -473,7 +473,9 @@ auto Parser::assignment() -> Expr {
 };
 
 auto Parser::prefix() -> Expr {
-    if (match({ETokenType::PLUS_PLUS})) {
+
+
+    if (match({ETokenType::PLUS_PLUS, ETokenType::MINUS_MINUS})) {
         Token op = previous();
         // call to the next as prefix to set the right precedence. we'll also
         // check that we dont chain these
@@ -483,9 +485,9 @@ auto Parser::prefix() -> Expr {
         }
         if (right.is<Variable>()) {
             if (op.eTokenType == ETokenType::PLUS_PLUS) {
-                return Increment{right, Increment::Type::PREFIX};
+                return Increment{op, right, Increment::Type::PREFIX};
             } else {
-                return Decrement{right, Increment::Type::PREFIX};
+                return Decrement{op, right, Increment::Type::PREFIX};
             }
         } else {
             throw Parser::error(peek(),
@@ -493,9 +495,33 @@ auto Parser::prefix() -> Expr {
                                 "lvalue operand (a variable)");
         }
     }
+
+    return postfix();
 }
 
 auto Parser::postfix() -> Expr {
+
+    Expr expr = call();
+    if (match({ETokenType::PLUS_PLUS, ETokenType::MINUS_MINUS})) {
+        Token op = previous();
+        if (expr.is<Variable>()) {
+            if (op.eTokenType == ETokenType::PLUS_PLUS) {
+                expr = Increment{op, expr, Increment::Type::POSTFIX};
+            } else {
+                expr = Decrement{op, expr, Increment::Type::POSTFIX};
+            }
+        } else {
+            throw Parser::error(peek(),
+                  "Operators '++' and '--' must be applied to an lvalue "
+                  "operand (a variable)");
+        }
+    }
+
+    if (match({ETokenType::PLUS_PLUS, ETokenType::MINUS_MINUS})) {
+        error(peek(), "Operators '++' and '--' cannot be concatenated");
+    }
+
+    return expr;
 }
 
 } // namespace cpplox

@@ -151,6 +151,7 @@ struct Call {
 struct Increment {
     enum class Type { POSTFIX, PREFIX };
 
+    Token op;
     Expr variable;
     Increment::Type type;
 };
@@ -158,7 +159,8 @@ struct Increment {
 class Decrement {
   public:
     enum class Type { POSTFIX, PREFIX };
-
+    
+    Token op;
     Expr variable;
     Increment::Type type;
 };
