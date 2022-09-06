@@ -369,8 +369,8 @@ auto Parser::finishCall(Expr callee) -> Expr {
         } while (match({ETokenType::COMMA}));
     }
 
-    Token paren =
-        consume(ETokenType::RIGHT_PARENTHESIS, "Expect right parens after arguments.");
+    Token paren = consume(ETokenType::RIGHT_PARENTHESIS,
+                          "Expect right parens after arguments.");
 
     return Call(callee, paren, arguments);
 }
@@ -473,18 +473,29 @@ auto Parser::assignment() -> Expr {
 };
 
 auto Parser::prefix() -> Expr {
-    if(match({ETokenType::PLUS_PLUS})){
+    if (match({ETokenType::PLUS_PLUS})) {
         Token op = previous();
-        // call to the next as prefix to set the right precedence. we'll also check that we dont chain these 
+        // call to the next as prefix to set the right precedence. we'll also
+        // check that we dont chain these
         Expr right = prefix();
-
-
+        if (right.is<Increment>() || right.is<Decrement>()) {
+            throw Parser::error(peek(), "Cannot concatenate inc/dec operator.");
+        }
+        if (right.is<Variable>()) {
+            if (op.eTokenType == ETokenType::PLUS_PLUS) {
+                return Increment{right, Increment::Type::PREFIX};
+            } else {
+                return Decrement{right, Increment::Type::PREFIX};
+            }
+        } else {
+            throw Parser::error(peek(),
+                                "Operators '++' and '--' must be applied to an "
+                                "lvalue operand (a variable)");
+        }
     }
 }
 
-
 auto Parser::postfix() -> Expr {
-    
 }
 
 } // namespace cpplox
