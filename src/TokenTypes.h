@@ -39,7 +39,7 @@ enum class ETokenType : uint8_t {
     LESS,
     LESS_EQUAL,
     PLUS_PLUS, 
-    MINUS_MINUS
+    MINUS_MINUS,
 
     // Literals.
     IDENTIFIER,
