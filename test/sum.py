@@ -10,7 +10,7 @@ for i in range(1,1000000):
     if (i % 2 == 0):
         sum = sum + 1.0 / i
     else:
-        sum = sum + 1.0 / (i * i)
+        sum = sum + 1.0 / i * i
     
     i = i + 1
 
