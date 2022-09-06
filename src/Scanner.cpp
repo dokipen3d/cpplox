@@ -84,8 +84,8 @@ std::vector<Token> scanTokens(const std::string& source) {
         std::string value = source.substr(
             start + 1, current - start - 2); // dont know why we need to do -2
         // need to use different named lambda as we cant override the name
-        addTokenLiteral(ETokenType::STRING, source.substr(
-            start + 1, current - start - 2));
+        addTokenLiteral(ETokenType::STRING,
+                        source.substr(start + 1, current - start - 2));
     };
 
     auto isDigit = [&](const char& c) -> bool { return c >= '0' && c <= '9'; };
@@ -143,8 +143,24 @@ std::vector<Token> scanTokens(const std::string& source) {
         case '}': addToken(ETokenType::RIGHT_BRACE); break;
         case ',': addToken(ETokenType::COMMA); break;
         case '.': addToken(ETokenType::DOT); break;
-        case '-': addToken(ETokenType::MINUS); break;
-        case '+': addToken(ETokenType::PLUS); break;
+        case '-': {
+            if (peek() == '-') {
+                advance();
+                addToken(ETokenType::MINUS_MINUS);
+            } else {
+                addToken(ETokenType::MINUS);
+            }
+            break;
+        }
+        case '+': {
+            if (peek() == '+') {
+                advance();
+                addToken(ETokenType::PLUS_PLUS);
+            } else {
+                addToken(ETokenType::PLUS);
+            }
+            break;
+        }
         case ';': addToken(ETokenType::SEMICOLON); break;
         case '*': addToken(ETokenType::STAR); break;
         case '%': addToken(ETokenType::MOD); break;
@@ -193,7 +209,8 @@ std::vector<Token> scanTokens(const std::string& source) {
             } else {
                 std::string str;
                 str = (char)c;
-                Error::error(line, std::string("Unexpected character: \'")+str+std::string("\'"));
+                Error::error(line, std::string("Unexpected character: \'") +
+                                       str + std::string("\'"));
                 break;
             }
         }
