@@ -87,6 +87,8 @@ inline const std::map<ETokenType, std::string> tokenMap{
     {ETokenType::GREATER_EQUAL, "Greater_equal"},
     {ETokenType::LESS, "Less"},
     {ETokenType::LESS_EQUAL, "Less_equal"},
+    {ETokenType::PLUS_PLUS, "Increment"},
+    {ETokenType::MINUS_MINUS, "Decrement"},
     {ETokenType::IDENTIFIER, "Identifier"},
     {ETokenType::STRING, "String"},
     {ETokenType::NUMBER, "Number"},
