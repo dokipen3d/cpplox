@@ -342,6 +342,7 @@ auto Parser::unary() -> Expr {
     }
 
     return prefix();
+    //return primary();
 };
 
 auto Parser::call() -> Expr {
@@ -381,7 +382,7 @@ auto Parser::multiplication() -> Expr {
     while (match({ETokenType::SLASH, ETokenType::STAR, ETokenType::MOD})) {
         Token _operator = previous();
         Expr right = unary();
-        return Binary(expr, _operator, right);
+        expr = Binary(expr, _operator, right);
     }
 
     return expr;

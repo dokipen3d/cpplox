@@ -1,0 +1,17 @@
+var before = clock();
+
+
+var sum = 0.0;
+for (var i = 1; i < 1000000; i++) {
+    if (i % 2 == 0) {
+        sum = sum + 1.0 / i;
+    }
+    else {
+        sum = sum + 1.0 / i * i;
+    }
+}
+print(sum);
+
+
+var after = clock();
+print after - before;
