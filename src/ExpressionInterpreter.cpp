@@ -508,7 +508,7 @@ Object Interpreter::operator()(const Decrement& dec) {
     Object prev = evaluate(dec.variable);
     checkNumberOperand(dec.op, prev);
 
-    double decLocal = prev.get<double>() + 1;
+    double decLocal = prev.get<double>() - 1;
 
     const Variable& variableExpr = dec.variable.get<Variable>();
 
@@ -526,26 +526,6 @@ Object Interpreter::operator()(const Decrement& dec) {
 
     return decLocal;
 }
-
-
-
-// LoxObject Interpreter::visit(const DecrementExpr* decrementExpr) {
-//     LoxObject prev = interpret(decrementExpr->variable.get());
-//     LoxObject dec = prev - LoxObject(1.0);
-
-//     const VariableExpr* variableExpr = decrementExpr->variable.get();
-//     if (localsDistances.find(variableExpr) != localsDistances.end()) {
-//         environment->assignAt(variableExpr->identifier, dec,
-//                               localsDistances[variableExpr]);
-//     } else {
-//         globalEnv->assign(variableExpr->identifier, dec);
-//     }
-
-//     if (decrementExpr->type == DecrementExpr::Type::POSTFIX) {
-//         return prev;
-//     }
-//     return dec;
-// }
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
