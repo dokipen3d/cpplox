@@ -93,6 +93,10 @@ struct Interpreter {
     Object operator()(const Call& call);
     Object operator()(const Increment& inc);
     Object operator()(const Decrement& inc);
+    Object operator()(const Get& get);
+    Object operator()(const Set& set);
+
+
 
     Object operator()(const void*) {
         return nullptr;

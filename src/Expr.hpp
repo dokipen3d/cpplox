@@ -21,6 +21,8 @@ struct Logical;
 struct Call;
 struct Increment;
 struct Decrement;
+struct Get;
+struct Set;
 
 struct ExprVoidType {};
 
@@ -35,7 +37,8 @@ using ExprVariant =
                  recursive_wrapper<Grouping>, Literal, recursive_wrapper<Unary>,
                  recursive_wrapper<Variable>, recursive_wrapper<Logical>,
                  recursive_wrapper<Call>, recursive_wrapper<Increment>,
-                 recursive_wrapper<Decrement>>;
+                 recursive_wrapper<Decrement>, recursive_wrapper<Get>,
+                 recursive_wrapper<Set>>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -156,13 +159,23 @@ struct Increment {
     Increment::Type type;
 };
 
-class Decrement {
-  public:
+struct Decrement {
     enum class Type { POSTFIX, PREFIX };
-    
+
     Token op;
     Expr variable;
     Increment::Type type;
+};
+
+struct Get {
+    Expr object;
+    Token name;
+};
+
+struct Set {
+    Expr object;
+    Token name;
+    Expr value;
 };
 
 using LookupVariableVariant = std::variant<Variable, Assign>;

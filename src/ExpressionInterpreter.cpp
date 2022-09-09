@@ -535,6 +535,30 @@ Object Interpreter::operator()(const Decrement& dec) {
     return decLocal;
 }
 
+Object Interpreter::operator()(const Get& get) {
+    Object object = evaluate(get.object);
+    if (object.is<LoxInstance>()) {
+      return object.get<LoxInstance>().get(get.name);
+    }
+
+    throw new RuntimeError(get.name,
+        "Only instances have properties.");
+}
+
+Object Interpreter::operator()(const Set& set) {
+   Object object = evaluate(set.object);
+
+    if (!(object.is<LoxInstance>())) { 
+      throw RuntimeError(set.name,
+                             "Only instances have fields.");
+    }
+
+    Object value = evaluate(set.value);
+    object.get<LoxInstance>().set(set.name, value);
+    return value;
+}
+
+
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
         return *object.get_if<bool>();

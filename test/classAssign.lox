@@ -1,0 +1,11 @@
+class Bagel {}
+class Pitta {}
+
+var bagel = Bagel();
+var pitta = Pitta();
+
+pitta.bread = "bread";
+
+bagel.car = pitta.bread;
+
+print bagel.car; // Prints "bread".

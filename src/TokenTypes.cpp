@@ -4,6 +4,42 @@
 
 namespace cpplox {
 
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<NativeFunction>& dt) {
+    os << "Native Function"
+       << "\n";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<FunctionObject>& dt) {
+    os << "Function Object"
+       << "\n";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<LoxClass>& loxClass) {
+    os << loxClass.t[loxClass.index].name;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const LoxClass& loxClass) {
+    os << loxClass.name;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const LoxInstance& loxInstance) {
+    os << loxInstance.klass << ".instance\n";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<LoxInstance>& loxInstance) {
+    os << loxInstance.t[loxInstance.index].klass << ".instance\n";
+    return os;
+}
+
 NativeFunction::NativeFunction(
     std::function<Object(const Interpreter&, const std::vector<Object>)> func,
     std::function<int()> arity)
@@ -128,41 +164,22 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     return nullptr;
 }
 
+const Object& LoxInstance::get(const cpplox::Token& name) const {
+    if (const auto search = properties.find(name.lexeme);
+        search != properties.end()) {
+        return search->second;
+    }
+
+    throw RuntimeError(name, "Undefined property '" + name.lexeme + "'.");
+}
+
+void LoxInstance::set(const Token& name, const Object& value) {
+    properties.insert_or_assign(name.lexeme, value);
+}
+
 Object LoxClass::operator()(Interpreter& interpreter,
                             const std::vector<Object>& arguments) {
     return LoxInstance(*this);
-}
-
-std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<NativeFunction>& dt) {
-    os << "Native Function"
-       << "\n";
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<FunctionObject>& dt) {
-    os << "Function Object"
-       << "\n";
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<LoxClass>& loxClass) {
-    os << loxClass.t[loxClass.index].name;
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os,
-                         const LoxClass& loxClass) {
-    os << loxClass.name;
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<LoxInstance>& loxInstance) {
-    os << loxInstance.t[loxInstance.index].klass << ".instance\n";
-    return os;
 }
 
 } // namespace cpplox

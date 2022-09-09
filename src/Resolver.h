@@ -48,6 +48,9 @@ struct Resolver {
     void operator()(const Call& call);
     void operator()(const Increment& inc);
     void operator()(const Decrement& dec);
+    void operator()(const Get& get);
+    void operator()(const Set& set);
+
 
     void operator()(const void*) {
     }

@@ -183,6 +183,17 @@ void Resolver::operator()(const Call& call) {
     }
 }
 
+void Resolver::operator()(const Get& get) {
+    resolve(get.object);
+}
+
+void Resolver::operator()(const Set& set) {
+    resolve(set.value);
+    resolve(set.object);
+}
+
+
+
 void Resolver::operator()(const Increment& inc) {
     resolveLocal(inc.variable.get<Variable>(), inc.variable.get<Variable>().name);
 }

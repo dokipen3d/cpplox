@@ -307,20 +307,10 @@ struct LoxClass {
     std::string name;
 };
 
-struct LoxInstance {
-
-    LoxInstance(const LoxClass& klass) : klass(klass) {
-    }
-
-    const std::string& toString() {
-        return this->klass.name + " instance";
-    }
-
-    const LoxClass& klass;
-
-    friend std::ostream&
-    operator<<(std::ostream& os, const recursive_wrapper<LoxInstance>& loxInstance);
-};
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<LoxInstance>& loxInstance);
+std::ostream& operator<<(std::ostream& os,
+                         const LoxInstance& loxInstance);
 
 class Token {
   public:
@@ -361,6 +351,26 @@ class Token {
     Object literal;
     int16_t line;
     ETokenType eTokenType;
+};
+
+struct LoxInstance {
+
+    LoxInstance(const LoxClass& klass) : klass(klass) {
+    }
+
+    const std::string& toString() {
+        return this->klass.name + " instance";
+    }
+
+    const Object& get(const cpplox::Token& name) const;
+    void set(const Token& name, const Object& value);
+
+    const LoxClass& klass;
+    tsl::robin_map<std::string, Object> properties;
+
+    // friend std::ostream&
+    // operator<<(std::ostream& os, const recursive_wrapper<LoxInstance>&
+    // loxInstance);
 };
 
 static_assert(std::is_move_constructible_v<Token>,

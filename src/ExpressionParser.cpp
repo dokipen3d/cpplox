@@ -260,7 +260,7 @@ auto Parser::classDeclaration() -> Statement {
 
     std::vector<Statement> functionStatements;
     while (!check(ETokenType::RIGHT_BRACE) && !isAtEnd()) {
-      functionStatements.push_back(function("method"));
+        functionStatements.push_back(function("method"));
     }
 
     consume(ETokenType::RIGHT_BRACE, "Expect '}' after class body.");
@@ -359,7 +359,7 @@ auto Parser::unary() -> Expr {
     }
 
     return prefix();
-    //return primary();
+    // return primary();
 };
 
 auto Parser::call() -> Expr {
@@ -368,6 +368,10 @@ auto Parser::call() -> Expr {
     while (true) {
         if (match({ETokenType::LEFT_PARENTHESIS})) {
             expr = finishCall(expr);
+        } else if (match({ETokenType::DOT})) {
+            Token name = consume(ETokenType::IDENTIFIER,
+                                 "Expect property name after '.'.");
+            expr = Get{expr, name};
         } else {
             break;
         }
@@ -481,6 +485,8 @@ auto Parser::assignment() -> Expr {
             const Variable& variable = expr.get<Variable>();
             Token name = variable.name;
             return Assign(name, value);
+        } else if (expr.is<Get>()) {
+            return Set{expr.get<Get>().object, expr.get<Get>().name, value};
         }
         // We report an error if the left-hand side isn’t a valid assignment
         // target, but we don’t throw it because the parser isn’t in a confused
@@ -491,7 +497,6 @@ auto Parser::assignment() -> Expr {
 };
 
 auto Parser::prefix() -> Expr {
-
 
     if (match({ETokenType::PLUS_PLUS, ETokenType::MINUS_MINUS})) {
         Token op = previous();
@@ -529,9 +534,9 @@ auto Parser::postfix() -> Expr {
                 expr = Decrement{op, expr, Increment::Type::POSTFIX};
             }
         } else {
-            throw Parser::error(peek(),
-                  "Operators '++' and '--' must be applied to an lvalue "
-                  "operand (a variable)");
+            throw Parser::error(
+                peek(), "Operators '++' and '--' must be applied to an lvalue "
+                        "operand (a variable)");
         }
     }
 
