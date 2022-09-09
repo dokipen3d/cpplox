@@ -38,7 +38,7 @@ enum class ETokenType : uint8_t {
     GREATER_EQUAL,
     LESS,
     LESS_EQUAL,
-    PLUS_PLUS, 
+    PLUS_PLUS,
     MINUS_MINUS,
 
     // Literals.
@@ -125,14 +125,16 @@ inline const std::map<std::string, ETokenType> keywordMap{
 struct NativeFunction;
 struct FunctionObject;
 struct Environment;
-
+struct LoxClass;
+struct LoxInstance;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant =
     std::variant<void*, double, recursive_wrapper<std::string>, bool,
                  recursive_wrapper<NativeFunction>,
-                 recursive_wrapper<FunctionObject>>;
+                 recursive_wrapper<FunctionObject>, recursive_wrapper<LoxClass>,
+                 recursive_wrapper<LoxInstance>>;
 
 struct Object final : ObjectVariant {
 
@@ -259,11 +261,11 @@ struct FunctionObject {
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
 
-    //FunctionObject(FunctionObject const& other );
-    // //FunctionObject(FunctionObject&&) = delete;
+    // FunctionObject(FunctionObject const& other );
+    //  //FunctionObject(FunctionObject&&) = delete;
 
     // FunctionObject& operator=(const FunctionObject& other);
-    //FunctionObject& operator=(FunctionObject&& other) = delete;
+    // FunctionObject& operator=(FunctionObject&& other) = delete;
 
     // inline bool operator==(const FunctionObject& other){
     //     return false;
@@ -280,7 +282,44 @@ struct FunctionObject {
     boost::local_shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
-    //Environment* envToClearDelayed = nullptr; // for closure
+    // Environment* envToClearDelayed = nullptr; // for closure
+};
+
+struct LoxClass {
+
+    LoxClass(const std::string& name) : name(name) {
+    }
+
+    Object operator()(Interpreter& interpreter,
+                      const std::vector<Object>& arguments);
+
+    std::size_t arity() const {
+        return 0;
+    }
+
+    const std::string& toString() {
+        return name;
+    }
+
+    friend std::ostream&
+    operator<<(std::ostream& os, const recursive_wrapper<LoxClass>& loxClass);
+
+    std::string name;
+};
+
+struct LoxInstance {
+
+    LoxInstance(const LoxClass& klass) : klass(klass) {
+    }
+
+    const std::string& toString() {
+        return this->klass.name + " instance";
+    }
+
+    const LoxClass& klass;
+
+    friend std::ostream&
+    operator<<(std::ostream& os, const recursive_wrapper<LoxInstance>& loxInstance);
 };
 
 class Token {
@@ -322,9 +361,6 @@ class Token {
     Object literal;
     int16_t line;
     ETokenType eTokenType;
-
-
-
 };
 
 static_assert(std::is_move_constructible_v<Token>,

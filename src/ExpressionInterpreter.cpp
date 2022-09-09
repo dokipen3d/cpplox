@@ -25,8 +25,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
         std::cout << "size of Literal = " << sizeof(Literal) << " bytes.\n";
         std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
-         std::cout << "size of rw = " << sizeof(recursive_wrapper<std::string>
-) << " bytes.\n";
+        std::cout << "size of rw = " << sizeof(recursive_wrapper<std::string>)
+                  << " bytes.\n";
         // TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
@@ -181,8 +181,10 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // std::cout << "end of F block " << this->environment->handle << "\n";
 }
 
-void Interpreter::operator()(const ClassStatement& classStatement){
-    
+void Interpreter::operator()(const ClassStatement& classStatement) {
+    environment->define(classStatement.name.lexeme, Object(nullptr));
+    environment->assign(classStatement.name,
+                        LoxClass(classStatement.name.lexeme));
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
@@ -475,7 +477,9 @@ Object Interpreter::operator()(const Call& call) {
             return checkArityAndCallFunction(static_cast<FunctionObject&>(*callee.get_if<recursive_wrapper<FunctionObject>>()));
         } else if (callee.is<NativeFunction>()){
             return checkArityAndCallFunction(callee.get<NativeFunction>());
-        } else {
+        } else if (callee.is<LoxClass>()){ 
+            return checkArityAndCallFunction(callee.get<LoxClass>());
+         }else {
             throwIfWrongType();  return {};
         }
     }();
@@ -520,8 +524,7 @@ Object Interpreter::operator()(const Decrement& dec) {
     if (variableExpr.distance != -1) {
         environment->assignAt(variableExpr.distance, variableExpr.name,
                               decLocal);
-    }
-    else {
+    } else {
         globals->assign(variableExpr.name, decLocal);
     }
 
@@ -579,10 +582,10 @@ template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6) {
     std::ostringstream out;
     out.precision(n);
-    //out.width(n);
+    // out.width(n);
     out << std::fixed << a_value;
 
-    return std::string(out.str(), 0, n+2);
+    return std::string(out.str(), 0, n + 2);
 }
 
 std::string Interpreter::stringify(const Object& object) {
@@ -599,6 +602,10 @@ std::string Interpreter::stringify(const Object& object) {
     }
     if (object.is<bool>()) {
         text = std::get<bool>(object) ? "true" : "false";
+    }
+
+    if (object.is<LoxInstance>()) {
+        text = object.get<LoxInstance>().klass.name + ".instance\n";
     }
 
     // must be a string.

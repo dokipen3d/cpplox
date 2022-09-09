@@ -87,7 +87,8 @@ FunctionObject::~FunctionObject() {
 
     // std::cout << "end\n";
 
-    if (!interpreter->finishing && interpreter->Environments[index].local_use_count() == 1) {
+    if (!interpreter->finishing &&
+        interpreter->Environments[index].local_use_count() == 1) {
 
         // std::cout << "after reset " << index << " lc: "
         //           << interpreter->Environments[index].local_use_count() <<
@@ -127,6 +128,11 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     return nullptr;
 }
 
+Object LoxClass::operator()(Interpreter& interpreter,
+                            const std::vector<Object>& arguments) {
+    return LoxInstance(*this);
+}
+
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<NativeFunction>& dt) {
     os << "Native Function"
@@ -140,4 +146,23 @@ std::ostream& operator<<(std::ostream& os,
        << "\n";
     return os;
 }
+
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<LoxClass>& loxClass) {
+    os << loxClass.t[loxClass.index].name;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const LoxClass& loxClass) {
+    os << loxClass.name;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const recursive_wrapper<LoxInstance>& loxInstance) {
+    os << loxInstance.t[loxInstance.index].klass << ".instance\n";
+    return os;
+}
+
 } // namespace cpplox

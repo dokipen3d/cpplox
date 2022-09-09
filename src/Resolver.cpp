@@ -135,7 +135,8 @@ void Resolver::operator()(const BlockStatement& blockStatement) {
 }
 
 void Resolver::operator()(const ClassStatement& classStatement){
-    
+    declare(classStatement.name);
+    define(classStatement.name);
 }
 
 
