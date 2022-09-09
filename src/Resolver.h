@@ -32,6 +32,8 @@ struct Resolver {
     void operator()(const PrintStatement& printStatement);
     void operator()(const VariableStatement& variableStatement);
     void operator()(const ReturnStatement& returnStatement);
+    void operator()(const ClassStatement& returnStatement);
+
     void operator()(const VoidType*) {
     }
     void operator()(const BlockStatement& blockStatement);

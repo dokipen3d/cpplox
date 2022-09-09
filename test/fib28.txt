@@ -4,7 +4,7 @@ fun fib(n) {
 }
 
 var before = clock();
-for(var i = 0; i < 5; i = i+1){
+for(var i = 0; i < 5; i++){
   print fib(28);
 }
 var after = clock();

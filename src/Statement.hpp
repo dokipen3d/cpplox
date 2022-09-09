@@ -12,6 +12,7 @@ struct BlockStatement;
 struct IfStatement;
 struct WhileStatement;
 struct FunctionStatement;
+struct ClassStatement;
 
 struct ExpressionStatement {
     explicit ExpressionStatement(const Expr& expression)
@@ -21,8 +22,7 @@ struct ExpressionStatement {
 };
 
 struct PrintStatement {
-    explicit PrintStatement(const Expr& expression)
-        : expression(expression) {
+    explicit PrintStatement(const Expr& expression) : expression(expression) {
     }
     Expr expression;
 };
@@ -30,7 +30,6 @@ struct PrintStatement {
 struct VariableStatement {
     VariableStatement(const Token& name, const Expr& initializer)
         : name(name), initializer(initializer) {
-    
     }
     Token name;
     Expr initializer;
@@ -39,19 +38,17 @@ struct VariableStatement {
 struct ReturnStatement {
     ReturnStatement(const Token& name, const Expr& value)
         : name(name), value(value) {
-       
     }
     Token name;
     // an expression that resolves to the value that we want to return
     Expr value;
 };
 
-using Statement =
-    std::variant<ExpressionStatement, PrintStatement, VariableStatement,
-                 ReturnStatement, recursive_wrapper<BlockStatement>,
-                 recursive_wrapper<IfStatement>,
-                 recursive_wrapper<WhileStatement>,
-                 recursive_wrapper<FunctionStatement>, VoidType*>;
+using Statement = std::variant<
+    ExpressionStatement, PrintStatement, VariableStatement, ReturnStatement,
+    recursive_wrapper<BlockStatement>, recursive_wrapper<IfStatement>,
+    recursive_wrapper<WhileStatement>, recursive_wrapper<FunctionStatement>,
+    recursive_wrapper<ClassStatement>, VoidType*>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -89,6 +86,14 @@ template <typename T> T& get(Statement& statement) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+struct ClassStatement {
+    ClassStatement(const Token& name,
+                   const std::vector<Statement>& functionStatements)
+        : name(name), functionStatements(functionStatements) {
+    }
+    Token name;
+    std::vector<Statement> functionStatements;
+};
 
 struct BlockStatement {
     explicit BlockStatement(const std::vector<Statement>& statements)
@@ -100,9 +105,7 @@ struct BlockStatement {
 struct FunctionStatement {
     FunctionStatement(const Token& p_name, const std::vector<Token>& params,
                       const std::vector<Statement>& body)
-        : name(p_name), params(params),
-          body(body) {
-
+        : name(p_name), params(params), body(body) {
     }
 
     Token name;
@@ -111,9 +114,9 @@ struct FunctionStatement {
 };
 
 struct IfStatement {
-    IfStatement(const Expr& condition, const Statement& thenBranch, const Statement& elseBranch)
-        : condition(condition), thenBranch(thenBranch),
-          elseBranch(elseBranch) {
+    IfStatement(const Expr& condition, const Statement& thenBranch,
+                const Statement& elseBranch)
+        : condition(condition), thenBranch(thenBranch), elseBranch(elseBranch) {
     }
     Expr condition;
     Statement thenBranch;

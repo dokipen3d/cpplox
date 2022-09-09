@@ -133,6 +133,12 @@ void Resolver::operator()(const BlockStatement& blockStatement) {
        // enableEnvironmentSwitching = true;
     }
 }
+
+void Resolver::operator()(const ClassStatement& classStatement){
+    
+}
+
+
 void Resolver::operator()(const Assign& assign) {
     resolve(assign.value);
     resolveLocal(assign, assign.name);

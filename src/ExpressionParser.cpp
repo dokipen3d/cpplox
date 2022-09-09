@@ -238,6 +238,9 @@ auto Parser::function(std::string kind) -> Statement {
 
 auto Parser::declaration() -> Statement {
     try {
+        if (match({ETokenType::CLASS})) {
+            return classDeclaration();
+        }
         if (match({ETokenType::FUN})) {
             return function("function");
         }
@@ -249,6 +252,20 @@ auto Parser::declaration() -> Statement {
         synchronize();
         return nullptr;
     }
+}
+
+auto Parser::classDeclaration() -> Statement {
+    Token name = consume(ETokenType::IDENTIFIER, "Expect class name.");
+    consume(ETokenType::LEFT_BRACE, "Expect '{' before class body.");
+
+    std::vector<Statement> functionStatements;
+    while (!check(ETokenType::RIGHT_BRACE) && !isAtEnd()) {
+      functionStatements.push_back(function("method"));
+    }
+
+    consume(ETokenType::RIGHT_BRACE, "Expect '}' after class body.");
+
+    return ClassStatement{name, functionStatements};
 }
 
 auto Parser::varDeclaration() -> Statement {

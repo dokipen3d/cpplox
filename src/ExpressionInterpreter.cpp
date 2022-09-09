@@ -25,7 +25,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
         std::cout << "size of Literal = " << sizeof(Literal) << " bytes.\n";
         std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
-
+         std::cout << "size of rw = " << sizeof(recursive_wrapper<std::string>
+) << " bytes.\n";
         // TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
@@ -178,6 +179,10 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     environment->defineVal(functionStatement.name.lexeme,
                            FunctionObject(this, &functionStatement));
     // std::cout << "end of F block " << this->environment->handle << "\n";
+}
+
+void Interpreter::operator()(const ClassStatement& classStatement){
+    
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
