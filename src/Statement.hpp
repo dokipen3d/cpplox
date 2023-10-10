@@ -131,4 +131,32 @@ struct WhileStatement {
     Statement body;
 };
 
+
+
+// template<>
+// inline std::vector<std::vector<cpplox::BlockStatement>> cpplox::recursive_wrapper<cpplox::BlockStatement>::t{};
+// template<>
+// inline std::vector<std::vector<cpplox::IfStatement>> cpplox::recursive_wrapper<cpplox::IfStatement>::t{};
+// template<>
+// inline std::vector<std::vector<cpplox::WhileStatement>> cpplox::recursive_wrapper<cpplox::WhileStatement>::t{};
+
+static inline int createScriptStatement(){
+
+
+    cpplox::recursive_wrapper<cpplox::BlockStatement>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::IfStatement>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::WhileStatement>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::FunctionStatement>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::ClassStatement>::t.push_back({});
+
+    return cpplox::recursive_wrapper<cpplox::WhileStatement>::t.size();
+}
+
+static inline void clearStorageStatement(){
+   
+    cpplox::recursive_wrapper<cpplox::BlockStatement>::t.clear();
+    cpplox::recursive_wrapper<cpplox::IfStatement>::t.clear();
+    cpplox::recursive_wrapper<cpplox::WhileStatement>::t.clear();
+}
+
 } // namespace cpplox

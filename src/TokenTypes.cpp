@@ -4,6 +4,19 @@
 
 namespace cpplox {
 
+
+// why no need? did robin hood already do it?
+//template<>
+//std::vector<std::vector<std::string>> cpplox::recursive_wrapper<std::string>::t;
+// template<>
+// inline std::vector<std::vector<cpplox::NativeFunction>> cpplox::recursive_wrapper<cpplox::NativeFunction>::t{};
+// template<>
+// inline std::vector<std::vector<cpplox::FunctionObject>> cpplox::recursive_wrapper<cpplox::FunctionObject>::t{};
+// template<>
+// inline std::vector<std::vector<cpplox::LoxClass>> cpplox::recursive_wrapper<cpplox::LoxClass>::t{};
+// template<>
+// inline std::vector<std::vector<cpplox::LoxInstance>> cpplox::recursive_wrapper<cpplox::LoxInstance>::t{};
+
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<NativeFunction>& dt) {
     os << "Native Function"
@@ -20,7 +33,7 @@ std::ostream& operator<<(std::ostream& os,
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<LoxClass>& loxClass) {
-    os << loxClass.t[loxClass.index].name;
+    os << loxClass.t[loxClass.storageIndex][loxClass.index].name;
     return os;
 }
 
@@ -36,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const LoxInstance& loxInstance) {
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<LoxInstance>& loxInstance) {
-    os << loxInstance.t[loxInstance.index].klass << ".instance\n";
+    os << loxInstance.t[loxInstance.storageIndex][loxInstance.index].klass << ".instance\n";
     return os;
 }
 
@@ -182,4 +195,31 @@ Object LoxClass::operator()(Interpreter& interpreter,
     return LoxInstance(this);
 }
 
+
+
+
+
+
+
 } // namespace cpplox
+
+
+int cpplox::createScriptStorageObjects(){
+
+    cpplox::recursive_wrapper<std::string>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::NativeFunction>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::FunctionObject>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::LoxClass>::t.push_back({});
+    cpplox::recursive_wrapper<cpplox::LoxInstance>::t.push_back({});
+
+    return cpplox::recursive_wrapper<cpplox::LoxInstance>::t.size();
+}
+
+ void cpplox::clearStorageObjects(){
+
+    cpplox::recursive_wrapper<std::string>::t.clear();
+    cpplox::recursive_wrapper<cpplox::NativeFunction>::t.clear();
+    cpplox::recursive_wrapper<cpplox::FunctionObject>::t.clear();
+    cpplox::recursive_wrapper<cpplox::LoxClass>::t.clear();
+    cpplox::recursive_wrapper<cpplox::LoxInstance>::t.clear();
+}

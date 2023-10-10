@@ -104,7 +104,20 @@ struct lox {
     cpplox::ExpressionPrinterVisitor printer;
 };
 
+
+  
+
 int main(int argumentCount, char* argumentValues[]) {
+
+    int storeCount = cpplox::createScriptStatement();
+    int storeCount2 = cpplox::createScriptStorageExpr();
+    int storeCount3 = cpplox::createScriptStorageObjects();
+
+     storeCount = cpplox::createScriptStatement();
+     storeCount2 = cpplox::createScriptStorageExpr();
+     storeCount3 = cpplox::createScriptStorageObjects();
+
+    std::cout << cpplox::recursive_wrapper<cpplox::FunctionObject>::t.size() <<"\n";
 
     // ddcpplox::visit2();
 
@@ -142,4 +155,10 @@ int main(int argumentCount, char* argumentValues[]) {
     } else {
         l.runPrompt();
     }
+
+    cpplox::clearStorageExpr();
+    cpplox::clearStorageObjects();
+    cpplox::clearStorageStatement();
+    
 }
+

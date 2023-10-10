@@ -136,7 +136,7 @@ using ObjectVariant =
                  recursive_wrapper<FunctionObject>, recursive_wrapper<LoxClass>,
                  recursive_wrapper<LoxInstance>>;
 
-struct Object final : ObjectVariant {
+struct Object : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
@@ -216,7 +216,7 @@ struct Object final : ObjectVariant {
 };
 inline std::ostream&
 operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt) {
-    os << dt.t[dt.index];
+    os << dt.t[dt.storageIndex][dt.index];
     return os;
 }
 struct Interpreter;
@@ -376,6 +376,10 @@ struct LoxInstance {
 static_assert(std::is_move_constructible_v<Token>,
               "token  not move contructible");
 static_assert(std::is_move_assignable_v<Token>, "token  not move contructible");
+
+int createScriptStorageObjects();
+void clearStorageObjects();
+
 
 } // namespace cpplox
 

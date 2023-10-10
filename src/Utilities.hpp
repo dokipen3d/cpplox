@@ -4,6 +4,28 @@
 #include <utility>
 #include <vector>
 
+template <class T>
+constexpr
+std::string_view
+type_name()
+{
+    using namespace std;
+#ifdef __clang__
+    string_view p = __PRETTY_FUNCTION__;
+    return string_view(p.data() + 34, p.size() - 34 - 1);
+#elif defined(__GNUC__)
+    string_view p = __PRETTY_FUNCTION__;
+#  if __cplusplus < 201402
+    return string_view(p.data() + 36, p.size() - 36 - 1);
+#  else
+    return string_view(p.data() + 49, p.find(';', 49) - 49);
+#  endif
+#elif defined(_MSC_VER)
+    string_view p = __FUNCSIG__;
+    return string_view(p.data() + 84, p.size() - 84 - 7);
+#endif
+}
+
 static unsigned int FNVHash(std::string str) {
     const unsigned int fnv_prime = 0x811C9DC5;
     unsigned int hash = 0;
@@ -19,6 +41,26 @@ static unsigned int FNVHash(std::string str) {
 }
 
 namespace cpplox {
+
+struct Assign;
+struct Binary;
+struct Grouping;
+struct Variable;
+struct Unary;
+struct Logical;
+struct Call;
+struct Increment;
+struct Decrement;
+struct Get;
+struct Set;
+
+struct BlockStatement;
+struct IfStatement;
+struct WhileStatement;
+struct FunctionStatement;
+struct ClassStatement;
+
+
 
 inline std::vector<std::string> split(std::string stringIn, char c = ' ') {
     std::vector<std::string> result;
@@ -37,10 +79,11 @@ inline std::vector<std::string> split(std::string stringIn, char c = ' ') {
 }
 
 // trim from end (in place)
-static inline void rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }).base(), s.end());
+static inline void rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(),
+                         [](unsigned char ch) { return !std::isspace(ch); })
+                .base(),
+            s.end());
 }
 
 inline bool safeToReuse = false;
@@ -51,10 +94,13 @@ template <typename T> struct recursive_wrapper {
 
     recursive_wrapper(T&& t_) {
         // t.push_back(std::move(t_));
-        t.emplace_back(std::forward<T>(t_));
+        //std::cout << "got here: " << type_name<T>() << "\n";
+        t[storageIndex].emplace_back(std::forward<T>(t_));
+        //t[storageIndex].push_back(std::forward<T>(t_));
+
         // std::cout << "increasing\n";
         //  t.push_back(std::forward<T>(t_));
-        index = t.size() - 1;
+        index = t[storageIndex].size() - 1;
     }
 
     // ~recursive_wrapper() {
@@ -73,10 +119,10 @@ template <typename T> struct recursive_wrapper {
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
     operator const T&() const {
-        return t[index];
+        return t[storageIndex][index];
     }
     operator T&() {
-        return t[index];
+        return t[storageIndex][index];
     }
 
     // bool operator==(const recursive_wrapper<T>& other) const {
@@ -89,14 +135,20 @@ template <typename T> struct recursive_wrapper {
     // }
 
     // store the value
-    static std::vector<T> t;
-    //static sparestack<T> t;
-    int index = -1;
+    // static sparestack<T> t;
+    uint16_t storageIndex = 1;
+    uint16_t index = -1;
     // std::basic_string<T> t;
+    static std::vector<std::vector<T>> t;
+
 };
 
 // template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
-template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
+// we can now use an index in each recursive wrapper to index into a uniquw
+// storage per script. perf wasn't majorly affected (tested fib 35) but it was
+// when we added the storage index. (3.3s to 3.75s 12% slower).
+template <typename T>
+inline std::vector<std::vector<T>> recursive_wrapper<T>::t;
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);
@@ -128,7 +180,9 @@ inline constexpr bool has_type_v = has_type<T, VariantPlaceholder>::value;
 //  allows std::visit(overloaded([](typeB& A){},
 //                               [](typeB& B){}))
 
-template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template <class... Ts> struct overloaded : Ts... {
+    using Ts::operator()...;
+};
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 template <class F> class finally {
@@ -154,9 +208,8 @@ template <class F> class finally {
     bool invoke_;
 };
 
+
 } // namespace cpplox
-
-
 
 /*
 char key, key2, key3;
