@@ -629,7 +629,7 @@ std::string Interpreter::stringify(const Object& object) {
     }
 
     if (object.is<LoxInstance>()) {
-        text = object.get<LoxInstance>().klass.name + ".instance\n";
+        text = object.get<LoxInstance>().klass->name + ".instance\n";
     }
 
     // must be a string.

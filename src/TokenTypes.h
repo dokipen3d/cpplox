@@ -355,17 +355,17 @@ class Token {
 
 struct LoxInstance {
 
-    LoxInstance(const LoxClass& klass) : klass(klass) {
+    LoxInstance(const LoxClass* klass) : klass(klass) {
     }
 
     const std::string& toString() {
-        return this->klass.name + " instance";
+        return this->klass->name + " instance";
     }
 
     const Object& get(const cpplox::Token& name) const;
     void set(const Token& name, const Object& value);
 
-    const LoxClass& klass;
+    const LoxClass* klass;
     tsl::robin_map<std::string, Object> properties;
 
     // friend std::ostream&

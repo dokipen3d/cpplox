@@ -179,7 +179,7 @@ void LoxInstance::set(const Token& name, const Object& value) {
 
 Object LoxClass::operator()(Interpreter& interpreter,
                             const std::vector<Object>& arguments) {
-    return LoxInstance(*this);
+    return LoxInstance(this);
 }
 
 } // namespace cpplox
