@@ -148,6 +148,12 @@ static inline int createScriptStatement(){
     cpplox::recursive_wrapper<cpplox::WhileStatement>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::FunctionStatement>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::ClassStatement>::t.push_back({});
+    // cpplox::recursive_wrapper<cpplox::ExpressionStatement>::t.push_back({});
+    // cpplox::recursive_wrapper<cpplox::PrintStatement>::t.push_back({});
+    // cpplox::recursive_wrapper<cpplox::VariableStatement>::t.push_back({});
+    // cpplox::recursive_wrapper<cpplox::ReturnStatement>::t.push_back({});
+
+
 
     return cpplox::recursive_wrapper<cpplox::WhileStatement>::t.size();
 }

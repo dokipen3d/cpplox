@@ -33,7 +33,7 @@ std::ostream& operator<<(std::ostream& os,
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<LoxClass>& loxClass) {
-    os << loxClass.t[loxClass.storageIndex][loxClass.index].name;
+    os << loxClass.t[0][loxClass.index].name;
     return os;
 }
 
@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const LoxInstance& loxInstance) {
 
 std::ostream& operator<<(std::ostream& os,
                          const recursive_wrapper<LoxInstance>& loxInstance) {
-    os << loxInstance.t[loxInstance.storageIndex][loxInstance.index].klass << ".instance\n";
+    os << loxInstance.t[0][loxInstance.index].klass << ".instance\n";
     return os;
 }
 

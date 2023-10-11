@@ -117,7 +117,6 @@ int main(int argumentCount, char* argumentValues[]) {
      storeCount2 = cpplox::createScriptStorageExpr();
      storeCount3 = cpplox::createScriptStorageObjects();
 
-    std::cout << cpplox::recursive_wrapper<cpplox::FunctionObject>::t.size() <<"\n";
 
     // ddcpplox::visit2();
 
@@ -155,6 +154,24 @@ int main(int argumentCount, char* argumentValues[]) {
     } else {
         l.runPrompt();
     }
+
+
+
+// struct Assign;
+// struct Binary;
+// struct Grouping;
+// struct Variable;
+// struct Unary;
+// struct Logical;
+// struct Call;
+// struct Increment;
+// struct Decrement;
+// struct Get;
+// struct Set;
+    std::cout << cpplox::recursive_wrapper<cpplox::FunctionObject>::t[0].size() <<"\n";
+    std::cout << cpplox::recursive_wrapper<cpplox::Binary>::t[0].size() <<"\n";
+    std::cout << cpplox::recursive_wrapper<cpplox::Grouping>::t[0].size() <<"\n";
+    std::cout << cpplox::recursive_wrapper<cpplox::Variable>::t[0].size() <<"\n";
 
     cpplox::clearStorageExpr();
     cpplox::clearStorageObjects();

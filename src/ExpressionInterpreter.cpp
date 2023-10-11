@@ -19,6 +19,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 
     try {
 
+        std::cout << "size of ss = " << sizeof(sparestack<Assign>) << " bytes.\n";
+
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
         std::cout << "size of st = " << sizeof(Statement) << " bytes.\n";

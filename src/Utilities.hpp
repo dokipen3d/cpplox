@@ -4,22 +4,18 @@
 #include <utility>
 #include <vector>
 
-template <class T>
-constexpr
-std::string_view
-type_name()
-{
+template <class T> constexpr std::string_view type_name() {
     using namespace std;
 #ifdef __clang__
     string_view p = __PRETTY_FUNCTION__;
     return string_view(p.data() + 34, p.size() - 34 - 1);
 #elif defined(__GNUC__)
     string_view p = __PRETTY_FUNCTION__;
-#  if __cplusplus < 201402
+#if __cplusplus < 201402
     return string_view(p.data() + 36, p.size() - 36 - 1);
-#  else
+#else
     return string_view(p.data() + 49, p.find(';', 49) - 49);
-#  endif
+#endif
 #elif defined(_MSC_VER)
     string_view p = __FUNCSIG__;
     return string_view(p.data() + 84, p.size() - 84 - 7);
@@ -60,8 +56,6 @@ struct WhileStatement;
 struct FunctionStatement;
 struct ClassStatement;
 
-
-
 inline std::vector<std::string> split(std::string stringIn, char c = ' ') {
     std::vector<std::string> result;
     const char* str = stringIn.c_str();
@@ -92,22 +86,19 @@ inline bool safeToReuse = false;
 template <typename T> struct recursive_wrapper {
     // construct from an existing object
 
-    recursive_wrapper(T&& t_) {
-        // t.push_back(std::move(t_));
-        //std::cout << "got here: " << type_name<T>() << "\n";
-        t[storageIndex].emplace_back(std::forward<T>(t_));
-        //t[storageIndex].push_back(std::forward<T>(t_));
+    recursive_wrapper(T&& t_, std::vector<T>* storageIn = nullptr);
+    recursive_wrapper(recursive_wrapper const&) = default;
+    recursive_wrapper(recursive_wrapper&&) = default;
 
-        // std::cout << "increasing\n";
-        //  t.push_back(std::forward<T>(t_));
-        index = t[storageIndex].size() - 1;
-    }
+    recursive_wrapper& operator=(const recursive_wrapper& other) = default;
+    recursive_wrapper& operator=(recursive_wrapper&& other) = default;
 
     // ~recursive_wrapper() {
+    //     std::cout << "oos " << type_name<T>() << " " << index << " \n";
 
-    //     if (safeToReuse) [[likely]] {
-    //         t.eraseAt(index);
-    //     }
+    //     // if (safeToReuse) [[likely]] {
+    //     //     t.eraseAt(index);
+    //     // }
     // }
     // recursive_wrapper(const recursive_wrapper& operand) = default;
 
@@ -119,10 +110,10 @@ template <typename T> struct recursive_wrapper {
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
     operator const T&() const {
-        return t[storageIndex][index];
+        return (*test)[index];
     }
     operator T&() {
-        return t[storageIndex][index];
+        return (*test)[index];
     }
 
     // bool operator==(const recursive_wrapper<T>& other) const {
@@ -136,11 +127,12 @@ template <typename T> struct recursive_wrapper {
 
     // store the value
     // static sparestack<T> t;
-    uint16_t storageIndex = 1;
-    uint16_t index = -1;
+    //uint32_t storageIndex = 0;
     // std::basic_string<T> t;
-    static std::vector<std::vector<T>> t;
+    uint32_t index = -1;
+    std::vector<T>* test;
 
+    static std::vector<std::vector<T>> t;
 };
 
 // template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
@@ -149,6 +141,22 @@ template <typename T> struct recursive_wrapper {
 // when we added the storage index. (3.3s to 3.75s 12% slower).
 template <typename T>
 inline std::vector<std::vector<T>> recursive_wrapper<T>::t;
+
+// we define the constructor outside of the class for now so that we can test using the static vectors for now
+// once we have the parser and interpreter passing in the unique storage vectors, we can stop using the static ones.
+// using the stored vector is a minimal perf hit and goes from ~3.3 to ~3.55 seconds on fibonacci. next step would 
+// be to try a tagged pointer to store the wrapper index in the pointer bits
+template <typename T> 
+recursive_wrapper<T>::recursive_wrapper(T&& t_, std::vector<T>* storageIn) : test{&recursive_wrapper<T>::t[0]} {
+        // t.push_back(std::move(t_));
+        // std::cout << "got here: " << type_name<T>() << "\n";
+        test->emplace_back(std::forward<T>(t_));
+        // t[storageIndex].push_back(std::forward<T>(t_));
+        // test = &t[0];
+        //  std::cout << "increasing\n";
+        //   t.push_back(std::forward<T>(t_));
+        index = test->size() - 1;
+};
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);
@@ -207,7 +215,6 @@ template <class F> class finally {
     F f_;
     bool invoke_;
 };
-
 
 } // namespace cpplox
 

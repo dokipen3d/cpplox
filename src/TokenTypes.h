@@ -141,11 +141,11 @@ struct Object : ObjectVariant {
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
 
-    // Object(Object const&) = default;
-    // Object(Object&&) = default;
+    Object(Object const&) = default;
+    Object(Object&&) = default;
 
-    // Object& operator=(const Object& other) = default;
-    // Object& operator=(Object&& other) = default;
+    Object& operator=(const Object& other) = default;
+    Object& operator=(Object&& other) = default;
 
     // helper functions to make variant comparable to nullptr
     //////////////////////////////////////////////////////////////////////////
@@ -216,7 +216,7 @@ struct Object : ObjectVariant {
 };
 inline std::ostream&
 operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt) {
-    os << dt.t[dt.storageIndex][dt.index];
+    os << dt.t[0][dt.index];
     return os;
 }
 struct Interpreter;

@@ -50,6 +50,12 @@ struct Expr final : ExprVariant {
     using ExprVariant::ExprVariant;
     using ExprVariant::operator=;
 
+    //Expr(const Expr&) = default;
+
+    // Expr(Expr&&) = default;
+    // Expr& operator=(Expr& other) = default;
+    // Expr& operator=(Expr&& other) = default;
+
     inline bool operator==(std::nullptr_t)
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
