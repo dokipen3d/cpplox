@@ -14,12 +14,12 @@ inline void unreachable() {}
 namespace std {
 
 template< class T >
-struct remove_cvref {
+struct remove_cvref2 {
     typedef std::remove_cv_t<std::remove_reference_t<T>> type;
 };
 
 template <class T> 
-using remove_cvref_t = typename std::remove_cvref<T>::type;
+using remove_cvref_t2 = typename std::remove_cvref2<T>::type;
 }
 
 namespace cpplox {
@@ -54,7 +54,7 @@ template <typename R> struct dispatcher<true, R> {
     static constexpr R switch_(F&& f, V&& v) {
 
         constexpr std::size_t size =
-            std::variant_size_v<std::remove_cvref_t<V>>;
+            std::variant_size_v<std::remove_cvref_t2<V>>;
         switch (v.index()) {
         case B + 0: {
             return dispatcher<B + 0 < size, R>::template case_<B + 0>(

@@ -29,7 +29,7 @@ struct TimeIt {
                          .count();
         std::cout << scopeName << " took "
                   <<   end
-                  << " milliseconds\n";
+                  << " seconds\n";
 
     }
     bool scope;

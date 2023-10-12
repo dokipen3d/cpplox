@@ -150,6 +150,39 @@ template <typename T> class spare_refcount_stack {
         }
     }
 
+
+    template <typename U>
+    inline std::size_t push_in(U&& env) {
+        if (spareIds.size() == 0) {
+            // std::cout << "creating new " << "\n";
+
+            _data.emplace_back(std::forward<U>(env));
+            refCountVec.push_back({0});
+            //_data.push_back(env);
+
+            // std::cout << "pushing " << _data.size() << " \n";
+
+            auto existing_size = _data.size() - 1;
+            // std::cout << "existing_size " << existing_size << "\n";
+
+            return existing_size;
+        } else {
+
+            std::size_t accessElement = spareIds.back();
+
+            // std::cout << "reusing "
+            //           << "\n";
+
+            _data[accessElement] = std::forward<U>(env);
+            refCountVec[accessElement] = 0;
+            //_data.emplace(_data.begin()+accessElement, std::forward<U>(env));
+            //_data.at(accessElement) = env;
+
+            spareIds.pop_back();
+            return accessElement;
+        }
+    }
+
     template <typename Callable> std::size_t retrieve(Callable&& callable) {
         if (spareIds.size() == 0) {
 
@@ -206,13 +239,13 @@ template <typename T> class spare_refcount_stack {
         return _data[idx];
     }
 
-    std::vector<int>& refCounts() {
+    inline std::vector<std::size_t>& refCounts() {
         return refCountVec;
     }
 
   private:
     std::vector<T> _data;
-    std::vector<int> refCountVec;
+    std::vector<std::size_t> refCountVec;
 
     std::vector<std::size_t> spareIds; // index of spare slots to fill ids
 };

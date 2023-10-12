@@ -23,7 +23,7 @@ check_ipo_supported(RESULT supported OUTPUT error)
 
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
-set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
+set_property(TARGET cpplox PROPERTY CXX_STANDARD 20)
 target_include_directories(cpplox PUBLIC boost/../) 
 
 #if(Boost_FOUND)

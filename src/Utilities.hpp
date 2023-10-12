@@ -83,16 +83,68 @@ static inline void rtrim(std::string& s) {
 
 inline bool safeToReuse = false;
 
+
+template <typename T> struct wrapper {
+    // wrapper(T&& t) {
+    //     index = storage.push_in(std::forward<T>(t));
+    //     storage.refCounts()[index]++;
+    // }
+    wrapper(T&& t);
+
+    wrapper(const wrapper& other) {
+        index = other.index;
+        storage.refCounts()[index]++;
+    }
+    wrapper(wrapper& other) {
+        index = other.index;
+        storage.refCounts()[index]++;
+    }
+
+    wrapper& operator=(const wrapper& other) {
+        index = other.index;
+        storage.refCounts()[index]++;
+
+        return *this;
+    }
+
+    ~wrapper() {
+        storage.refCounts()[index]--;
+        if (storage.refCounts()[index] == 0) {
+            storage.eraseAt(index);
+        }
+    };
+
+    operator const T&() const {
+        return (storage)[index];
+    }
+    operator T&() {
+        return (storage)[index];
+    }
+
+    int index = -1;
+    //spare_refcount_stack<T>* storage;
+    static spare_refcount_stack<T> storage;
+
+};
+
+template <typename T> inline spare_refcount_stack<T> wrapper<T>::storage{spare_refcount_stack<T>{}};
+
+template <typename T>
+wrapper<T>::wrapper(T&& t) {
+    index = storage.push_in(std::forward<T>(t));
+    storage.refCounts()[index]++;
+};
+
 // recursive wrapper with single vector for each type
 template <typename T> struct recursive_wrapper {
     // construct from an existing object
 
     recursive_wrapper(T&& t_, std::vector<T>* storageIn = nullptr);
-    recursive_wrapper(recursive_wrapper const&) = default;
-    recursive_wrapper(recursive_wrapper&&) = default;
+    // recursive_wrapper(recursive_wrapper const&) = default;
+    // recursive_wrapper(recursive_wrapper&&) = default;
 
-    recursive_wrapper& operator=(const recursive_wrapper& other) = default;
-    recursive_wrapper& operator=(recursive_wrapper&& other) = default;
+    // recursive_wrapper& operator=(const recursive_wrapper& other) = default;
+    // recursive_wrapper& operator=(recursive_wrapper&& other) = default;
 
     // ~recursive_wrapper() {
     //     std::cout << "oos " << type_name<T>() << " " << index << " \n";
@@ -111,11 +163,12 @@ template <typename T> struct recursive_wrapper {
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
     operator const T&() const {
-        // return (*test)[index];
-        return test[0];
+        return (*test)[index];
+        //return test[0];
     }
     operator T&() {
-        return test[0];
+        return (*test)[index];
+        //return test[0];
     }
 
     // bool operator==(const recursive_wrapper<T>& other) const {
@@ -131,10 +184,11 @@ template <typename T> struct recursive_wrapper {
     // static sparestack<T> t;
     // uint32_t storageIndex = 0;
     // std::basic_string<T> t;
+    std::vector<T>* test;
     uint32_t index = -1;
-    std::vector<T> test;
 
     static std::vector<std::vector<T>> t;
+
 };
 
 // template <typename T> inline std::vector<T> recursive_wrapper<T>::t;
@@ -153,15 +207,15 @@ inline std::vector<std::vector<T>> recursive_wrapper<T>::t;
 template <typename T>
 recursive_wrapper<T>::recursive_wrapper(
     T&& t_,
-    std::vector<T>* storageIn) { //} : test{&recursive_wrapper<T>::t[0]} {
+    std::vector<T>* storageIn) : test{&(recursive_wrapper<T>::t[0])} {
     // t.push_back(std::move(t_));
     // std::cout << "got here: " << type_name<T>() << "\n";
-    test.emplace_back(std::forward<T>(t_));
+    test->emplace_back(std::forward<T>(t_));
     // t[storageIndex].push_back(std::forward<T>(t_));
     // test = &t[0];
     //  std::cout << "increasing\n";
     //   t.push_back(std::forward<T>(t_));
-    // index = test->size() - 1;
+    index = test->size() - 1;
 };
 
 // template<typename T>
@@ -193,45 +247,6 @@ recursive_wrapper<T>::recursive_wrapper(
 //    // }
 // };
 
-template <typename T> struct wrapper {
-    wrapper(T&& t) {
-        index = storage.push(std::forward<T>(t));
-        storage.refCounts()[index]++;
-    }
-
-    wrapper(const wrapper& other) {
-        index = other.index;
-        storage.refCounts()[index]++;
-    }
-
-
-    wrapper& operator=(const wrapper& other) {
-        index = other.index;
-        storage.refCounts()[index]++;
-
-        return *this;
-    }
-
-
-    ~wrapper() {
-        storage.refCounts()[index]--;
-        if ( storage.refCounts()[index] == 0) {
-            storage.eraseAt(index);
-        }
-    };
-
-    operator const T&() const {
-        return storage[index];
-    }
-    operator T&() {
-        return storage[index];
-    }
-
-    int index = -1;
-    static spare_refcount_stack<T> storage;
-};
-
-template <typename T> inline spare_refcount_stack<T> wrapper<T>::storage;
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);
