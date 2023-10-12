@@ -55,8 +55,9 @@ struct lox {
         cpplox::safeToReuse = true;
 
         try {
-
+            std::cout << "running interpreters\n";
             // std::cout << "interpreting expression\n";
+            TimeIt timer("interpreter");
 
             interpreter.interpret(statements);
 

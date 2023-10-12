@@ -267,10 +267,10 @@ struct FunctionObject {
     Object operator()(Interpreter& interpreter,
                       const std::vector<Object>& arguments);
 
-    // FunctionObject(FunctionObject const& other );
+    //FunctionObject(FunctionObject const& other ) = default;
     //  //FunctionObject(FunctionObject&&) = delete;
 
-    // FunctionObject& operator=(const FunctionObject& other);
+    //FunctionObject& operator=(const FunctionObject& other) = default;
     // FunctionObject& operator=(FunctionObject&& other) = delete;
 
     // inline bool operator==(const FunctionObject& other){
