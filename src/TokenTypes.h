@@ -131,21 +131,21 @@ struct LoxInstance;
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant =
-    std::variant<void*, double, recursive_wrapper<std::string>, bool,
-                 recursive_wrapper<NativeFunction>,
-                 recursive_wrapper<FunctionObject>, recursive_wrapper<LoxClass>,
-                 recursive_wrapper<LoxInstance>>;
+    std::variant<void*, double, wrapper<std::string>, bool,
+                 wrapper<NativeFunction>,
+                 wrapper<FunctionObject>, wrapper<LoxClass>,
+                 wrapper<LoxInstance>>;
 
 struct Object : ObjectVariant {
 
     using ObjectVariant::ObjectVariant;
     using ObjectVariant::operator=;
 
-    Object(Object const&) = default;
-    Object(Object&&) = default;
+    //Object(Object const&) = default;
+    //Object(Object&&) = default;
 
-    Object& operator=(const Object& other) = default;
-    Object& operator=(Object&& other) = default;
+    //Object& operator=(const Object& other) = default;
+    //Object& operator=(Object&& other) = default;
 
     // helper functions to make variant comparable to nullptr
     //////////////////////////////////////////////////////////////////////////
@@ -160,8 +160,8 @@ struct Object : ObjectVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        if (std::holds_alternative<recursive_wrapper<NativeFunction>>(other) ||
-            std::holds_alternative<recursive_wrapper<NativeFunction>>(*this)) {
+        if (std::holds_alternative<wrapper<NativeFunction>>(other) ||
+            std::holds_alternative<wrapper<NativeFunction>>(*this)) {
             return false;
         } else {
             return *this == other;
@@ -176,47 +176,53 @@ struct Object : ObjectVariant {
     inline bool is() const { // function needs to be const  to make it
         // callable from a const ref
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
+                               wrapper<T>, T>;
         return std::holds_alternative<actualTypeToGet>(*this);
     }
 
     template <typename T>
     inline const T& getRecursiveObject() { // function needs to be const  to
                                            // make it callable from a const ref
-        return std::get<recursive_wrapper<T>>(*this);
+        return std::get<wrapper<T>>(*this);
     }
     template <typename T> inline const T& get() const {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
+                               wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 
     template <typename T> inline const T* get_if() const noexcept {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
+                               wrapper<T>, T>;
         return (const T*)std::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T* get_if() noexcept {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
+                               wrapper<T>, T>;
         return (T*)std::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T& get() {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<recursive_wrapper<T>, ObjectVariant>,
-                               recursive_wrapper<T>, T>;
+            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
+                               wrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 };
+// inline std::ostream&
+// operator<<(std::ostream& os, const cpplox::wrapper<std::string>& dt) {
+//     os << dt.t[0][dt.index];
+//     return os;
+// }
+
 inline std::ostream&
-operator<<(std::ostream& os, const cpplox::recursive_wrapper<std::string>& dt) {
-    os << dt.t[0][dt.index];
+operator<<(std::ostream& os, const cpplox::wrapper<std::string>& dt) {
+    os << (std::string)dt;
     return os;
 }
 struct Interpreter;
@@ -243,7 +249,7 @@ struct NativeFunction {
     // }
 
     friend std::ostream&
-    operator<<(std::ostream& os, const recursive_wrapper<NativeFunction>& dt);
+    operator<<(std::ostream& os, const wrapper<NativeFunction>& dt);
 
     // we store references to lambdas
     std::function<Object(const Interpreter&, const std::vector<Object>&)>
@@ -277,7 +283,7 @@ struct FunctionObject {
     // }
 
     friend std::ostream&
-    operator<<(std::ostream& os, const recursive_wrapper<FunctionObject>& dt);
+    operator<<(std::ostream& os, const wrapper<FunctionObject>& dt);
 
     boost::local_shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
@@ -302,13 +308,13 @@ struct LoxClass {
     }
 
     friend std::ostream&
-    operator<<(std::ostream& os, const recursive_wrapper<LoxClass>& loxClass);
+    operator<<(std::ostream& os, const wrapper<LoxClass>& loxClass);
 
     std::string name;
 };
 
 std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<LoxInstance>& loxInstance);
+                         const wrapper<LoxInstance>& loxInstance);
 std::ostream& operator<<(std::ostream& os,
                          const LoxInstance& loxInstance);
 

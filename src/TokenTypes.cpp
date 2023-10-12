@@ -18,22 +18,22 @@ namespace cpplox {
 // inline std::vector<std::vector<cpplox::LoxInstance>> cpplox::recursive_wrapper<cpplox::LoxInstance>::t{};
 
 std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<NativeFunction>& dt) {
+                         const wrapper<NativeFunction>& dt) {
     os << "Native Function"
        << "\n";
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<FunctionObject>& dt) {
+                         const wrapper<FunctionObject>& dt) {
     os << "Function Object"
        << "\n";
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<LoxClass>& loxClass) {
-    os << loxClass.t[0][loxClass.index].name;
+                         const wrapper<LoxClass>& loxClass) {
+    os << ((LoxClass)loxClass).name;
     return os;
 }
 
@@ -48,8 +48,8 @@ std::ostream& operator<<(std::ostream& os, const LoxInstance& loxInstance) {
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const recursive_wrapper<LoxInstance>& loxInstance) {
-    os << loxInstance.t[0][loxInstance.index].klass << ".instance\n";
+                         const wrapper<LoxInstance>& loxInstance) {
+    os << ((LoxInstance)loxInstance).klass << ".instance\n";
     return os;
 }
 

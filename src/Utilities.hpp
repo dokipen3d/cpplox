@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <variant>
 
 template <class T> constexpr std::string_view type_name() {
     using namespace std;
@@ -110,10 +111,11 @@ template <typename T> struct recursive_wrapper {
     // cast back to wrapped type
     // operator const T &()  { return t.front(); }
     operator const T&() const {
-        return (*test)[index];
+        //return (*test)[index];
+        return test[0];
     }
     operator T&() {
-        return (*test)[index];
+        return test[0];
     }
 
     // bool operator==(const recursive_wrapper<T>& other) const {
@@ -130,7 +132,7 @@ template <typename T> struct recursive_wrapper {
     //uint32_t storageIndex = 0;
     // std::basic_string<T> t;
     uint32_t index = -1;
-    std::vector<T>* test;
+    std::vector<T> test;
 
     static std::vector<std::vector<T>> t;
 };
@@ -147,16 +149,94 @@ inline std::vector<std::vector<T>> recursive_wrapper<T>::t;
 // using the stored vector is a minimal perf hit and goes from ~3.3 to ~3.55 seconds on fibonacci. next step would 
 // be to try a tagged pointer to store the wrapper index in the pointer bits
 template <typename T> 
-recursive_wrapper<T>::recursive_wrapper(T&& t_, std::vector<T>* storageIn) : test{&recursive_wrapper<T>::t[0]} {
+recursive_wrapper<T>::recursive_wrapper(T&& t_, std::vector<T>* storageIn){//} : test{&recursive_wrapper<T>::t[0]} {
         // t.push_back(std::move(t_));
         // std::cout << "got here: " << type_name<T>() << "\n";
-        test->emplace_back(std::forward<T>(t_));
+        test.emplace_back(std::forward<T>(t_));
         // t[storageIndex].push_back(std::forward<T>(t_));
         // test = &t[0];
         //  std::cout << "increasing\n";
         //   t.push_back(std::forward<T>(t_));
-        index = test->size() - 1;
+        //index = test->size() - 1;
 };
+//
+//template<typename T>
+//struct wrapper {
+//    wrapper(const T& t) {
+//        p = std::make_unique<T>(t);
+//    }
+//
+//    wrapper(const wrapper& other) {
+//        p = std::make_unique<T>(*other.p.get());
+//    }
+//
+//    wrapper& operator= (const wrapper& other) {
+//        p = std::make_unique<T>(*other.p.get());
+//        return *this;
+//    }
+//    ~wrapper() = default;
+//
+//    operator const T&() const {
+//        return *p;
+//    }
+//    operator T&() {
+//        return *p;
+//    }
+//
+//    std::unique_ptr<T> p;
+//    // auto operator <=> (const wrapper& other) const {
+//    //     return p <=> other.p;
+//    // }
+//};
+
+
+
+template <typename T> struct wrapper {
+    wrapper(const T& t) {
+        index = storage.push(t);
+        useCount++;
+
+
+    }
+
+    wrapper(const wrapper& other) {
+        index = other.index;
+        useCount++;
+
+    }
+
+    wrapper& operator=(const wrapper& other) {
+        index = other.index;
+        useCount++;
+
+        return *this;
+    }
+    ~wrapper() {
+        useCount--;
+        //std::cout << "Use" << useCount << "\n"; 
+        if (useCount == 1) {
+            storage.eraseAt(index);
+        }
+    }
+
+    operator const T&() const {
+        return storage[index];
+    }
+    operator T&() {
+        return storage[index];
+    }
+
+    static sparestack<T> storage;
+    int index = -1;
+    int useCount = 0;
+
+// auto operator <=> (const wrapper& other) const {
+    //     return p <=> other.p;
+    // }
+};
+
+template <typename T> inline sparestack<T> wrapper<T>::storage;
+
 
 inline void stripZerosFromString(std::string& text) {
     text.erase(text.find_last_not_of('0') + 1, std::string::npos);

@@ -290,14 +290,14 @@ Object Interpreter::operator()(const Binary& binary) {
         // }
 
         if (left.is<std::string>() && right.is<std::string>()) {
-
             return left.get<std::string>() + right.get<std::string>();
+            ;
             // return *left.get_if<std::string>() +
             // *right.get_if<std::string>();
             //  return
-            //  static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>())
+            //static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
             //  +
-            //  static_cast<std::string>(left.get<cpplox::recursive_wrapper<std::string>>());
+            //  static_cast<std::string>(left.get<cpplox::wrapper<std::string>>());
         }
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
@@ -476,7 +476,7 @@ Object Interpreter::operator()(const Call& call) {
     const Object ret = [&]() -> Object {
         if(callee.is<FunctionObject>()){
             //return checkArityAndCallFunction(callee.get<FunctionObject>());
-            return checkArityAndCallFunction(static_cast<FunctionObject&>(*callee.get_if<recursive_wrapper<FunctionObject>>()));
+            return checkArityAndCallFunction(static_cast<FunctionObject&>(*callee.get_if<wrapper<FunctionObject>>()));
         } else if (callee.is<NativeFunction>()){
             return checkArityAndCallFunction(callee.get<NativeFunction>());
         } else if (callee.is<LoxClass>()){ 
@@ -615,6 +615,7 @@ std::string to_string_with_precision(const T a_value, const int n = 6) {
 }
 
 std::string Interpreter::stringify(const Object& object) {
+
     std::string text; // for rvo
     if (object == nullptr) {
         text = "nil";
@@ -636,6 +637,7 @@ std::string Interpreter::stringify(const Object& object) {
 
     // must be a string.
     if (object.is<std::string>()) {
+        std::cout << "s";
         text = object.get<std::string>();
     }
     return text;
