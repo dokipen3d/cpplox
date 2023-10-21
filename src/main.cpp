@@ -55,6 +55,8 @@ struct lox {
         cpplox::safeToReuse = true;
 
         try {
+
+            
             std::cout << "running interpreters\n";
             // std::cout << "interpreting expression\n";
             TimeIt timer("interpreter");
@@ -110,13 +112,7 @@ struct lox {
 
 int main(int argumentCount, char* argumentValues[]) {
 
-    int storeCount = cpplox::createScriptStatement();
-    int storeCount2 = cpplox::createScriptStorageExpr();
-    int storeCount3 = cpplox::createScriptStorageObjects();
-
-     storeCount = cpplox::createScriptStatement();
-     storeCount2 = cpplox::createScriptStorageExpr();
-     storeCount3 = cpplox::createScriptStorageObjects();
+   
 
 
     // ddcpplox::visit2();
@@ -135,6 +131,10 @@ int main(int argumentCount, char* argumentValues[]) {
 
     std::cout.precision(18);
     lox l;
+
+     int storeCount = cpplox::createScriptStatement();
+             int storeCount2 = cpplox::createScriptStorageExpr();
+            int storeCount3 = cpplox::createScriptStorageObjects();
 
     if (argumentCount > 3) {
         std::cout << "Usage: cpplox [script] \n";
@@ -169,14 +169,14 @@ int main(int argumentCount, char* argumentValues[]) {
 // struct Decrement;
 // struct Get;
 // struct Set;
-    std::cout << cpplox::recursive_wrapper<cpplox::FunctionObject>::t[0].size() <<"\n";
-    std::cout << cpplox::recursive_wrapper<cpplox::Binary>::t[0].size() <<"\n";
-    std::cout << cpplox::recursive_wrapper<cpplox::Grouping>::t[0].size() <<"\n";
-    std::cout << cpplox::recursive_wrapper<cpplox::Variable>::t[0].size() <<"\n";
+    //std::cout << cpplox::recursive_wrapper<cpplox::FunctionObject>::t[0].size() <<"\n";
+    //std::cout << cpplox::recursive_wrapper<cpplox::Binary>::t[0].size() <<"\n";
+    //std::cout << cpplox::recursive_wrapper<cpplox::Grouping>::t[0].size() <<"\n";
+    //std::cout << cpplox::recursive_wrapper<cpplox::Variable>::t[0].size() <<"\n";
 
-    cpplox::clearStorageExpr();
-    cpplox::clearStorageObjects();
-    cpplox::clearStorageStatement();
+    // cpplox::clearStorageExpr();
+    // cpplox::clearStorageObjects();
+    // cpplox::clearStorageStatement();
     
 }
 

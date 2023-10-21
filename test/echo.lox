@@ -1,0 +1,9 @@
+fun echo(n) {
+  print(n);
+  return n;
+}
+
+//print echo(echo(1) + echo(2));
+//print(echo(4) + echo(5));
+
+print echo(echo(1) + echo(2)) + echo(echo(4) + echo(5));

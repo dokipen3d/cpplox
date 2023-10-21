@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-
+#include "thirdparty/plf_colony.h"
 #include "boost/smart_ptr/make_local_shared.hpp"
 
 template <typename T> class sparestack {
@@ -345,4 +345,59 @@ template <typename T> class uniquestack {
   private:
     std::vector<T> _data;
     std::vector<std::size_t> spareIds; // index of spare slots to fill ids
+};
+
+
+template <typename T> class stablestack {
+
+  public:
+    void reserve(std::size_t count) {
+        _data.reserve(count);
+    }
+
+    using Iter = plf::colony<T>::iterator;
+
+    template <typename Callable> Iter retrieve(Callable&& callable) {
+        if (spareIts.size() == 0) {
+
+            auto it = _data.insert(T{});
+            // _data.push_back(
+            //     boost::make_local_shared_noinit<typename T::element_type>());
+            //_data.push_back(env);
+            //std::cout << "pb\n";
+            callable(*it);
+
+            return it;
+        } else {
+            //std::cout << "rt\n";
+
+            auto accessIt = spareIts.back();
+
+            spareIts.pop_back();
+            callable(*accessIt);
+            return accessIt;
+        }
+    }
+
+    std::size_t size() {
+        return _data.size() - spareIts.size();
+    }
+
+    void eraseAt(Iter it) {
+                   // std::cout << "er\n";
+
+        spareIts.push_back(it); // add the spare slot to sparestack
+    }
+
+    T& operator[](std::size_t idx) {
+        return _data[idx];
+    }
+
+    T& operator[](std::size_t idx) const {
+        return _data[idx];
+    }
+
+  private:
+    plf::colony<T> _data;
+    std::vector<Iter> spareIts; // index of spare slots to fill ids
 };

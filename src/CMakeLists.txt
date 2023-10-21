@@ -10,8 +10,7 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
     endif()
     add_compile_options("/GS-")
     add_compile_options("/EHsc")
-else()
-
+    add_compile_options("/std:c++20")
 endif()
 
 include(CheckIPOSupported)

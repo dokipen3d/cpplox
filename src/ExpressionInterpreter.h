@@ -133,7 +133,7 @@ struct Interpreter {
     //     }
     // };
 
-    struct objVectorHelper {
+    struct [[nodiscard]] objVectorHelper {
         std::vector<Object>& objVector;
         size_t index;
     };
@@ -142,7 +142,7 @@ struct Interpreter {
     void clearEnvironmentFromStack(Environment* environment);
     void clearEnvironmentFromStack(int handle);
 
-    objVectorHelper getNewArgumentVector();
+    [[nodiscard]] objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
 
     Object currentReturn = Object{nullptr};
@@ -152,6 +152,8 @@ struct Interpreter {
         globalsHold; // place to store global native functions etc
 
     sparestack<std::vector<Object>> argumentsStack;
+    stablestack<std::vector<Object>> argumentsStack2;
+
     uniquestack<boost::local_shared_ptr<Environment>> Environments;
 
     Environment* globals; // place to store global native functions etc
