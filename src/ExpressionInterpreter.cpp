@@ -4,8 +4,8 @@
 #include "Utilities.hpp"
 //#include "Object.h"
 #include "TokenTypes.h"
-#include "thirdparty/visit.hpp"
-#include "thirdparty/visit2.hpp"
+//#include "thirdparty/visit.hpp"
+//#include "thirdparty/visit2.hpp"
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -47,7 +47,7 @@ void Interpreter::execute(const Statement& statementToExecute) {
 
 Object Interpreter::evaluate(const Expr& expression) {
 #if (_MSC_VER)
-    return cpplox::visit(*this, static_cast<const ExprVariant&>(expression));
+    return std::visit(*this, static_cast<const ExprVariant&>(expression));
 #else
     return std::visit(*this, static_cast<const ExprVariant&>(expression));
 #endif
@@ -422,6 +422,8 @@ Interpreter::objVectorHelper Interpreter::getNewArgumentVector() {
     return {argumentsStack[sizet], sizet};
 }
 
+
+
 void Interpreter::clearArgumentVector(size_t index) {
     argumentsStack.eraseAt(index);
 }
@@ -429,13 +431,21 @@ void Interpreter::clearArgumentVector(size_t index) {
 Object Interpreter::operator()(const Call& call) {
     Object callee = evaluate(call.callee);
 
-    // std::vector<Object> arguments;
-
-    const auto& objHelper = getNewArgumentVector();
-    auto& arguments = objHelper.objVector;
+    //std::vector<Object> arguments;
+    auto argumentsIt = argumentsStack2.retrieve([](auto& colonyIt) { colonyIt.clear(); });
+    auto& arguments = *argumentsIt;
     arguments.reserve(call.arguments.size());
+    //const auto& objHelper = getNewArgumentVector();
+    //auto& argumentsIndex = argumentsStack[objHelper.index];// objHelper.objVector;
+    //arguments.reserve(call.arguments.size());
+    //argumentsStack[objHelper.index].push_back(Object{5.0});
+    //argumentsStack[objHelper.index].pop_back();
+
+    //std::cout << "gettin arg stack" << objHelper.index << "for argsize " << call.arguments.size() << std::endl;
+    //std::cout << std::endl;
 
     for (const auto& argument : call.arguments) {
+
         arguments.emplace_back(evaluate(argument));
     }
 
@@ -484,7 +494,9 @@ Object Interpreter::operator()(const Call& call) {
         }
     }();
     // clang-format on
-    clearArgumentVector(objHelper.index);
+    //std::cout << "clearing arg stack" << objHelper.index << "\n";
+    argumentsStack2.eraseAt(argumentsIt);
+    //clearArgumentVector(objHelper.index);
     return ret;
 }
 

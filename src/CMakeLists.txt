@@ -4,11 +4,13 @@ project (cpplox)
 
 if (MSVC_VERSION GREATER_EQUAL "1900")
     include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
+    CHECK_CXX_COMPILER_FLAG("/std:c++20" _cpp_latest_flag_supported)
     if (_cpp_latest_flag_supported)
-        add_compile_options("/std:c++latest ")
+        #add_compile_options("/std:c++20 ")
     endif()
     add_compile_options("/GS-")
+    add_compile_options("/std:c++20")
+
 else()
 
 endif()
@@ -22,7 +24,7 @@ check_ipo_supported(RESULT supported OUTPUT error)
 
 
 add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisitor.cpp ExpressionInterpreter.cpp ExpressionParser.cpp Error.cpp Scanner.cpp ) 
-set_property(TARGET cpplox PROPERTY CXX_STANDARD 17)
+set_property(TARGET cpplox PROPERTY CXX_STANDARD 20)
 target_include_directories(cpplox PUBLIC boost/../) 
 
 #if(Boost_FOUND)
