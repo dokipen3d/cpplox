@@ -322,9 +322,12 @@ class Token {
   public:
     Token() = default; // need th to make expression be able to hold Tokens
                        // as members
-    Token(ETokenType tokenType, std::string lexeme, Object literal, int line)
+    Token(ETokenType tokenType, std::string lexemeIn, Object literal, int line)
         : eTokenType(tokenType), literal(std::move(literal)),
-          lexeme(std::move(lexeme)), line(line) {
+          lexeme(std::move(lexemeIn)), line(line) {
+            hash = FNVHash(lexeme);
+            //std::cout << "Call: " << lexeme << " hash: " << hash << "\n";
+
     }
 
     // bool operator==(const Token& other) const {
@@ -354,6 +357,7 @@ class Token {
     friend struct Error;
 
     std::string lexeme;
+    int32_t hash;
     Object literal;
     int32_t line;
     ETokenType eTokenType;

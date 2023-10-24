@@ -4,7 +4,7 @@
 #include "Statement.hpp"
 #include "TimeIt.hpp"
 #include "thirdparty/sparestack.hpp"
-//#include "thirdparty/shared_ptr.hpp"
+// #include "thirdparty/shared_ptr.hpp"
 #include "boost/smart_ptr/local_shared_ptr.hpp"
 #include <chrono>
 #include <exception>
@@ -12,7 +12,7 @@
 #include <memory>
 #include <unordered_map>
 #include <variant>
-//#include "thirdparty/mvariant.hpp"
+// #include "thirdparty/mvariant.hpp"
 
 #include <vector>
 
@@ -36,7 +36,12 @@ struct Interpreter {
         environment = globals;
         // should move this to cpp file....
         globals->define(
-            "clock",
+            FNVHash("clock"), // as long as this hash matches the one made in
+                              // the token constructor we should be okay, we
+                              // might need to add rehashing to token
+                              // constructor to prevent collisions
+                              // we can also create an overloaded define for env
+                              // tht takes the string and does the hash for us
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object>& arguments) -> Object {
@@ -49,7 +54,7 @@ struct Interpreter {
                 /*arity*/ []() { return 0; }});
 
         globals->define(
-            "str",
+            FNVHash("str"),
             NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object>& arguments) -> Object {
@@ -75,7 +80,6 @@ struct Interpreter {
     void operator()(const ReturnStatement& returnStatement);
     void operator()(const ClassStatement& returnStatement);
 
-
     void operator()(const VoidType*) {
     }
 
@@ -95,8 +99,6 @@ struct Interpreter {
     Object operator()(const Decrement& inc);
     Object operator()(const Get& get);
     Object operator()(const Set& set);
-
-
 
     Object operator()(const void*) {
         return nullptr;

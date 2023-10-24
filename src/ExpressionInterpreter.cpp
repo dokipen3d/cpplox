@@ -152,7 +152,7 @@ void Interpreter::operator()(const VariableStatement& variableStatement) {
         value = evaluate(variableStatement.initializer);
     }
 
-    environment->define(variableStatement.name.lexeme, value);
+    environment->define(variableStatement.name.hash, value);
     return;
 }
 
@@ -178,13 +178,13 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // Object functionObject = FunctionObject(this, &functionStatement);
     // std::cout << "start of F block " << this->environment->handle << "\n";
 
-    environment->defineVal(functionStatement.name.lexeme,
+    environment->defineVal(functionStatement.name.hash,
                            FunctionObject(this, &functionStatement));
     // std::cout << "end of F block " << this->environment->handle << "\n";
 }
 
 void Interpreter::operator()(const ClassStatement& classStatement) {
-    environment->define(classStatement.name.lexeme, Object(nullptr));
+    environment->define(classStatement.name.hash, Object(nullptr));
     environment->assign(classStatement.name,
                         LoxClass(classStatement.name.lexeme));
 }
@@ -375,6 +375,8 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable) {
+    //std::cout << "Looking up: " << variable.name.lexeme << " hash: " << variable.name.hash << "\n";
+
     return lookUpVariable(variable.name, variable);
 }
 
@@ -649,7 +651,7 @@ std::string Interpreter::stringify(const Object& object) {
 
     // must be a string.
     if (object.is<std::string>()) {
-        std::cout << "s";
+        //std::cout << "s";
         text = object.get<std::string>();
     }
     return text;

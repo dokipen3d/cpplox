@@ -158,7 +158,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
     auto environment = interpreter.retrieveEnvironment(closure2.get());
     // sub = environment;
     for (int i = 0; i < m_declaration->params.size(); i++) {
-        environment->define(m_declaration->params[i].lexeme, arguments[i]);
+        environment->define(m_declaration->params[i].hash, arguments[i]);
     }
 
     interpreter.executeBlock(m_declaration->body, environment);

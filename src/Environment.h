@@ -55,7 +55,7 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     }
 
     const Object& get(const Token& name) const {
-        if (auto search = values.find(name.lexeme);
+        if (auto search = values.find(name.hash);
             search != values.end()) { // if init version of contains()
             return search->second;
         } else if (enclosing != nullptr) {
@@ -70,29 +70,30 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     Object getAt(int distance, const Token& name) {
         Environment* anc = ancestor(distance);
         const auto& varmap = anc->values;
-        if (auto env = varmap.find(name.lexeme); env != varmap.end()) {
+        if (auto env = varmap.find(name.hash); env != varmap.end()) {
             return env->second;
         }
         return {};
     }
 
-    void define(const std::string& name, const Object& value) {
+    void define(const int32_t& name, const Object& value) {
         values.insert_or_assign(name, value);
     }
 
+
     template <typename T>
-    void defineVal(const std::string& name, T&& value) {
+    void defineVal(const int32_t& name, T&& value) {
         values.insert_or_assign(name, std::forward<T>(value));
     }
 
     void assignAt(int distance, const Token& name, const Object& value) {
-        ancestor(distance)->values.insert_or_assign(name.lexeme, value);
+        ancestor(distance)->values.insert_or_assign(name.hash, value);
     }
 
     void assign(const Token& name, const Object& value) {
-        if (const auto search = values.find(name.lexeme);
+        if (const auto search = values.find(name.hash);
             search != values.end()) { // if init version of contains()
-            values.insert_or_assign(name.lexeme, value);
+            values.insert_or_assign(name.hash, value);
             return;
         } else if (enclosing != nullptr) {
             enclosing->assign(name, value);
@@ -109,7 +110,7 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     // Environment* enclosing = nullptr;
     //std::unordered_map<std::string, Object> values;
     //robin_hood::unordered_map<std::string, Object> values;
-    tsl::robin_map<std::string, Object> values;
+    tsl::robin_map<int32_t, Object> values;
 
     // tsl::robin_map<std::string, Object, std::hash<std::string>,
     //                std::equal_to<std::string>,

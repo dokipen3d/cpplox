@@ -135,7 +135,8 @@ struct Unary {
 };
 
 struct Variable {
-    explicit Variable(Token name) : name(std::move(name)) {
+    explicit Variable(Token nameIn) : name(std::move(nameIn)) {
+        //std::cout << "making variable " << name.lexeme << "hash " << name.hash << "\n"; 
     }
     Token name;
     mutable int distance = -1;
