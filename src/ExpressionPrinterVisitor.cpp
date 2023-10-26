@@ -47,6 +47,17 @@ void ExpressionPrinterVisitor::operator()(const Literal& literal) {
     }
 }
 
+
+void ExpressionPrinterVisitor::operator()(const BinaryAdd& binary) {
+    parenthesize(binary.op.lexeme, binary.left, binary.right);
+    //}
+}
+
+void ExpressionPrinterVisitor::operator()(const BinarySub& binary) {
+    parenthesize(binary.op.lexeme, binary.left, binary.right);
+    //}
+}
+
 void ExpressionPrinterVisitor::operator()(const Grouping& grouping) {
     parenthesize("group", grouping.expr);
 }

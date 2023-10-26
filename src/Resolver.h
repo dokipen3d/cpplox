@@ -40,6 +40,8 @@ struct Resolver {
 
     void operator()(const Assign& assign);
     void operator()(const Binary& binary);
+    void operator()(const BinaryAdd& binary);
+    void operator()(const BinarySub& binary);
     void operator()(const Literal& literal);
     void operator()(const Grouping& grouping);
     void operator()(const Unary& unary);

@@ -156,6 +156,15 @@ void Resolver::operator()(const Grouping& grouping) {
 void Resolver::operator()(const Unary& unary) {
     resolve(unary.expr);
 }
+void Resolver::operator()(const BinaryAdd& binary) {
+    resolve(binary.left);
+    resolve(binary.right);
+}
+
+void Resolver::operator()(const BinarySub& binary) {
+    resolve(binary.left);
+    resolve(binary.right);
+}
 void Resolver::operator()(const Variable& variable) {
     if (!scopes.empty()) {
         auto varmap = scopes.back();

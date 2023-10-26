@@ -29,10 +29,40 @@ struct Return : std::exception {
     Object value;
 };
 
+struct ObjectAdder {
+
+    Object operator()(const double a, const double b) const;
+    //Object operator()(const wrapper<std::string>& a, const wrapper<std::string>& b) const;
+
+    // Handle other combinations, possibly with errors if they're invalid
+    template<typename T, typename U>
+    Object operator()(const T&, const U&) const {
+        throw std::runtime_error("Type mismatch error");
+    }
+};
+
+struct ObjectSubber {
+    ObjectSubber() = default;
+    Object operator()(const double& a, const double& b);
+    Object operator()(const double& a, const double& b) const;
+
+
+    // Handle other combinations, possibly with errors if they're invalid
+    template<typename T, typename U>
+    Object operator()(const T&, const U&) const {
+        throw std::runtime_error("Type mismatch error");
+    }
+
+     template<typename T, typename U>
+    Object operator()(const T&, const U&) {
+        throw std::runtime_error("Type mismatch error");
+    }
+
+};
+
 struct Interpreter {
     Interpreter() {
         globals = retrieveEnvironment();
-
         environment = globals;
         // should move this to cpp file....
         globals->define(
@@ -89,6 +119,8 @@ struct Interpreter {
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
+    Object operator()(const BinaryAdd& binary);
+    Object operator()(const BinarySub& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
@@ -152,6 +184,10 @@ struct Interpreter {
     bool finishing = false;
     std::shared_ptr<Environment>
         globalsHold; // place to store global native functions etc
+
+    ObjectAdder adder;
+    ObjectSubber subber;
+
 
     sparestack<std::vector<Object>> argumentsStack;
     stablestack<std::vector<Object>> argumentsStack2;

@@ -2,10 +2,10 @@
 #include "Error.h"
 #include "ExceptionError.h"
 #include "Utilities.hpp"
-//#include "Object.h"
+// #include "Object.h"
 #include "TokenTypes.h"
-//#include "thirdparty/visit.hpp"
-//#include "thirdparty/visit2.hpp"
+// #include "thirdparty/visit.hpp"
+// #include "thirdparty/visit2.hpp"
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -19,7 +19,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 
     try {
 
-        std::cout << "size of ss = " << sizeof(sparestack<Assign>) << " bytes.\n";
+        std::cout << "size of ss = " << sizeof(sparestack<Assign>)
+                  << " bytes.\n";
 
         std::cout << "size of object = " << sizeof(Object) << " bytes.\n";
         std::cout << "size of expr = " << sizeof(Expr) << " bytes.\n";
@@ -143,7 +144,7 @@ void Interpreter::operator()(const WhileStatement& whileStatement) {
 void Interpreter::operator()(const PrintStatement& printStatement) {
     const Object& value = evaluate(printStatement.expression);
     std::cout << std::fixed << stringify(value) << "\n";
-    //puts(stringify(value).c_str());
+    // puts(stringify(value).c_str());
 
     return;
 }
@@ -271,6 +272,71 @@ void Interpreter::executeBlock(const std::vector<Statement>& statements,
     }
 }
 
+Object ObjectAdder::operator()(const double a, const double b) const {
+    return a + b;
+}
+
+// Object ObjectAdder::operator()(const wrapper<std::string>& a,
+//                                const wrapper<std::string>& b) const {
+//     return static_cast<std::string>(a) + static_cast<std::string>(b) ;
+// }
+
+Object ObjectSubber::operator()(const double& a, const double& b) {
+    return a - b;
+}
+
+Object ObjectSubber::operator()(const double& a, const double& b) const {
+    return a - b;
+}
+
+
+Object Interpreter::operator()(const BinaryAdd& binary) {
+
+    const Object& left = evaluate(binary.left);
+    const Object& right = evaluate(binary.right);
+
+    Object ret = std::visit(adder, left, right);
+    if (left.is<double>() && right.is<double>()) {
+        // return std::get<double>(left) + std::get<double>(right);
+        return *left.get_if<double>() + *right.get_if<double>();
+    }
+    // // const auto* a = left.get_if<double>();
+    // // const auto* b = right.get_if<double>();
+    // // if(a && b){
+    // //     return *a + *b;
+    // // }
+
+    if (left.is<std::string>() && right.is<std::string>()) {
+        //return left.get<std::string>() + right.get<std::string>();
+        ;
+        // return *left.get_if<std::string>() +
+        // *right.get_if<std::string>();
+        //  return
+        static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
+         +
+         static_cast<std::string>(left.get<cpplox::wrapper<std::string>>());
+    }
+    // this case already has type checking built into which is why it
+    // doesnt call checkOperands. intead if we get here, then we throw
+    // the error directly which the check would have done
+    //throw RuntimeError(binary.op, "Operands must be a number.");
+    return ret;
+    //  unreachable
+}
+
+Object Interpreter::operator()(const BinarySub& binary) {
+
+    const Object left = evaluate(binary.left);
+    const Object right = evaluate(binary.right);
+
+    //checkNumberOperands(binary.op, left, right);
+        // return std::get<double>(left) - std::get<double>(right);
+    return *left.get_if<double>() - *right.get_if<double>();
+    //Object ret = std::visit(subber, left, right);
+    //return ret;
+    // unreachable
+}
+
 Object Interpreter::operator()(const Binary& binary) {
     // Object returnValue;
 
@@ -283,7 +349,7 @@ Object Interpreter::operator()(const Binary& binary) {
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
             // return std::get<double>(left) + std::get<double>(right);
-        return *left.get_if<double>() + *right.get_if<double>();
+            return *left.get_if<double>() + *right.get_if<double>();
         }
         // const auto* a = left.get_if<double>();
         // const auto* b = right.get_if<double>();
@@ -297,7 +363,7 @@ Object Interpreter::operator()(const Binary& binary) {
             // return *left.get_if<std::string>() +
             // *right.get_if<std::string>();
             //  return
-            //static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
+            // static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
             //  +
             //  static_cast<std::string>(left.get<cpplox::wrapper<std::string>>());
         }
@@ -377,7 +443,8 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable) {
-    //std::cout << "Looking up: " << variable.name.lexeme << " hash: " << variable.name.hash << "\n";
+    // std::cout << "Looking up: " << variable.name.lexeme << " hash: " <<
+    // variable.name.hash << "\n";
 
     return lookUpVariable(variable.name, variable);
 }
@@ -428,8 +495,6 @@ Interpreter::objVectorHelper Interpreter::getNewArgumentVector() {
     return {argumentsStack[sizet], sizet};
 }
 
-
-
 void Interpreter::clearArgumentVector(size_t index) {
     argumentsStack.eraseAt(index);
 }
@@ -437,18 +502,19 @@ void Interpreter::clearArgumentVector(size_t index) {
 Object Interpreter::operator()(const Call& call) {
     Object callee = evaluate(call.callee);
 
-    //std::vector<Object> arguments;
-    auto argumentsIt = argumentsStack2.retrieve([](auto& colonyIt) { colonyIt.clear(); });
+    // std::vector<Object> arguments;
+    auto argumentsIt =
+        argumentsStack2.retrieve([](auto& colonyIt) { colonyIt.clear(); });
     auto& arguments = *argumentsIt;
     arguments.reserve(call.arguments.size());
-    //const auto& objHelper = getNewArgumentVector();
-    //auto& argumentsIndex = argumentsStack[objHelper.index];// objHelper.objVector;
-    //arguments.reserve(call.arguments.size());
-    //argumentsStack[objHelper.index].push_back(Object{5.0});
-    //argumentsStack[objHelper.index].pop_back();
+    // const auto& objHelper = getNewArgumentVector();
+    // auto& argumentsIndex = argumentsStack[objHelper.index];//
+    // objHelper.objVector; arguments.reserve(call.arguments.size());
+    // argumentsStack[objHelper.index].push_back(Object{5.0});
+    // argumentsStack[objHelper.index].pop_back();
 
-    //std::cout << "gettin arg stack" << objHelper.index << "for argsize " << call.arguments.size() << std::endl;
-    //std::cout << std::endl;
+    // std::cout << "gettin arg stack" << objHelper.index << "for argsize " <<
+    // call.arguments.size() << std::endl; std::cout << std::endl;
 
     for (const auto& argument : call.arguments) {
 
@@ -506,9 +572,9 @@ Object Interpreter::operator()(const Call& call) {
         }
     }();
     // clang-format on
-    //std::cout << "clearing arg stack" << objHelper.index << "\n";
+    // std::cout << "clearing arg stack" << objHelper.index << "\n";
     argumentsStack2.eraseAt(argumentsIt);
-    //clearArgumentVector(objHelper.index);
+    // clearArgumentVector(objHelper.index);
     return ret;
 }
 
@@ -562,26 +628,23 @@ Object Interpreter::operator()(const Decrement& dec) {
 Object Interpreter::operator()(const Get& get) {
     Object object = evaluate(get.object);
     if (object.is<LoxInstance>()) {
-      return object.get<LoxInstance>().get(get.name);
+        return object.get<LoxInstance>().get(get.name);
     }
 
-    throw new RuntimeError(get.name,
-        "Only instances have properties.");
+    throw new RuntimeError(get.name, "Only instances have properties.");
 }
 
 Object Interpreter::operator()(const Set& set) {
-   Object object = evaluate(set.object);
+    Object object = evaluate(set.object);
 
-    if (!(object.is<LoxInstance>())) { 
-      throw RuntimeError(set.name,
-                             "Only instances have fields.");
+    if (!(object.is<LoxInstance>())) {
+        throw RuntimeError(set.name, "Only instances have fields.");
     }
 
     Object value = evaluate(set.value);
     object.get<LoxInstance>().set(set.name, value);
     return value;
 }
-
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
@@ -659,7 +722,7 @@ std::string Interpreter::stringify(const Object& object) {
 
     // must be a string.
     if (object.is<std::string>()) {
-        //std::cout << "s";
+        // std::cout << "s";
         text = object.get<std::string>();
     }
     return text;
