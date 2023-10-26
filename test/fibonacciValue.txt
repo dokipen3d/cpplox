@@ -5,7 +5,8 @@ fun fib(n) {
 
 var before = clock();
 
-  print fib(10);
+print fib(10);
+
 
 var after = clock();
 print after - before;

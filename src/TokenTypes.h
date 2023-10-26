@@ -376,7 +376,7 @@ struct LoxInstance {
     void set(const Token& name, const Object& value);
 
     const LoxClass* klass;
-    tsl::robin_map<std::string, Object> properties;
+    tsl::robin_map<int32_t, Object> properties;
 
     // friend std::ostream&
     // operator<<(std::ostream& os, const recursive_wrapper<LoxInstance>&

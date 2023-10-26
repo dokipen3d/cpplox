@@ -11,8 +11,8 @@
 #include "thirdparty/flat_hash_map.hpp"
 #include "thirdparty/robin_hood.h"
 #include "thirdparty/robin_hood_map.h"
-//#include "thirdparty/unordered_dense.h"
-
+#include "thirdparty/unordered_dense.h"
+#include "thirdparty/dense_hash_map.hpp"
 //#include "absl/container/flat_hash_map.h"
 //#include "absl/container/node_hash_map.h"
 
@@ -111,13 +111,13 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     //std::unordered_map<std::string, Object> values;
     //robin_hood::unordered_map<std::string, Object> values;
     tsl::robin_map<int32_t, Object> values;
-
-    // tsl::robin_map<std::string, Object, std::hash<std::string>,
+    //jg::dense_hash_map<int32_t, Object> values;
+    // tsl::robin_map<int32_t, Object, std::hash<std::string>,
     //                std::equal_to<std::string>,
     //                std::allocator<std::pair<std::string, Object>>,
     //                true> values;
 
-    // ankerl::unordered_dense::map<std::string, Object> values;
+    //ankerl::unordered_dense::map<int32_t, Object> values;
     // absl::flat_hash_map<std::string, Object> values;
     //  absl::node_hash_map<std::string, Object> values;
 

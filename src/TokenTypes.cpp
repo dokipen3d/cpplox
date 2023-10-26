@@ -178,7 +178,7 @@ Object FunctionObject::operator()(Interpreter& interpreter,
 }
 
 const Object& LoxInstance::get(const cpplox::Token& name) const {
-    if (const auto search = properties.find(name.lexeme);
+    if (const auto search = properties.find(name.hash);
         search != properties.end()) {
         return search->second;
     }
@@ -187,7 +187,7 @@ const Object& LoxInstance::get(const cpplox::Token& name) const {
 }
 
 void LoxInstance::set(const Token& name, const Object& value) {
-    properties.insert_or_assign(name.lexeme, value);
+    properties.insert_or_assign(name.hash, value);
 }
 
 Object LoxClass::operator()(Interpreter& interpreter,
