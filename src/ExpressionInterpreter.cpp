@@ -294,6 +294,7 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
 
     const Object& left = evaluate(binary.left);
     const Object& right = evaluate(binary.right);
+    checkNumberOperands(binary.op, left, right);
 
     Object ret = std::visit(adder, left, right);
     if (left.is<double>() && right.is<double>()) {
@@ -329,7 +330,7 @@ Object Interpreter::operator()(const BinarySub& binary) {
     const Object left = evaluate(binary.left);
     const Object right = evaluate(binary.right);
 
-    //checkNumberOperands(binary.op, left, right);
+    checkNumberOperands(binary.op, left, right);
         // return std::get<double>(left) - std::get<double>(right);
     return *left.get_if<double>() - *right.get_if<double>();
     //Object ret = std::visit(subber, left, right);
@@ -443,9 +444,6 @@ Object Interpreter::operator()(const Literal& literal) {
 }
 
 Object Interpreter::operator()(const Variable& variable) {
-    // std::cout << "Looking up: " << variable.name.lexeme << " hash: " <<
-    // variable.name.hash << "\n";
-
     return lookUpVariable(variable.name, variable);
 }
 

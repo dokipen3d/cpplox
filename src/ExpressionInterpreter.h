@@ -65,6 +65,14 @@ struct Interpreter {
         globals = retrieveEnvironment();
         environment = globals;
         // should move this to cpp file....
+        std::cout << "making up: "
+                  << "clock"
+                  << " hash: " << FNVHash("clock") << "\n";
+
+                std::cout << "making up: "
+                  << "clock"
+                  << " hash: " << FNVHash("clock") << "\n";
+
         globals->define(
             FNVHash("clock"), // as long as this hash matches the one made in
                               // the token constructor we should be okay, we

@@ -76,6 +76,7 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     }
 
     void define(const int32_t& name, const Object& value) {
+
         values.insert_or_assign(name, value);
     }
 

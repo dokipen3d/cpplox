@@ -326,8 +326,6 @@ class Token {
         : eTokenType(tokenType), literal(std::move(literal)),
           lexeme(std::move(lexemeIn)), line(line) {
             hash = FNVHash(lexeme);
-            //std::cout << "Call: " << lexeme << " hash: " << hash << "\n";
-
     }
 
     // bool operator==(const Token& other) const {
