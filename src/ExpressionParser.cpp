@@ -415,8 +415,31 @@ auto Parser::addition() -> Expr {
     while (match({ETokenType::MINUS, ETokenType::PLUS})) {
         Token _operator = previous();
         Expr right = multiplication();
-        expr = Binary(expr, _operator, right);
+        if(_operator.eTokenType == ETokenType::MINUS){
+             std::cout << "parsed minus\n";
+             expr = BinarySub(expr, _operator, right);
+        } else {
+            std::cout << "parsed plus\n";
+            expr = BinaryAdd(expr, _operator, right);
+
+        }
+        std::cout << "while\n";
+
+        //     expr = BinarySub(expr, _operator, right);
+        //     break;
+        // } else if(_operator.eTokenType == ETokenType::PLUS){
+        //     std::cout << "parsed plus\n";
+        //     expr = BinaryAdd(expr, _operator, right);
+        //     break;
+
+        // } else {
+        //     std::cout << "err\n";
+
+        // }
+        // std::cout << "STILL LOOPING?n";
+        //expr = Binary(expr, _operator, right);
     }
+    std::cout << "got here\n";
 
     return expr;
 };

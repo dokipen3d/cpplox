@@ -148,6 +148,16 @@ void Resolver::operator()(const Binary& binary) {
     resolve(binary.left);
     resolve(binary.right);
 }
+
+void Resolver::operator()(const BinaryAdd& binary) {
+    resolve(binary.left);
+    resolve(binary.right);
+}
+
+void Resolver::operator()(const BinarySub& binary) {
+    resolve(binary.left);
+    resolve(binary.right);
+}
 void Resolver::operator()(const Literal& literal) {
 }
 void Resolver::operator()(const Grouping& grouping) {

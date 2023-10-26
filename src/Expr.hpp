@@ -1,20 +1,22 @@
 #pragma once
 
-//#include "Object.h"
+// #include "Object.h"
 
-#include "Utilities.hpp"
 #include "TokenTypes.h"
+#include "Utilities.hpp"
 
 #include <functional>
 #include <iostream>
 #include <variant>
-//#include "thirdparty/mvariant.hpp"
+// #include "thirdparty/mvariant.hpp"
 #include <vector>
 
 namespace cpplox {
 // foward declares for recursive variant
 struct Assign;
 struct Binary;
+struct BinaryAdd;
+struct BinarySub;
 struct Grouping;
 struct Variable;
 struct Unary;
@@ -33,14 +35,14 @@ struct Literal {
     Object val;
 };
 
-
 using ExprVariant =
     std::variant<void*, recursive_wrapper<Assign>, recursive_wrapper<Binary>,
-                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>, recursive_wrapper<Unary>,
-                 recursive_wrapper<Variable>, recursive_wrapper<Logical>,
-                 recursive_wrapper<Call>, recursive_wrapper<Increment>,
-                 recursive_wrapper<Decrement>, recursive_wrapper<Get>,
-                 recursive_wrapper<Set>>;
+                 recursive_wrapper<BinaryAdd>, recursive_wrapper<BinarySub>,
+                 recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
+                 recursive_wrapper<Unary>, recursive_wrapper<Variable>,
+                 recursive_wrapper<Logical>, recursive_wrapper<Call>,
+                 recursive_wrapper<Increment>, recursive_wrapper<Decrement>,
+                 recursive_wrapper<Get>, recursive_wrapper<Set>>;
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +52,7 @@ struct Expr final : ExprVariant {
     using ExprVariant::ExprVariant;
     using ExprVariant::operator=;
 
-    //Expr(const Expr&) = default;
+    // Expr(const Expr&) = default;
 
     // Expr(Expr&&) = default;
     // Expr& operator=(Expr& other) = default;
@@ -119,8 +121,30 @@ struct Grouping {
 };
 
 struct Binary {
-    Binary(Expr left, Token op, Expr right)
+    explicit Binary(Expr left, Token op, Expr right)
         : left{left}, right{right}, op(std::move(op)) {
+    }
+    Token op;
+    Expr left;
+    Expr right;
+};
+
+struct BinaryAdd {
+    explicit BinaryAdd(Expr left, Token op, Expr right)
+        : left{left}, right{right}, op(op) {
+        std::cout << "in bin add \n";
+
+    }
+    Token op;
+    Expr left;
+    Expr right;
+};
+
+struct BinarySub {
+    explicit BinarySub(Expr left, Token op, Expr right)
+        : left{left}, right{right}, op(op) {
+                    std::cout << "in bin sub \n";
+
     }
     Token op;
     Expr left;
@@ -136,7 +160,8 @@ struct Unary {
 
 struct Variable {
     explicit Variable(Token nameIn) : name(std::move(nameIn)) {
-        //std::cout << "making variable " << name.lexeme << "hash " << name.hash << "\n"; 
+        // std::cout << "making variable " << name.lexeme << "hash " <<
+        // name.hash << "\n";
     }
     Token name;
     mutable int distance = -1;
@@ -193,34 +218,37 @@ static_assert(std::is_move_constructible_v<Expr>,
               "Expr is not move contructible");
 static_assert(std::is_move_assignable_v<Expr>, "Expr is not move contructible");
 
+// template<>
+// inline std::vector<std::vector<cpplox::Assign>>
+// cpplox::recursive_wrapper<cpplox::Assign>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Binary>>
+// cpplox::recursive_wrapper<cpplox::Binary>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Grouping>>
+// cpplox::recursive_wrapper<cpplox::Grouping>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Unary>>
+// cpplox::recursive_wrapper<cpplox::Unary>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Variable>>
+// cpplox::recursive_wrapper<cpplox::Variable>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Logical>>
+// cpplox::recursive_wrapper<cpplox::Logical>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Call>>
+// cpplox::recursive_wrapper<cpplox::Call>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Increment>>
+// cpplox::recursive_wrapper<cpplox::Increment>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Decrement>>
+// cpplox::recursive_wrapper<cpplox::Decrement>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Get>>
+// cpplox::recursive_wrapper<cpplox::Get>::t{}; template<> inline
+// std::vector<std::vector<cpplox::Set>>
+// cpplox::recursive_wrapper<cpplox::Set>::t{};
 
-// template<>
-// inline std::vector<std::vector<cpplox::Assign>> cpplox::recursive_wrapper<cpplox::Assign>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Binary>> cpplox::recursive_wrapper<cpplox::Binary>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Grouping>> cpplox::recursive_wrapper<cpplox::Grouping>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Unary>> cpplox::recursive_wrapper<cpplox::Unary>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Variable>> cpplox::recursive_wrapper<cpplox::Variable>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Logical>> cpplox::recursive_wrapper<cpplox::Logical>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Call>> cpplox::recursive_wrapper<cpplox::Call>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Increment>> cpplox::recursive_wrapper<cpplox::Increment>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Decrement>> cpplox::recursive_wrapper<cpplox::Decrement>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Get>> cpplox::recursive_wrapper<cpplox::Get>::t{};
-// template<>
-// inline std::vector<std::vector<cpplox::Set>> cpplox::recursive_wrapper<cpplox::Set>::t{};
-
-static inline int createScriptStorageExpr(){
+static inline int createScriptStorageExpr() {
 
     cpplox::recursive_wrapper<cpplox::Assign>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::Binary>::t.push_back({});
+        cpplox::recursive_wrapper<cpplox::BinaryAdd>::t.push_back({});
+        cpplox::recursive_wrapper<cpplox::BinarySub>::t.push_back({});
+
     cpplox::recursive_wrapper<cpplox::Grouping>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::Unary>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::Variable>::t.push_back({});
@@ -232,13 +260,15 @@ static inline int createScriptStorageExpr(){
     cpplox::recursive_wrapper<cpplox::Set>::t.push_back({});
     cpplox::recursive_wrapper<cpplox::Literal>::t.push_back({});
 
-
     return cpplox::recursive_wrapper<cpplox::Set>::t.size();
 }
 
-static inline void clearStorageExpr(){
+static inline void clearStorageExpr() {
     cpplox::recursive_wrapper<cpplox::Assign>::t.clear();
     cpplox::recursive_wrapper<cpplox::Binary>::t.clear();
+    cpplox::recursive_wrapper<cpplox::BinaryAdd>::t.clear();
+    cpplox::recursive_wrapper<cpplox::BinarySub>::t.clear();
+
     cpplox::recursive_wrapper<cpplox::Grouping>::t.clear();
     cpplox::recursive_wrapper<cpplox::Unary>::t.clear();
     cpplox::recursive_wrapper<cpplox::Variable>::t.clear();
@@ -249,7 +279,6 @@ static inline void clearStorageExpr(){
     cpplox::recursive_wrapper<cpplox::Get>::t.clear();
     cpplox::recursive_wrapper<cpplox::Set>::t.clear();
     cpplox::recursive_wrapper<cpplox::Literal>::t.clear();
-
 }
 
 } // namespace cpplox

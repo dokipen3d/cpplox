@@ -29,6 +29,30 @@ struct Return : std::exception {
     Object value;
 };
 
+struct ObjectAdder {
+     
+    Object operator()(const double a, const double b) const;
+    //Object operator()(const wrapper<std::string>& a, const wrapper<std::string>& b) const;
+
+    // Handle other combinations, possibly with errors if they're invalid
+    template<typename T, typename U>
+    Object operator()(const T&, const U&) const {
+        throw std::runtime_error("Type mismatch error");
+    }
+};
+
+struct ObjectSubber {
+     
+    Object operator()(const double& a, const double& b);
+
+    // Handle other combinations, possibly with errors if they're invalid
+    template<typename T, typename U>
+    Object operator()(const T&, const U&) const {
+        throw std::runtime_error("Type mismatch error");
+    }
+
+};
+
 struct Interpreter {
     Interpreter() {
         globals = retrieveEnvironment();
@@ -89,6 +113,8 @@ struct Interpreter {
 
     Object operator()(const Assign& assign);
     Object operator()(const Binary& binary);
+    Object operator()(const BinaryAdd& binary);
+    Object operator()(const BinarySub& binary);
     Object operator()(const Literal& literal);
     Object operator()(const Grouping& grouping);
     Object operator()(const Unary& unary);
@@ -99,6 +125,8 @@ struct Interpreter {
     Object operator()(const Decrement& inc);
     Object operator()(const Get& get);
     Object operator()(const Set& set);
+
+   
 
     Object operator()(const void*) {
         return nullptr;
@@ -146,6 +174,9 @@ struct Interpreter {
 
     [[nodiscard]] objVectorHelper getNewArgumentVector();
     void clearArgumentVector(size_t index);
+
+    const ObjectAdder adder;
+    const ObjectAdder subber;
 
     Object currentReturn = Object{nullptr};
     bool containsReturn = false;

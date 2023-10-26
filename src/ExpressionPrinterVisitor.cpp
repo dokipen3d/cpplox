@@ -34,6 +34,17 @@ void ExpressionPrinterVisitor::operator()(const Binary& binary) {
     parenthesize(binary.op.lexeme, binary.left, binary.right);
     //}
 }
+
+void ExpressionPrinterVisitor::operator()(const BinaryAdd& binary) {
+    parenthesize(binary.op.lexeme, binary.left, binary.right);
+    //}
+}
+
+void ExpressionPrinterVisitor::operator()(const BinarySub& binary) {
+    parenthesize(binary.op.lexeme, binary.left, binary.right);
+    //}
+}
+
 void ExpressionPrinterVisitor::operator()(const Literal& literal) {
     if (literal.val == nullptr) {
         ast << "nil";
