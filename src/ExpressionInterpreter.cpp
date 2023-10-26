@@ -143,6 +143,8 @@ void Interpreter::operator()(const WhileStatement& whileStatement) {
 void Interpreter::operator()(const PrintStatement& printStatement) {
     const Object& value = evaluate(printStatement.expression);
     std::cout << std::fixed << stringify(value) << "\n";
+    //puts(stringify(value).c_str());
+
     return;
 }
 
@@ -281,7 +283,7 @@ Object Interpreter::operator()(const Binary& binary) {
         // are the same type. if the types are different, what do we do?
         if (left.is<double>() && right.is<double>()) {
             // return std::get<double>(left) + std::get<double>(right);
-            return *left.get_if<double>() + *right.get_if<double>();
+        return *left.get_if<double>() + *right.get_if<double>();
         }
         // const auto* a = left.get_if<double>();
         // const auto* b = right.get_if<double>();
@@ -480,6 +482,12 @@ Object Interpreter::operator()(const Call& call) {
     //                [&](FunctionObject& func) -> Object {
     //                    return checkArityAndCallFunction(func);
     //                },
+    //                 [&](LoxClass& loxclass) -> Object {
+    //                    return checkArityAndCallFunction(loxclass);
+    //                },
+    //                 [&](LoxInstance& loxclass) -> Object {
+    //                    return throwIfWrongType(); return {};
+    //                },
     //                [&](const bool b) -> Object { throwIfWrongType(); return {};},
     //                [&](const std::string& s) -> Object { throwIfWrongType(); return {}; },
     //                [&](const double d) -> Object { throwIfWrongType();  return {};},
@@ -488,7 +496,7 @@ Object Interpreter::operator()(const Call& call) {
     const Object ret = [&]() -> Object {
         if(callee.is<FunctionObject>()){
             //return checkArityAndCallFunction(callee.get<FunctionObject>());
-            return checkArityAndCallFunction(static_cast<FunctionObject&>(*callee.get_if<wrapper<FunctionObject>>()));
+            return checkArityAndCallFunction(static_cast<FunctionObject&>(callee.get<FunctionObject>()));
         } else if (callee.is<NativeFunction>()){
             return checkArityAndCallFunction(callee.get<NativeFunction>());
         } else if (callee.is<LoxClass>()){ 
