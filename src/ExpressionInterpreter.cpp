@@ -667,6 +667,12 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     if (a.is<std::string>() && b.is<std::string>()) {
         return a.get<std::string>() == b.get<std::string>();
     }
+
+    // when we compare a string with a number, just say false. this prevents a crash
+    if (a.is<std::string>() && *b.get_if<double>()) {
+        return false;
+    }
+
     return a == b;
 }
 // we could rely on the bad_variant_access but this way we throw based on
