@@ -66,6 +66,12 @@ template <std::size_t GrowthFactor>
 struct is_power_of_two_policy<tsl::rh::power_of_two_growth_policy<GrowthFactor>>
     : std::true_type {};
 
+// Only available in C++17, we need to be compatible with C++11
+template <class T>
+const T& clamp(const T& v, const T& lo, const T& hi) {
+  return std::min(hi, std::max(lo, v));
+}
+
 template <typename T, typename U>
 static T numeric_cast(U value,
                       const char* error_message = "numeric_cast() failed.") {
@@ -248,14 +254,22 @@ class bucket_entry : public bucket_entry_hash<StoreHash> {
 
   value_type& value() noexcept {
     tsl_rh_assert(!empty());
+#if defined(__cplusplus) && __cplusplus >= 201703L
     return *std::launder(
         reinterpret_cast<value_type*>(std::addressof(m_value)));
+#else
+    return *reinterpret_cast<value_type*>(std::addressof(m_value));
+#endif
   }
 
   const value_type& value() const noexcept {
     tsl_rh_assert(!empty());
+#if defined(__cplusplus) && __cplusplus >= 201703L
     return *std::launder(
         reinterpret_cast<const value_type*>(std::addressof(m_value)));
+#else
+    return *reinterpret_cast<const value_type*>(std::addressof(m_value));
+#endif
   }
 
   distance_type dist_from_ideal_bucket() const noexcept {
@@ -527,6 +541,7 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
   };
 
  public:
+#if defined(__cplusplus) && __cplusplus >= 201402L
   robin_hash(size_type bucket_count, const Hash& hash, const KeyEqual& equal,
              const Allocator& alloc,
              float min_load_factor = DEFAULT_MIN_LOAD_FACTOR,
@@ -554,6 +569,47 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     this->min_load_factor(min_load_factor);
     this->max_load_factor(max_load_factor);
   }
+#else
+  /**
+   * C++11 doesn't support the creation of a std::vector with a custom allocator
+   * and 'count' default-inserted elements. The needed contructor `explicit
+   * vector(size_type count, const Allocator& alloc = Allocator());` is only
+   * available in C++14 and later. We thus must resize after using the
+   * `vector(const Allocator& alloc)` constructor.
+   *
+   * We can't use `vector(size_type count, const T& value, const Allocator&
+   * alloc)` as it requires the value T to be copyable.
+   */
+  robin_hash(size_type bucket_count, const Hash& hash, const KeyEqual& equal,
+             const Allocator& alloc,
+             float min_load_factor = DEFAULT_MIN_LOAD_FACTOR,
+             float max_load_factor = DEFAULT_MAX_LOAD_FACTOR)
+      : Hash(hash),
+        KeyEqual(equal),
+        GrowthPolicy(bucket_count),
+        m_buckets_data(alloc),
+        m_buckets(static_empty_bucket_ptr()),
+        m_bucket_count(bucket_count),
+        m_nb_elements(0),
+        m_grow_on_next_insert(false),
+        m_try_shrink_on_next_insert(false) {
+    if (bucket_count > max_bucket_count()) {
+      TSL_RH_THROW_OR_TERMINATE(std::length_error,
+                                "The map exceeds its maximum bucket count.");
+    }
+
+    if (m_bucket_count > 0) {
+      m_buckets_data.resize(m_bucket_count);
+      m_buckets = m_buckets_data.data();
+
+      tsl_rh_assert(!m_buckets_data.empty());
+      m_buckets_data.back().set_as_last_bucket();
+    }
+
+    this->min_load_factor(min_load_factor);
+    this->max_load_factor(max_load_factor);
+  }
+#endif
 
   robin_hash(const robin_hash& other)
       : Hash(other),
@@ -686,18 +742,6 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     return insert_impl(KeySelect()(value), std::forward<P>(value));
   }
 
-  /**
-   * Use the hash value 'precalculated_hash' instead of hashing the key. The
-   * hash value should be the same as hash_function()(KeySelect()(value)),
-   * otherwise the behaviour is undefined.
-   */
-  template <typename P>
-  std::pair<iterator, bool> insert_with_hash(std::size_t precalculated_hash,
-                                             P&& value) {
-    return insert_impl_with_hash(precalculated_hash, KeySelect()(value),
-                                 std::forward<P>(value));
-  }
-
   template <typename P>
   iterator insert_hint(const_iterator hint, P&& value) {
     if (hint != cend() &&
@@ -738,23 +782,6 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     return it;
   }
 
-  /**
-   * Use the hash value 'precalculated_hash' instead of hashing the key. The
-   * hash value should be the same as hash_function()(key), otherwise the
-   * behaviour is undefined.
-   */
-  template <class K, class M>
-  std::pair<iterator, bool> insert_or_assign_with_hash(
-      std::size_t precalculated_hash, K&& key, M&& obj) {
-    auto it = try_emplace_with_hash(precalculated_hash, std::forward<K>(key),
-                                    std::forward<M>(obj));
-    if (!it.second) {
-      it.first.value() = std::forward<M>(obj);
-    }
-
-    return it;
-  }
-
   template <class K, class M>
   iterator insert_or_assign(const_iterator hint, K&& key, M&& obj) {
     if (hint != cend() && compare_keys(KeySelect()(*hint), key)) {
@@ -784,20 +811,6 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
                        std::forward_as_tuple(std::forward<Args>(args)...));
   }
 
-  /**
-   * Use the hash value 'precalculated_hash' instead of hashing the key. The
-   * hash value should be the same as hash_function()(key), otherwise the
-   * behaviour is undefined.
-   */
-  template <class K, class... Args>
-  std::pair<iterator, bool> try_emplace_with_hash(
-      std::size_t precalculated_hash, K&& key, Args&&... args) {
-    return insert_impl_with_hash(
-        precalculated_hash, key, std::piecewise_construct,
-        std::forward_as_tuple(std::forward<K>(key)),
-        std::forward_as_tuple(std::forward<Args>(args)...));
-  }
-
   template <class K, class... Args>
   iterator try_emplace_hint(const_iterator hint, K&& key, Args&&... args) {
     if (hint != cend() && compare_keys(KeySelect()(*hint), key)) {
@@ -805,10 +818,6 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     }
 
     return try_emplace(std::forward<K>(key), std::forward<Args>(args)...).first;
-  }
-
-  void erase_fast(iterator pos) {
-    erase_from_bucket(pos);
   }
 
   /**
@@ -826,6 +835,8 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     if (pos.m_bucket->empty()) {
       ++pos;
     }
+
+    m_try_shrink_on_next_insert = true;
 
     return pos;
   }
@@ -905,6 +916,8 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     auto it = find(key, hash);
     if (it != end()) {
       erase_from_bucket(it);
+      m_try_shrink_on_next_insert = true;
+
       return 1;
     } else {
       return 0;
@@ -1060,13 +1073,13 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
   float max_load_factor() const { return m_max_load_factor; }
 
   void min_load_factor(float ml) {
-    m_min_load_factor = std::clamp(ml, float(MINIMUM_MIN_LOAD_FACTOR),
-                                   float(MAXIMUM_MIN_LOAD_FACTOR));
+    m_min_load_factor = clamp(ml, float(MINIMUM_MIN_LOAD_FACTOR),
+                              float(MAXIMUM_MIN_LOAD_FACTOR));
   }
 
   void max_load_factor(float ml) {
-    m_max_load_factor = std::clamp(ml, float(MINIMUM_MAX_LOAD_FACTOR),
-                                   float(MAXIMUM_MAX_LOAD_FACTOR));
+    m_max_load_factor = clamp(ml, float(MINIMUM_MAX_LOAD_FACTOR),
+                              float(MAXIMUM_MAX_LOAD_FACTOR));
     m_load_threshold = size_type(float(bucket_count()) * m_max_load_factor);
     tsl_rh_assert(bucket_count() == 0 || m_load_threshold < bucket_count());
   }
@@ -1198,20 +1211,12 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
       previous_ibucket = ibucket;
       ibucket = next_bucket(ibucket);
     }
-    m_try_shrink_on_next_insert = true;
   }
 
   template <class K, class... Args>
   std::pair<iterator, bool> insert_impl(const K& key,
                                         Args&&... value_type_args) {
-    return insert_impl_with_hash(hash_key(key), key,
-                                 std::forward<Args>(value_type_args)...);
-  }
-
-  template <class K, class... Args>
-  std::pair<iterator, bool> insert_impl_with_hash(
-      std::size_t hash, const K& key, Args&&... value_type_args) {
-    tsl_rh_assert(hash == hash_key(key));
+    const std::size_t hash = hash_key(key);
 
     std::size_t ibucket = bucket_for_hash(hash);
     distance_type dist_from_ideal_bucket = 0;
@@ -1518,9 +1523,6 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
     } else {
       m_bucket_count = numeric_cast<size_type>(
           bucket_count_ds, "Deserialized bucket_count is too big.");
-      // Recompute m_load_threshold, during max_load_factor() the bucket count
-      // was still 0 which would trigger rehash on first insert
-      m_load_threshold = size_type(float(bucket_count()) * m_max_load_factor);
 
       GrowthPolicy::operator=(GrowthPolicy(m_bucket_count));
       // GrowthPolicy should not modify the bucket count we got from

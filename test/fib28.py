@@ -7,6 +7,6 @@ def fib(n):
   return fib(n - 1) + fib(n - 2)
 
 start = time.time()
-for i in range(0, 5):
+for i in range(0, 50):
   print(fib(28))
 print("elapsed: " + str(time.time() - start))

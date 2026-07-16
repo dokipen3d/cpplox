@@ -123,7 +123,13 @@ template <typename T> struct wrapper {
         return (storage)[index];
     }
 
-    int index = -1;
+    int32_t index = -1;
+    //std::array<int32_t, 32> ar;
+        //int64_t index2 = -1;
+        //int64_t index3 = -1;
+        //        int64_t index4 = -1;
+
+
     //spare_refcount_stack<T>* storage;
     static spare_refcount_stack<T> storage;
 
@@ -187,7 +193,7 @@ template <typename T> struct recursive_wrapper {
     // uint32_t storageIndex = 0;
     // std::basic_string<T> t;
     std::vector<T>* test;
-    uint32_t index = -1;
+    int32_t index = -1;
 
     static std::vector<std::vector<T>> t;
 

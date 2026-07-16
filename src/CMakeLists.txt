@@ -16,8 +16,8 @@ endif()
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supported OUTPUT error)
 
-#find_package(absl REQUIRED)
-#find_package(Boost 1.79.0) 
+find_package(absl REQUIRED)
+find_package(Boost 1.89.0) 
 
 
 
@@ -25,9 +25,9 @@ add_executable(cpplox main.cpp TokenTypes.cpp Resolver.cpp ExpressionPrinterVisi
 set_property(TARGET cpplox PROPERTY CXX_STANDARD 20)
 target_include_directories(cpplox PUBLIC boost/../) 
 
-#if(Boost_FOUND)
-#    target_include_directories(cpplox PUBLIC ${Boost_INCLUDE_DIRS}) 
-#endif()
+if(Boost_FOUND)
+    target_include_directories(cpplox PUBLIC ${Boost_INCLUDE_DIRS}) 
+endif()
 
 if( supported )
     message(STATUS "IPO / LTO enabled")
@@ -42,6 +42,6 @@ target_compile_options(cpplox PRIVATE -flto=thin)
 target_link_options(cpplox PRIVATE -flto=thin)
 endif()
 
-#target_link_libraries(cpplox PRIVATE absl::node_hash_map)
+target_link_libraries(cpplox PRIVATE absl::node_hash_map)
 #target_compile_options(cpplox PRIVATE -Werror -Wall -Wextra -Wno-error=switch -w)
 #target_compile_options(cpplox PRIVATE --param max-inline-recursive-depth=16)

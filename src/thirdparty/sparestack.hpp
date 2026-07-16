@@ -4,6 +4,8 @@
 #include <utility>
 #include <vector>
 #include "thirdparty/plf_colony.h"
+#include "thirdparty/fast_vector.h"
+
 #include "boost/smart_ptr/make_local_shared.hpp"
 
 template <typename T> class sparestack {
@@ -102,7 +104,9 @@ template <typename T> class sparestack {
 
   private:
     std::vector<T> _data;
+    //fast_vector<T> _data;
     std::vector<std::size_t> spareIds; // index of spare slots to fill ids
+    //fast_vector<std::size_t> spareIds;
 };
 
 template <typename T> class spare_refcount_stack {

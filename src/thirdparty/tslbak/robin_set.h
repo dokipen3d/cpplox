@@ -215,24 +215,6 @@ class robin_set {
     return m_ht.insert(std::move(value));
   }
 
-  /**
-   * Use the hash value 'precalculated_hash' instead of hashing the key. The
-   * hash value should be the same as hash_function()(value). Useful to speed-up
-   * the insertion if you already have the hash.
-   */
-  std::pair<iterator, bool> insert_with_hash(std::size_t precalculated_hash,
-                                             const value_type& value) {
-    return m_ht.insert_with_hash(precalculated_hash, value);
-  }
-
-  /**
-   * @copydoc insert_with_hash(std::size_t precalculated_hash, const value_type& value)
-   */
-  std::pair<iterator, bool> insert_with_hash(std::size_t precalculated_hash,
-                                             value_type&& value) {
-    return m_ht.insert_with_hash(precalculated_hash, std::move(value));
-  }
-
   iterator insert(const_iterator hint, const value_type& value) {
     return m_ht.insert_hint(hint, value);
   }
@@ -280,14 +262,6 @@ class robin_set {
     return m_ht.erase(first, last);
   }
   size_type erase(const key_type& key) { return m_ht.erase(key); }
-
-  /**
-   * Erase the element at position 'pos'. In contrast to the regular erase()
-   * function, erase_fast() does not return an iterator. This allows it to be
-   * faster especially in hash sets with a low load factor, where finding the
-   * next nonempty bucket would be costly.
-   */
-  void erase_fast(iterator pos) { return m_ht.erase_fast(pos); }
 
   /**
    * Use the hash value 'precalculated_hash' instead of hashing the key. The

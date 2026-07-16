@@ -32,7 +32,7 @@ struct Return : std::exception {
 struct ObjectAdder {
 
     Object operator()(const double a, const double b) const;
-    //Object operator()(const wrapper<std::string>& a, const wrapper<std::string>& b) const;
+    Object operator()(const wrapper<std::string>& a, const wrapper<std::string>& b) const;
 
     // Handle other combinations, possibly with errors if they're invalid
     template<typename T, typename U>
@@ -190,8 +190,8 @@ struct Interpreter {
     Object currentReturn = Object{nullptr};
     bool containsReturn = false;
     bool finishing = false;
-    std::shared_ptr<Environment>
-        globalsHold; // place to store global native functions etc
+    // std::shared_ptr<Environment>
+    //     globalsHold; // place to store global native functions etc
 
     ObjectAdder adder;
     ObjectSubber subber;
@@ -201,7 +201,7 @@ struct Interpreter {
     stablestack<std::vector<Object>> argumentsStack2;
 
     uniquestack<boost::local_shared_ptr<Environment>> Environments;
-
+    
     Environment* globals; // place to store global native functions etc
 
     Environment*

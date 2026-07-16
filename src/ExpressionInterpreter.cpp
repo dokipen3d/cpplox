@@ -30,6 +30,8 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
         std::cout << "size of rw = " << sizeof(recursive_wrapper<std::string>)
                   << " bytes.\n";
+        std::cout << "size of w = " << sizeof(wrapper<std::string>)
+                  << " bytes.\n";
         // TimeIt timer("interpreter");
 
         for (const auto& statement : statements) {
@@ -276,10 +278,10 @@ Object ObjectAdder::operator()(const double a, const double b) const {
     return a + b;
 }
 
-// Object ObjectAdder::operator()(const wrapper<std::string>& a,
-//                                const wrapper<std::string>& b) const {
-//     return static_cast<std::string>(a) + static_cast<std::string>(b) ;
-// }
+Object ObjectAdder::operator()(const wrapper<std::string>& a,
+                               const wrapper<std::string>& b) const {
+    return static_cast<std::string>(a) + static_cast<std::string>(b) ;
+}
 
 Object ObjectSubber::operator()(const double& a, const double& b) {
     return a - b;
@@ -294,7 +296,7 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
 
     const Object& left = evaluate(binary.left);
     const Object& right = evaluate(binary.right);
-    checkNumberOperands(binary.op, left, right);
+    //checkNumberOperands(binary.op, left, right);
 
     Object ret = std::visit(adder, left, right);
     if (left.is<double>() && right.is<double>()) {
@@ -312,7 +314,7 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
         ;
         // return *left.get_if<std::string>() +
         // *right.get_if<std::string>();
-        //  return
+        return
         static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
          +
          static_cast<std::string>(left.get<cpplox::wrapper<std::string>>());
@@ -371,7 +373,7 @@ Object Interpreter::operator()(const Binary& binary) {
         // this case already has type checking built into which is why it
         // doesnt call checkOperands. intead if we get here, then we throw
         // the error directly which the check would have done
-        throw RuntimeError(binary.op, "Operands must be a number.");
+        throw RuntimeError(binary.op, "Operands must be a number bin.");
     }
     case ETokenType::MINUS: {
         checkNumberOperands(binary.op, left, right);
@@ -690,7 +692,7 @@ void Interpreter::checkNumberOperands(const Token& token, const Object& left,
     if (left.is<double>() && right.is<double>()) {
         return;
     }
-    throw RuntimeError(token, "Operands must be a number.");
+    throw RuntimeError(token, "Operands must be a number. thrown");
 }
 
 template <typename T>

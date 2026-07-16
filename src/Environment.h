@@ -12,7 +12,7 @@
 #include "thirdparty/robin_hood.h"
 #include "thirdparty/robin_hood_map.h"
 #include "thirdparty/unordered_dense.h"
-//#include "absl/container/flat_hash_map.h"
+#include "absl/container/flat_hash_map.h"
 //#include "absl/container/node_hash_map.h"
 
 #include "thirdparty/tsl/robin_map.h"
@@ -20,6 +20,8 @@
 #include "ExceptionError.h"
 #include "Utilities.hpp"
 #include "boost/smart_ptr/local_shared_ptr.hpp"
+#include "boost/unordered/unordered_map.hpp"
+
 
 //#include "thirdparty/shared_ptr.hpp"
 template <typename S> struct hasher {
@@ -28,6 +30,52 @@ template <typename S> struct hasher {
         return FNVHash(x);
     }
 };
+
+
+template <typename T>
+struct myhasher {
+    T operator()(T h) const noexcept  {
+        h ^= h >> 16;
+        h *= 0x85ebca6b;
+        h ^= h >> 13;
+        h *= 0xc2b2ae35;
+        h ^= h >> 16;
+        return h;
+    }
+};
+
+
+template <typename T>
+struct fibhasher {
+    T operator()(T h) const noexcept  {
+        (h * 2654435769U) ^ 76825976; 
+        return h;
+    }
+};
+
+// FNV-1a 32-bit hash implementation
+template <typename T>
+struct fnvhasher {
+    T operator()(T h) const noexcept  {
+        // Official 32-bit FNV constants
+        const uint32_t fnv_prime = 0x01000193;
+        const uint32_t fnv_offset_basis = 0x811C9DC5;
+
+        // Get byte-level pointer to the data
+        const auto* byte_ptr = reinterpret_cast<const uint8_t*>(&h);
+        size_t size = sizeof(T);
+
+        uint32_t hash = fnv_offset_basis;
+
+        for (size_t i = 0; i < size; ++i) {
+            hash ^= byte_ptr[i];       // XOR the low 8-bits
+            hash *= fnv_prime;         // Multiply by the FNV prime
+        }
+
+        return hash;
+    }
+};
+
 
 namespace cpplox {
 struct Environment {//}: std::enable_shared_from_this<Environment> {
@@ -65,6 +113,8 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
                                "Undefined variable '" + name.lexeme + "'.");
         }
     }
+
+    
 
     Object getAt(int distance, const Token& name) {
         Environment* anc = ancestor(distance);
@@ -108,17 +158,28 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     boost::local_shared_ptr<Environment> enclosing;
 
     // Environment* enclosing = nullptr;
-    //std::unordered_map<std::string, Object> values;
-    //robin_hood::unordered_map<std::string, Object> values;
+    //std::unordered_map<int32_t, Object> values;
+    //robin_hood::unordered_map<int32_t, Object> values;
+    
     tsl::robin_map<int32_t, Object> values;
+
+    // tsl::robin_map<uint32_t, Object, fibhasher<uint32_t>,
+    //                std::equal_to<uint32_t>,
+    //                std::allocator<std::pair<uint32_t, Object>>,
+    //                false> values;
+
+    //tsl::robin_map<uint32_t, Object, fibhasher<uint32_t>> values;
+
+    //boost::unordered_map<int32_t, Object> values;
+
     //jg::dense_hash_map<int32_t, Object> values;
     // tsl::robin_map<int32_t, Object, std::hash<std::string>,
     //                std::equal_to<std::string>,
     //                std::allocator<std::pair<std::string, Object>>,
     //                true> values;
 
-    //ankerl::unordered_dense::map<int32_t, Object> values;
-    // absl::flat_hash_map<std::string, Object> values;
+    //ankerl::unordered_dense::map<int32_t, Object, myhasher<uint32_t>> values;
+    //absl::flat_hash_map<int32_t, Object> values;
     //  absl::node_hash_map<std::string, Object> values;
 
     int handle = -1;
@@ -126,7 +187,7 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     // int refCount = 0;
     //  plf::colony<Environment>::iterator it;
     // ska::bytell_hash_map<std::string, Object, hasher<std::string>> values;
-    //ska::flat_hash_map<std::string, Object> values;
+    //ska::flat_hash_map<int32_t, Object> values;
 };
 
 // static_assert(std::is_copy_constructible_v<Environment>, "");

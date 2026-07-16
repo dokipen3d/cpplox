@@ -68,7 +68,7 @@ class Parser {
     std::vector<Token>& tokens;
 
     //for pre hashing
-    tsl::robin_map<std::string, Object> map;
+    //tsl::robin_map<std::string, Object> map;
 };
 
 struct visitor;
