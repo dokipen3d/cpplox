@@ -317,7 +317,7 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
         return
         static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
          +
-         static_cast<std::string>(left.get<cpplox::wrapper<std::string>>());
+         static_cast<std::string>(right.get<cpplox::wrapper<std::string>>());
     }
     // this case already has type checking built into which is why it
     // doesnt call checkOperands. intead if we get here, then we throw
@@ -631,7 +631,7 @@ Object Interpreter::operator()(const Get& get) {
         return object.get<LoxInstance>().get(get.name);
     }
 
-    throw new RuntimeError(get.name, "Only instances have properties.");
+    throw RuntimeError(get.name, "Only instances have properties.");
 }
 
 Object Interpreter::operator()(const Set& set) {
@@ -671,7 +671,7 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     }
 
     // when we compare a string with a number, just say false. this prevents a crash
-    if (a.is<std::string>() && *b.get_if<double>()) {
+    if (a.is<std::string>() && b.is<double>()) {
         return false;
     }
 
