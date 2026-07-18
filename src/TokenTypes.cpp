@@ -18,21 +18,21 @@ namespace cpplox {
 // inline std::vector<std::vector<cpplox::LoxInstance>> cpplox::recursive_wrapper<cpplox::LoxInstance>::t{};
 
 std::ostream& operator<<(std::ostream& os,
-                         const wrapper<NativeFunction>& dt) {
+                         const colonywrapper<NativeFunction>& dt) {
     os << "Native Function"
        << "\n";
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const wrapper<FunctionObject>& dt) {
+                         const colonywrapper<FunctionObject>& dt) {
     os << "Function Object"
        << "\n";
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const wrapper<LoxClass>& loxClass) {
+                         const colonywrapper<LoxClass>& loxClass) {
     os << ((LoxClass)loxClass).name;
     return os;
 }
@@ -48,21 +48,25 @@ std::ostream& operator<<(std::ostream& os, const LoxInstance& loxInstance) {
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const wrapper<LoxInstance>& loxInstance) {
+                         const colonywrapper<LoxInstance>& loxInstance) {
     os << ((LoxInstance)loxInstance).klass << ".instance\n";
     return os;
 }
 
 NativeFunction::NativeFunction(
     std::function<Object(const Interpreter&, const std::vector<Object>)> func,
-    std::function<int()> arity)
-    : m_func(func), arity(arity) {
+    std::function<int()> arity,
+    plf::colony<NativeFunction>* colony,
+    const std::string& name)
+    : m_func(func), arity(arity), colony(colony), name(name) {
 }
 
-FunctionObject::FunctionObject(Interpreter* interpreter,
-                               const FunctionStatement* functionStatement)
+FunctionObject::FunctionObject( Interpreter* interpreter,
+                                const FunctionStatement* functionStatement,
+                                plf::colony<FunctionObject>* colony)
     : interpreter(interpreter), m_declaration(functionStatement),
-      closure2(interpreter->Environments[interpreter->environment->handle]) {
+      closure2(interpreter->Environments[interpreter->environment->handle]) ,
+      colony(colony) {
     // std::cout << "making FO, getting parent env "
     //           << interpreter->environment->handle << "with uc "
     //           << closure2.local_use_count() << "\n";
@@ -89,6 +93,10 @@ FunctionObject::FunctionObject(Interpreter* interpreter,
 
 std::size_t FunctionObject::arity() const {
     return m_declaration->params.size();
+};
+
+const std::string& FunctionObject::namestring(){
+    return m_declaration->name.lexeme;
 };
 
 FunctionObject::~FunctionObject() {
@@ -123,7 +131,7 @@ FunctionObject::~FunctionObject() {
     // if (closure2.local_use_count() > 0) {
 
     // std::cout << " about to reset\n";
-    closure2.reset();
+    
 
     // std::cout << " after to reset\n";
 
@@ -136,14 +144,25 @@ FunctionObject::~FunctionObject() {
 
     // std::cout << "end\n";
 
-    if (!interpreter->finishing &&
-        interpreter->Environments[index].local_use_count() == 1) {
+    //f (!interpreter->finishing){
+     //   std::cout << "use count: " << interpreter->Environments[index].local_use_count() << " " << index << "\n";
+    //}
 
+
+    if (!interpreter->finishing &&
+        interpreter->Environments[index].local_use_count() == 0) {
+        //std::cout << "use count 0 \n";
         // std::cout << "after reset " << index << " lc: "
         //           << interpreter->Environments[index].local_use_count() <<
         //           "\n";
         interpreter->clearEnvironmentFromStack(index);
+        
+
     }
+
+    closure2.reset();
+
+
 }
 
 Object FunctionObject::operator()(Interpreter& interpreter,
@@ -191,8 +210,9 @@ void LoxInstance::set(const Token& name, const Object& value) {
 }
 
 Object LoxClass::operator()(Interpreter& interpreter,
-                            const std::vector<Object>& arguments) {
-    return LoxInstance(this);
+                            const std::vector<Object>& arguments) {   
+    auto it = instancecolony->insert(LoxInstance(this, instancecolony));
+    return colonywrapper<LoxInstance>(&(*it));
 }
 
 

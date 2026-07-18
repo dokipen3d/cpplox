@@ -6,6 +6,7 @@
 #include <vector>
 #include <variant>
 #include <string_view>
+#include <typeinfo>
 
 template <class T> constexpr std::string_view type_name() {
     using namespace std;
@@ -123,6 +124,10 @@ template <typename T> struct wrapper {
         return (storage)[index];
     }
 
+    // 48 bit index
+    // 8 bits - interpreter id vector index - better than using 48-bit pointer to vector? static interpreter vector
+    // 5 bits ref count? 32 references per object
+    // 36 bit index?
     int32_t index = -1;
     //std::array<int32_t, 32> ar;
         //int64_t index2 = -1;
@@ -141,6 +146,65 @@ template <typename T>
 wrapper<T>::wrapper(T&& t) {
     index = storage.push_in(std::forward<T>(t));
     storage.refCounts()[index]++;
+};
+
+
+
+template <typename T> struct colonywrapper {
+
+    colonywrapper(T* tptr);
+
+    colonywrapper(const colonywrapper& other) {
+        index = other.index;
+        //std::cout << "ref up const copy\n";
+
+        (*index).referenceCount++;
+        //(*index).referenceCount++;
+    }
+    colonywrapper(colonywrapper& other) {
+        index = other.index;
+        //std::cout << "ref up copy\n";
+        (*index).referenceCount++;
+    }
+
+    colonywrapper& operator=(const colonywrapper& other) {
+        index = other.index;
+        //std::cout << "ref up const assign\n";
+        (*index).referenceCount++;
+
+        return *this;
+    }
+
+    ~colonywrapper() {
+        (*index).referenceCount--;
+        //if((*index).referenceCount < 5){
+            //std::cout << (*index).referenceCount << " " << type_name<T>() << "\n";// " " << index->namestring() << "\n";
+        //}
+        if ((*index).referenceCount == 0) {
+            //std::cout << "erasing" << "\n";
+            index->erase();
+        }
+    };
+
+    operator const T&() const {
+        return *index;
+    }
+    operator T&() {
+        return *index;
+    }
+
+    T* index = nullptr;
+
+    //static plf_colony<T> storage;
+
+};
+
+
+template <typename T>
+colonywrapper<T>::colonywrapper(T* tptr) {
+    index = tptr;
+    //std::cout << "creating " << type_name<T>() << " " << tptr->namestring() << "\n";
+    (*index).referenceCount++;
 };
 
 // recursive wrapper with single vector for each type

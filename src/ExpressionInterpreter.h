@@ -73,14 +73,7 @@ struct Interpreter {
                   << "clock"
                   << " hash: " << FNVHash("clock") << "\n";
 
-        globals->define(
-            FNVHash("clock"), // as long as this hash matches the one made in
-                              // the token constructor we should be okay, we
-                              // might need to add rehashing to token
-                              // constructor to prevent collisions
-                              // we can also create an overloaded define for env
-                              // tht takes the string and does the hash for us
-            NativeFunction{
+        auto it = NFstorage.insert(NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object>& arguments) -> Object {
                     using namespace std::chrono;
@@ -89,18 +82,34 @@ struct Interpreter {
                             .count();
                     return s;
                 },
-                /*arity*/ []() { return 0; }});
+                /*arity*/ []() { return 0; },
+                &NFstorage,
+                "clock"});
 
         globals->define(
-            FNVHash("str"),
-            NativeFunction{
+            FNVHash("clock"), // as long as this hash matches the one made in
+                              // the token constructor we should be okay, we
+                              // might need to add rehashing to token
+                              // constructor to prevent collisions
+                              // we can also create an overloaded define for env
+                              // tht takes the string and does the hash for us
+            colonywrapper<NativeFunction>(&(*it)));
+
+
+        auto it2 = NFstorage.insert(NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object>& arguments) -> Object {
                     std::string s = std::to_string(arguments[0].get<double>());
                     stripZerosFromString(s);
                     return s;
                 },
-                /*arity*/ []() { return 1; }});
+                /*arity*/ []() { return 1; },
+            &NFstorage,
+            "str"});
+
+        globals->define(
+            FNVHash("str"),
+            colonywrapper<NativeFunction>(&(*it2)));
     }
 
     void interpret(const std::vector<Statement>& statements);
@@ -200,6 +209,8 @@ struct Interpreter {
     sparestack<std::vector<Object>> argumentsStack;
     stablestack<std::vector<Object>> argumentsStack2;
 
+
+
     uniquestack<boost::local_shared_ptr<Environment>> Environments;
     
     Environment* globals; // place to store global native functions etc
@@ -207,5 +218,14 @@ struct Interpreter {
     Environment*
         environment; // this maybe overriden temporarily by blocks and then
     // std::unordered_map<LookupVariableVariant, int> locals;
+
+    plf::colony<std::string> Sstorage;
+    plf::colony<NativeFunction> NFstorage;
+    plf::colony<FunctionObject> FOstorage;
+    plf::colony<LoxInstance> LIstorage;
+    plf::colony<LoxClass> LCstorage;
+
+
+
 };
 } // namespace cpplox

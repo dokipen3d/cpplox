@@ -28,7 +28,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         std::cout << "size of Token = " << sizeof(Token) << " bytes.\n";
         std::cout << "size of Literal = " << sizeof(Literal) << " bytes.\n";
         std::cout << "size of grouping = " << sizeof(Grouping) << " bytes.\n";
-        std::cout << "size of rw = " << sizeof(recursive_wrapper<std::string>)
+        std::cout << "size of rw = " << sizeof(wrapper<std::string>)
                   << " bytes.\n";
         std::cout << "size of w = " << sizeof(wrapper<std::string>)
                   << " bytes.\n";
@@ -44,6 +44,10 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         Error::runtimeError(error);
     }
     finishing = true;
+    Environments.clear();
+
+    //std::cout << "Env size: " << Environments.size() << "\n";
+
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
@@ -183,15 +187,18 @@ void Interpreter::operator()(const FunctionStatement& functionStatement) {
     // Object functionObject = FunctionObject(this, &functionStatement);
     // std::cout << "start of F block " << this->environment->handle << "\n";
 
+    auto it = FOstorage.insert(FunctionObject(this, &functionStatement, &FOstorage));
     environment->defineVal(functionStatement.name.hash,
-                           FunctionObject(this, &functionStatement));
+                           colonywrapper<FunctionObject>(&(*it)));
     // std::cout << "end of F block " << this->environment->handle << "\n";
 }
 
 void Interpreter::operator()(const ClassStatement& classStatement) {
     environment->define(classStatement.name.hash, Object(nullptr));
+    auto it = LCstorage.insert(LoxClass(classStatement.name.lexeme, &LCstorage, &LIstorage));
+
     environment->assign(classStatement.name,
-                        LoxClass(classStatement.name.lexeme));
+                        colonywrapper<LoxClass>(&(*it)));
 }
 
 Environment* Interpreter::retrieveEnvironment(Environment* closure) {
@@ -309,7 +316,7 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
     // //     return *a + *b;
     // // }
 
-    if (left.is<std::string>() && right.is<std::string>()) {
+    if (left.isString() && right.isString()) {
         //return left.get<std::string>() + right.get<std::string>();
         ;
         // return *left.get_if<std::string>() +
@@ -360,8 +367,10 @@ Object Interpreter::operator()(const Binary& binary) {
         //     return *a + *b;
         // }
 
-        if (left.is<std::string>() && right.is<std::string>()) {
-            return left.get<std::string>() + right.get<std::string>();
+        if (left.isString() && right.isString()) {
+            return static_cast<std::string>(left.get<cpplox::wrapper<std::string>>())
+         +
+         static_cast<std::string>(right.get<cpplox::wrapper<std::string>>());
             ;
             // return *left.get_if<std::string>() +
             // *right.get_if<std::string>();
@@ -666,12 +675,14 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     if (a.is<double>() && b.is<double>()) {
         return *a.get_if<double>() == *b.get_if<double>();
     }
-    if (a.is<std::string>() && b.is<std::string>()) {
-        return a.get<std::string>() == b.get<std::string>();
+    if (a.isString() && b.isString()) {
+        return static_cast<std::string>(a.get<cpplox::wrapper<std::string>>())
+         ==
+         static_cast<std::string>(b.get<cpplox::wrapper<std::string>>());
     }
 
     // when we compare a string with a number, just say false. this prevents a crash
-    if (a.is<std::string>() && b.is<double>()) {
+    if (a.isString() && b.is<double>()) {
         return false;
     }
 
@@ -727,9 +738,9 @@ std::string Interpreter::stringify(const Object& object) {
     }
 
     // must be a string.
-    if (object.is<std::string>()) {
+    if (object.isString()) {
         // std::cout << "s";
-        text = object.get<std::string>();
+        text = static_cast<std::string>(object.get<wrapper<std::string>>());
     }
     return text;
 }

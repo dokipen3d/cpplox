@@ -318,6 +318,10 @@ template <typename T> class uniquestack {
         return _data.size() - spareIds.size();
     }
 
+    void clear(){
+        _data.clear();
+    }
+
     void eraseAt(std::size_t position) {
         // // if (position < _data.size()) { // if position is within range
         // if (position ==

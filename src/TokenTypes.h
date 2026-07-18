@@ -12,6 +12,7 @@
 #include "thirdparty/tsl/robin_map.h"
 //#include "thirdparty/visit.hpp"
 #include "boost/smart_ptr/local_shared_ptr.hpp"
+#include "thirdparty/plf_colony.h"
 
 namespace cpplox {
 enum class ETokenType : uint8_t {
@@ -127,14 +128,17 @@ struct FunctionObject;
 struct Environment;
 struct LoxClass;
 struct LoxInstance;
+//struct StringType;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
 // index of the variant ie index() > 0
 using ObjectVariant =
-    std::variant<void*, double, wrapper<std::string>, bool,
-                 wrapper<NativeFunction>,
-                 wrapper<FunctionObject>, wrapper<LoxClass>,
-                 wrapper<LoxInstance>>;
+    std::variant<void*, double, bool,
+                wrapper<std::string>,
+                colonywrapper<NativeFunction>,
+                colonywrapper<FunctionObject>, 
+                colonywrapper<LoxClass>,
+                colonywrapper<LoxInstance>>;
 
 struct Object : ObjectVariant {
 
@@ -160,8 +164,8 @@ struct Object : ObjectVariant {
         const { // needs to be inline because its a free function that
                 // it included in multiple translation units. needs to
                 // be marked inline so linker knows its the same one
-        if (std::holds_alternative<wrapper<NativeFunction>>(other) ||
-            std::holds_alternative<wrapper<NativeFunction>>(*this)) {
+        if (std::holds_alternative<colonywrapper<NativeFunction>>(other) ||
+            std::holds_alternative<colonywrapper<NativeFunction>>(*this)) {
             return false;
         } else {
             return *this == other;
@@ -176,41 +180,46 @@ struct Object : ObjectVariant {
     inline bool is() const { // function needs to be const  to make it
         // callable from a const ref
         using actualTypeToGet =
-            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
-                               wrapper<T>, T>;
+            std::conditional_t<has_type_v<colonywrapper<T>, ObjectVariant>,
+                               colonywrapper<T>, T>;
         return std::holds_alternative<actualTypeToGet>(*this);
+    }
+
+    inline bool isString() const { // function needs to be const  to make it
+
+        return std::holds_alternative<wrapper<std::string>>(*this);
     }
 
     template <typename T>
     inline const T& getRecursiveObject() { // function needs to be const  to
                                            // make it callable from a const ref
-        return std::get<wrapper<T>>(*this);
+        return std::get<colonywrapper<T>>(*this);
     }
     template <typename T> inline const T& get() const {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
-                               wrapper<T>, T>;
+            std::conditional_t<has_type_v<colonywrapper<T>, ObjectVariant>,
+                               colonywrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 
     template <typename T> inline const T* get_if() const noexcept {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
-                               wrapper<T>, T>;
+            std::conditional_t<has_type_v<colonywrapper<T>, ObjectVariant>,
+                               colonywrapper<T>, T>;
         return (const T*)std::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T* get_if() noexcept {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
-                               wrapper<T>, T>;
+            std::conditional_t<has_type_v<colonywrapper<T>, ObjectVariant>,
+                               colonywrapper<T>, T>;
         return (T*)std::get_if<actualTypeToGet>(this);
     }
 
     template <typename T> inline T& get() {
         using actualTypeToGet =
-            std::conditional_t<has_type_v<wrapper<T>, ObjectVariant>,
-                               wrapper<T>, T>;
+            std::conditional_t<has_type_v<colonywrapper<T>, ObjectVariant>,
+                               colonywrapper<T>, T>;
         return std::get<actualTypeToGet>(*this);
     }
 };
@@ -227,11 +236,36 @@ operator<<(std::ostream& os, const cpplox::wrapper<std::string>& dt) {
 }
 struct Interpreter;
 
+// struct StringType : std::string {
+
+
+//     StringType(StringType const&) = default;
+//     StringType(StringType&&) = default;
+
+//     StringType& operator=(const StringType& other) = default;
+//     StringType& operator=(StringType&& other) = default;
+
+//     const std::string& namestring() {
+//         return *this;
+//     }
+
+//     void erase(){
+//         auto it = colony->get_iterator(this);
+//         colony->erase(it);
+//     }
+//     int32_t referenceCount = 0;
+
+//     plf::colony<std::string>* Sstorage;
+
+// };
+
 struct NativeFunction {
     NativeFunction(
         std::function<Object(const Interpreter&, const std::vector<Object>)>
             func,
-        std::function<int()> arity);
+        std::function<int()> arity,
+        plf::colony<NativeFunction>* colony,
+        const std::string& name);
 
     // NativeFunction(NativeFunction const&) = default;
     // NativeFunction(NativeFunction&&) = default;
@@ -248,20 +282,34 @@ struct NativeFunction {
     //     return false;
     // }
 
+    void erase(){
+        auto it = colony->get_iterator(this);
+        colony->erase(it);
+    }
+
+    const std::string& namestring(){
+        return name;
+    }
+
     friend std::ostream&
-    operator<<(std::ostream& os, const wrapper<NativeFunction>& dt);
+    operator<<(std::ostream& os, const colonywrapper<NativeFunction>& dt);
 
     // we store references to lambdas
     std::function<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
     std::function<int()> arity;
+    int32_t referenceCount = 0;
+    plf::colony<NativeFunction>* colony;
+    std::string name;
+
 };
 
 struct FunctionStatement;
 
 struct FunctionObject {
     FunctionObject(Interpreter* interpreter,
-                   const FunctionStatement* functionStatement);
+                   const FunctionStatement* functionStatement,
+                plf::colony<FunctionObject>* colony);
     ~FunctionObject();
 
     Object operator()(Interpreter& interpreter,
@@ -282,18 +330,31 @@ struct FunctionObject {
     //     envToClearDelayed = delayed;
     // }
 
+    void erase(){
+        auto it = colony->get_iterator(this);
+        colony->erase(it);
+    }
+
+    const std::string& namestring();
+
     friend std::ostream&
-    operator<<(std::ostream& os, const wrapper<FunctionObject>& dt);
+    operator<<(std::ostream& os, const colonywrapper<FunctionObject>& dt);
 
     boost::local_shared_ptr<Environment> closure2 = nullptr;
     Interpreter* interpreter;
     const FunctionStatement* m_declaration;
+    int32_t referenceCount = 0;
+    plf::colony<FunctionObject>* colony;
+
     // Environment* envToClearDelayed = nullptr; // for closure
 };
 
 struct LoxClass {
 
-    LoxClass(const std::string& name) : name(name) {
+    LoxClass(const std::string& name, 
+                        plf::colony<LoxClass>* colony, 
+                        plf::colony<LoxInstance>* instancecolony) : 
+                        name(name), colony(colony), instancecolony(instancecolony) {
     }
 
     Object operator()(Interpreter& interpreter,
@@ -303,18 +364,31 @@ struct LoxClass {
         return 0;
     }
 
+    void erase(){
+        auto it = colony->get_iterator(this);
+        colony->erase(it);
+    }
+
     const std::string& toString() {
         return name;
     }
 
+    const std::string& namestring() {
+        return name;
+    }
+
     friend std::ostream&
-    operator<<(std::ostream& os, const wrapper<LoxClass>& loxClass);
+    operator<<(std::ostream& os, const colonywrapper<LoxClass>& loxClass);
 
     std::string name;
+    int32_t referenceCount = 0;
+    plf::colony<LoxClass>* colony;
+    plf::colony<LoxInstance>* instancecolony;
+
 };
 
 std::ostream& operator<<(std::ostream& os,
-                         const wrapper<LoxInstance>& loxInstance);
+                         const colonywrapper<LoxInstance>& loxInstance);
 std::ostream& operator<<(std::ostream& os,
                          const LoxInstance& loxInstance);
 
@@ -363,7 +437,8 @@ class Token {
 
 struct LoxInstance {
 
-    LoxInstance(const LoxClass* klass) : klass(klass) {
+    LoxInstance(const LoxClass* klass,  
+                plf::colony<LoxInstance>* colony) : klass(klass), colony(colony) {
     }
 
     const std::string& toString() {
@@ -373,12 +448,23 @@ struct LoxInstance {
     const Object& get(const cpplox::Token& name) const;
     void set(const Token& name, const Object& value);
 
+    void erase(){
+        auto it = colony->get_iterator(this);
+        colony->erase(it);
+    }
+
+    const std::string& namestring(){
+        return std::string(klass->name + ":instance");
+    }
+
     const LoxClass* klass;
     tsl::robin_map<int32_t, Object> properties;
+    int32_t referenceCount = 0;
 
     // friend std::ostream&
     // operator<<(std::ostream& os, const recursive_wrapper<LoxInstance>&
     // loxInstance);
+    plf::colony<LoxInstance>* colony;
 };
 
 static_assert(std::is_move_constructible_v<Token>,
