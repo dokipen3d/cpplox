@@ -1,0 +1,16 @@
+class thisIsIt {
+
+    fun doIt(){
+
+    }
+
+    var doThisVar = 5;
+
+    fun ohYeah(x, y){
+        print("doThat");
+    }
+
+    var doThatVar = "poo";
+    var doNoVal;
+
+}

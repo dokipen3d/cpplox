@@ -24,7 +24,7 @@ void my_handler(int s) {
 
 struct lox {
 
-    void run(const std::string& code) {
+    void run(const std::string& code, bool printAst = false) {
 
         // std::cout << "scanning tokens\n";
 
@@ -44,16 +44,27 @@ struct lox {
         }
         // std::cout << "resolving\n";
 
+        {
+                        TimeIt timer("resolver");
+
+        
         cpplox::Resolver resolver;
         resolver.resolve(statements);
+        }
 
         if (hadError) {
             std::cout << "parse error\n";
             return;
         }
+        std::cout << statements.size() << "\n";
 
         cpplox::safeToReuse = true;
-
+        if(printAst){
+            for (const cpplox::Statement& statement : statements) {
+                printer.printSt(statement);
+            }
+            return;
+        }
         try {
 
             
@@ -69,11 +80,11 @@ struct lox {
     }
 
     // dummy functions to make main run at this stage
-    void runFile(const std::string& filePath) {
+    void runFile(const std::string& filePath, bool printAst = false) {
         // std::cout << "running file " << filePath << "\n";
         std::ifstream inputFileStream(filePath);
         std::string code(std::istreambuf_iterator<char>{inputFileStream}, {});
-        run(code);
+        run(code, printAst);
     }
 
     void runPrompt() {
@@ -142,6 +153,8 @@ int main(int argumentCount, char* argumentValues[]) {
     } else if (argumentCount == 3) {
         if (strcmp(argumentValues[1], "-p") == 0) {
             std::cout << "printing AST\n";
+            l.runFile(argumentValues[2], true);
+            return 1;
         }
 
     } else if (argumentCount == 2) {

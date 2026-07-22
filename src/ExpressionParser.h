@@ -33,6 +33,7 @@ class Parser {
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
     auto classDeclaration() -> /*-------------------------------------------->*/Statement;
 
+
     auto statement() -> /*--------------------------------------------------->*/Statement;
     auto whileStatement() -> /*---------------------------------------------->*/Statement;
     auto returnStatement() -> /*--------------------------------------------->*/Statement;

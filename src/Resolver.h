@@ -52,6 +52,7 @@ struct Resolver {
     void operator()(const Decrement& dec);
     void operator()(const Get& get);
     void operator()(const Set& set);
+    void operator()(const Uninitialized& set){};
 
 
     void operator()(const void*) {

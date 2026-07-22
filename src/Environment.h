@@ -8,11 +8,11 @@
 #include <unordered_map>
 
 //#include "thirdparty/bytell_hash_map.hpp"
-#include "thirdparty/flat_hash_map.hpp"
-#include "thirdparty/robin_hood.h"
-#include "thirdparty/robin_hood_map.h"
-#include "thirdparty/unordered_dense.h"
-#include "absl/container/flat_hash_map.h"
+//#include "thirdparty/flat_hash_map.hpp"
+//#include "thirdparty/robin_hood.h"
+//#include "thirdparty/robin_hood_map.h"
+//#include "thirdparty/unordered_dense.h"
+//#include "absl/container/flat_hash_map.h"
 //#include "absl/container/node_hash_map.h"
 
 #include "thirdparty/tsl/robin_map.h"
@@ -20,7 +20,8 @@
 #include "ExceptionError.h"
 #include "Utilities.hpp"
 #include "boost/smart_ptr/local_shared_ptr.hpp"
-#include "boost/unordered/unordered_map.hpp"
+//#include "boost/unordered/unordered_flat_map.hpp"
+//#include "thirdparty/hash_table5.hpp"
 
 
 //#include "thirdparty/shared_ptr.hpp"
@@ -128,22 +129,30 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     void define(const int32_t& name, const Object& value) {
 
         values.insert_or_assign(name, value);
+        //values.insert_unique(name, value);
+
     }
 
 
     template <typename T>
     void defineVal(const int32_t& name, T&& value) {
         values.insert_or_assign(name, std::forward<T>(value));
+        //values.insert_unique(name, std::forward<T>(value));
     }
 
     void assignAt(int distance, const Token& name, const Object& value) {
         ancestor(distance)->values.insert_or_assign(name.hash, value);
+        //ancestor(distance)->values.insert_unique(name.hash, value);
+
     }
 
     void assign(const Token& name, const Object& value) {
-        if (const auto search = values.find(name.hash);
-            search != values.end()) { // if init version of contains()
+        //if (const auto search = values.find(name.hash);
+        //    search != values.end()) { // if init version of contains()
+        if(values.contains(name.hash)) {
             values.insert_or_assign(name.hash, value);
+            //values.insert_unique(name.hash, value);
+
             return;
         } else if (enclosing != nullptr) {
             enclosing->assign(name, value);
@@ -161,16 +170,17 @@ struct Environment {//}: std::enable_shared_from_this<Environment> {
     //std::unordered_map<int32_t, Object> values;
     //robin_hood::unordered_map<int32_t, Object> values;
     
-    tsl::robin_map<int32_t, Object> values;
+    //tsl::robin_map<int32_t, Object> values;
 
     // tsl::robin_map<uint32_t, Object, fibhasher<uint32_t>,
     //                std::equal_to<uint32_t>,
     //                std::allocator<std::pair<uint32_t, Object>>,
     //                false> values;
 
-    //tsl::robin_map<uint32_t, Object, fibhasher<uint32_t>> values;
+    tsl::robin_map<uint32_t, Object> values;
 
-    //boost::unordered_map<int32_t, Object> values;
+    //boost::unordered_flat_map<int32_t, Object> values;
+    //emhash5::HashMap<int32_t, Object> values;
 
     //jg::dense_hash_map<int32_t, Object> values;
     // tsl::robin_map<int32_t, Object, std::hash<std::string>,

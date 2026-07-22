@@ -13,6 +13,8 @@
 //#include "thirdparty/visit.hpp"
 #include "boost/smart_ptr/local_shared_ptr.hpp"
 #include "thirdparty/plf_colony.h"
+#include "thirdparty/function_ref.hpp"
+
 
 namespace cpplox {
 enum class ETokenType : uint8_t {
@@ -128,6 +130,7 @@ struct FunctionObject;
 struct Environment;
 struct LoxClass;
 struct LoxInstance;
+struct uninitialized;
 //struct StringType;
 // equivalent to the use of the Java.Object in the crafting interpreters
 // tutorial. void* means a not a literal. we check for it by checking the active
@@ -259,11 +262,13 @@ struct Interpreter;
 
 // };
 
+
+
 struct NativeFunction {
     NativeFunction(
-        std::function<Object(const Interpreter&, const std::vector<Object>)>
+        tl::function_ref<Object(const Interpreter&, const std::vector<Object>&)>
             func,
-        std::function<int()> arity,
+        tl::function_ref<int()> arity,
         plf::colony<NativeFunction>* colony,
         const std::string& name);
 
@@ -295,14 +300,16 @@ struct NativeFunction {
     operator<<(std::ostream& os, const colonywrapper<NativeFunction>& dt);
 
     // we store references to lambdas
-    std::function<Object(const Interpreter&, const std::vector<Object>&)>
+    tl::function_ref<Object(const Interpreter&, const std::vector<Object>&)>
         m_func;
-    std::function<int()> arity;
+    tl::function_ref<int()> arity;
     int32_t referenceCount = 0;
     plf::colony<NativeFunction>* colony;
     std::string name;
 
 };
+
+
 
 struct FunctionStatement;
 
@@ -348,6 +355,7 @@ struct FunctionObject {
 
     // Environment* envToClearDelayed = nullptr; // for closure
 };
+
 
 struct LoxClass {
 
@@ -476,6 +484,9 @@ void clearStorageObjects();
 
 
 } // namespace cpplox
+
+
+
 
 template <>
 struct std::variant_size<cpplox::Object>

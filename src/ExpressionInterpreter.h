@@ -12,6 +12,11 @@
 #include <memory>
 #include <unordered_map>
 #include <variant>
+#include <boost/hana/assert.hpp>
+#include <boost/hana/integral_constant.hpp>
+#include <boost/hana/map.hpp>
+#include <boost/hana/pair.hpp>
+#include <boost/hana/type.hpp>
 // #include "thirdparty/mvariant.hpp"
 
 #include <vector>
@@ -60,7 +65,21 @@ struct ObjectSubber {
 
 };
 
+
+
+
+
+
 struct Interpreter {
+
+
+    NativeFunction* makeNativeFunction(NativeFunction&& NF){
+        auto it = NFstorage.insert(std::forward<NativeFunction>(NF));
+        return &(*it);
+    }
+
+
+
     Interpreter() {
         globals = retrieveEnvironment();
         environment = globals;
@@ -73,7 +92,7 @@ struct Interpreter {
                   << "clock"
                   << " hash: " << FNVHash("clock") << "\n";
 
-        auto it = NFstorage.insert(NativeFunction{
+        auto nf = makeNativeFunction(NativeFunction{
                 /*call*/ [](const Interpreter& interpreter,
                             const std::vector<Object>& arguments) -> Object {
                     using namespace std::chrono;
@@ -93,7 +112,7 @@ struct Interpreter {
                               // constructor to prevent collisions
                               // we can also create an overloaded define for env
                               // tht takes the string and does the hash for us
-            colonywrapper<NativeFunction>(&(*it)));
+            colonywrapper<NativeFunction>(nf));
 
 
         auto it2 = NFstorage.insert(NativeFunction{
@@ -110,11 +129,27 @@ struct Interpreter {
         globals->define(
             FNVHash("str"),
             colonywrapper<NativeFunction>(&(*it2)));
+
+        auto it3 = NFstorage.insert(NativeFunction{
+                /*call*/ [](const Interpreter& interpreter,
+                            const std::vector<Object>& arguments) -> Object {
+                    double ret = arguments[0].get<double>() * arguments[1].get<double>();
+                    return ret;
+                },
+                /*arity*/ []() { return 2; },
+            &NFstorage,
+            "doit"});
+
+        globals->define(
+            FNVHash("doit"),
+            colonywrapper<NativeFunction>(&(*it3)));
     }
 
     void interpret(const std::vector<Statement>& statements);
     void execute(const Statement& statementToExecute);
     Object evaluate(const Expr& expression);
+    Object evaluate2(bool b);
+
     Object lookUpVariable(const Token& name, const Variable& expr);
 
     void operator()(const ExpressionStatement& expressionStatement);
@@ -148,6 +183,7 @@ struct Interpreter {
     Object operator()(const Decrement& inc);
     Object operator()(const Get& get);
     Object operator()(const Set& set);
+    Object operator()(const Uninitialized& uninitialized);
 
     Object operator()(const void*) {
         return nullptr;

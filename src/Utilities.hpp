@@ -26,6 +26,8 @@ template <class T> constexpr std::string_view type_name() {
 #endif
 }
 
+
+
 static unsigned int FNVHash(std::string str) {
     const unsigned int fnv_prime = 0x811C9DC5;
     unsigned int hash = 0;
@@ -128,7 +130,7 @@ template <typename T> struct wrapper {
     // 8 bits - interpreter id vector index - better than using 48-bit pointer to vector? static interpreter vector
     // 5 bits ref count? 32 references per object
     // 36 bit index?
-    int32_t index = -1;
+    int64_t index = -1;
     //std::array<int32_t, 32> ar;
         //int64_t index2 = -1;
         //int64_t index3 = -1;
@@ -176,14 +178,14 @@ template <typename T> struct colonywrapper {
     }
 
     ~colonywrapper() {
-        (*index).referenceCount--;
-        //if((*index).referenceCount < 5){
-            //std::cout << (*index).referenceCount << " " << type_name<T>() << "\n";// " " << index->namestring() << "\n";
-        //}
-        if ((*index).referenceCount == 0) {
-            //std::cout << "erasing" << "\n";
-            index->erase();
-        }
+        // (*index).referenceCount--;
+        // //if((*index).referenceCount < 5){
+        //     //std::cout << (*index).referenceCount << " " << type_name<T>() << "\n";// " " << index->namestring() << "\n";
+        // //}
+        // if ((*index).referenceCount == 0) {
+        //     //std::cout << "erasing" << "\n";
+        //     index->erase();
+        // }
     };
 
     operator const T&() const {
@@ -257,7 +259,7 @@ template <typename T> struct recursive_wrapper {
     // uint32_t storageIndex = 0;
     // std::basic_string<T> t;
     std::vector<T>* test;
-    int32_t index = -1;
+    int64_t index = -1;
 
     static std::vector<std::vector<T>> t;
 

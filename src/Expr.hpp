@@ -26,6 +26,8 @@ struct Increment;
 struct Decrement;
 struct Get;
 struct Set;
+struct Uninitialized{};
+
 
 struct ExprVoidType {};
 
@@ -36,7 +38,7 @@ struct Literal {
 };
 
 using ExprVariant =
-    std::variant<void*, recursive_wrapper<Assign>, recursive_wrapper<Binary>,
+    std::variant<void*, Uninitialized, recursive_wrapper<Assign>, recursive_wrapper<Binary>,
                  recursive_wrapper<BinaryAdd>, recursive_wrapper<BinarySub>,
                  recursive_wrapper<Grouping>, recursive_wrapper<Literal>,
                  recursive_wrapper<Unary>, recursive_wrapper<Variable>,

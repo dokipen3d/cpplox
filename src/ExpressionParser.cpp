@@ -259,19 +259,34 @@ auto Parser::classDeclaration() -> Statement {
     consume(ETokenType::LEFT_BRACE, "Expect '{' before class body.");
 
     std::vector<Statement> functionStatements;
+    std::vector<Statement> functionProperties;
+
+    // when we do type checking we will need to change this as both 
+    // functions and variables will start with a type. something like 
+    // type indentifier ( is fun and 
+    // type identifier ; or = is variable
     while (!check(ETokenType::RIGHT_BRACE) && !isAtEnd()) {
-        functionStatements.push_back(function("method"));
+        if(match({ETokenType::FUN})){
+            functionStatements.push_back(function("method"));
+        } else if(match({ETokenType::VAR})){
+            functionProperties.push_back(varDeclaration());
+        } else{
+            throw Parser::error(peek(), "In class and there was no func or variable here");
+        }
     }
 
     consume(ETokenType::RIGHT_BRACE, "Expect '}' after class body.");
 
-    return ClassStatement{name, functionStatements};
+    return ClassStatement{name, functionStatements, functionProperties};
 }
+
+
+
 
 auto Parser::varDeclaration() -> Statement {
     Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
 
-    Expr initializer = nullptr;
+    Expr initializer = Uninitialized{};
     if (match({ETokenType ::EQUAL})) {
         initializer = expression();
     }
@@ -346,7 +361,9 @@ auto Parser::primary() -> Expr {
     if (match({ETokenType::LEFT_PARENTHESIS})) {
         Expr expr = expression();
         consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after expression.");
-        return Grouping(expr);
+        //return Grouping(expr);
+        return expr;
+
     }
     throw Parser::error(peek(), "Expect expression.");
 };

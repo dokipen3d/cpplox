@@ -37,6 +37,13 @@ std::ostream& operator<<(std::ostream& os,
     return os;
 }
 
+// std::ostream& operator<<(std::ostream& os,
+//                          const uninitialized& uninit) {
+//     os << "uninit\n";
+//     return os;
+// }
+
+
 std::ostream& operator<<(std::ostream& os, const LoxClass& loxClass) {
     os << loxClass.name;
     return os;
@@ -54,8 +61,8 @@ std::ostream& operator<<(std::ostream& os,
 }
 
 NativeFunction::NativeFunction(
-    std::function<Object(const Interpreter&, const std::vector<Object>)> func,
-    std::function<int()> arity,
+    tl::function_ref<Object(const Interpreter&, const std::vector<Object>&)> func,
+    tl::function_ref<int()> arity,
     plf::colony<NativeFunction>* colony,
     const std::string& name)
     : m_func(func), arity(arity), colony(colony), name(name) {

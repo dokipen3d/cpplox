@@ -44,11 +44,24 @@ struct ReturnStatement {
     Expr value;
 };
 
-using Statement = std::variant<
+using StatementVariant = std::variant<
     ExpressionStatement, PrintStatement, VariableStatement, ReturnStatement,
     recursive_wrapper<BlockStatement>, recursive_wrapper<IfStatement>,
     recursive_wrapper<WhileStatement>, recursive_wrapper<FunctionStatement>,
     recursive_wrapper<ClassStatement>, VoidType*>;
+
+struct Statement final : StatementVariant {
+
+    using StatementVariant::StatementVariant;
+    using StatementVariant::operator=;
+
+    // Statement(Statement const&) = default;
+    // Statement(Statement&&) = default;
+
+    // Statement& operator=(const Statement& other) = default;
+    // Statement& operator=(Statement&& other) = default;
+
+};
 
 // helper functions to make variant comparable to nullptr
 //////////////////////////////////////////////////////////////////////////
@@ -87,12 +100,14 @@ template <typename T> T& get(Statement& statement) {
 
 //////////////////////////////////////////////////////////////////////////
 struct ClassStatement {
-    ClassStatement(const Token& name,
-                   const std::vector<Statement>& functionStatements)
-        : name(name), functionStatements(functionStatements) {
+    ClassStatement( const Token& name,
+                    const std::vector<Statement>& functionStatements,
+                    const std::vector<Statement>& functionProperties)
+        : name(name), functionStatements(functionStatements), functionProperties(functionProperties){
     }
     Token name;
     std::vector<Statement> functionStatements;
+    std::vector<Statement> functionProperties;
 };
 
 struct BlockStatement {
@@ -166,3 +181,12 @@ static inline void clearStorageStatement(){
 }
 
 } // namespace cpplox
+
+template <>
+struct std::variant_size<cpplox::Statement>
+    : std::variant_size<cpplox::StatementVariant> {};
+
+template <std::size_t I>
+struct std::variant_alternative<I, cpplox::Statement>
+    : std::variant_alternative<I, cpplox::StatementVariant> {};
+

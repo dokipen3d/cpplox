@@ -4,14 +4,33 @@
 #include "Utilities.hpp"
 // #include "Object.h"
 #include "TokenTypes.h"
-// #include "thirdparty/visit.hpp"
-// #include "thirdparty/visit2.hpp"
+//#include "thirdparty/visit.hpp"
+//#include "thirdparty/visit2.hpp"
 #include <functional>
 #include <iostream>
 #include <sstream>
 
 #include <iterator> //for std::next()
 #include <vector>
+
+#define FAST_VISIT(variant, visitor) \
+    switch ((variant).index()) { \
+        case 0: return (*visitor)(std::get<0>(variant)); break; \
+        case 1: return (*visitor)(std::get<1>(variant)); break; \
+        case 2: return (*visitor)(std::get<2>(variant)); break; \
+        case 3: return (*visitor)(std::get<3>(variant)); break; \
+        case 4: return (*visitor)(std::get<4>(variant)); break; \
+        case 5: return (*visitor)(std::get<5>(variant)); break; \
+        case 6: return (*visitor)(std::get<6>(variant)); break; \
+        case 7: return (*visitor)(std::get<7>(variant)); break; \
+        case 8: return (*visitor)(std::get<8>(variant)); break; \
+        case 9: return (*visitor)(std::get<9>(variant)); break; \
+        case 10: return (*visitor)(std::get<10>(variant)); break; \
+        case 11: return (*visitor)(std::get<11>(variant)); break; \
+        case 12: return (*visitor)(std::get<12>(variant)); break; \
+        case 13: return (*visitor)(std::get<13>(variant)); break; \
+        case 14: return (*visitor)(std::get<14>(variant)); break; \
+    }
 
 namespace cpplox {
 
@@ -44,6 +63,7 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
         Error::runtimeError(error);
     }
     finishing = true;
+    
     Environments.clear();
 
     //std::cout << "Env size: " << Environments.size() << "\n";
@@ -51,14 +71,26 @@ void Interpreter::interpret(const std::vector<Statement>& statements) {
 }
 
 void Interpreter::execute(const Statement& statementToExecute) {
+    //FAST_VISIT(statementToExecute, this)
+
     std::visit(*this, statementToExecute);
 }
+
+Object Interpreter::evaluate2(bool b) {
+    if(b){
+        return true;
+    } else {
+        return 1.0;
+    }
+}
+
 
 Object Interpreter::evaluate(const Expr& expression) {
 #if (_MSC_VER)
     return std::visit(*this, static_cast<const ExprVariant&>(expression));
 #else
     return std::visit(*this, static_cast<const ExprVariant&>(expression));
+     //FAST_VISIT(static_cast<const ExprVariant&>(expression), this)
 #endif
 
     // return [&]() -> Object {
@@ -306,15 +338,15 @@ Object Interpreter::operator()(const BinaryAdd& binary) {
     //checkNumberOperands(binary.op, left, right);
 
     Object ret = std::visit(adder, left, right);
-    if (left.is<double>() && right.is<double>()) {
-        // return std::get<double>(left) + std::get<double>(right);
-        return *left.get_if<double>() + *right.get_if<double>();
-    }
-    // // const auto* a = left.get_if<double>();
-    // // const auto* b = right.get_if<double>();
-    // // if(a && b){
-    // //     return *a + *b;
-    // // }
+    // if (left.is<double>() && right.is<double>()) {
+    //     // return std::get<double>(left) + std::get<double>(right);
+    //     return *left.get_if<double>() + *right.get_if<double>();
+    // }
+    // // // const auto* a = left.get_if<double>();
+    // // // const auto* b = right.get_if<double>();
+    // // // if(a && b){
+    // // //     return *a + *b;
+    // // // }
 
     if (left.isString() && right.isString()) {
         //return left.get<std::string>() + right.get<std::string>();
@@ -339,9 +371,9 @@ Object Interpreter::operator()(const BinarySub& binary) {
     const Object left = evaluate(binary.left);
     const Object right = evaluate(binary.right);
 
-    checkNumberOperands(binary.op, left, right);
+    //checkNumberOperands(binary.op, left, right);
         // return std::get<double>(left) - std::get<double>(right);
-    return *left.get_if<double>() - *right.get_if<double>();
+    return left.get<double>() - right.get<double>();
     //Object ret = std::visit(subber, left, right);
     //return ret;
     // unreachable
@@ -432,7 +464,7 @@ Object Interpreter::operator()(const Binary& binary) {
 }
 
 Object Interpreter::operator()(const Assign& assign) {
-    const Object& value = evaluate(assign.value);
+    const Object value = evaluate(assign.value);
 
     // auto search = locals.find(assign);
     // if (search != locals.end()) {
@@ -454,6 +486,10 @@ Object Interpreter::operator()(const Literal& literal) {
     return literal.val;
 }
 
+Object Interpreter::operator()(const Uninitialized& uninitialized) {
+    return nullptr;
+}
+
 Object Interpreter::operator()(const Variable& variable) {
     return lookUpVariable(variable.name, variable);
 }
@@ -462,7 +498,7 @@ Object Interpreter::operator()(const Grouping& grouping) {
     return evaluate(grouping.expr);
 }
 Object Interpreter::operator()(const Unary& unary) {
-    const Object& right = evaluate(unary.expr);
+    const Object right = evaluate(unary.expr);
 
     switch (unary.token.eTokenType) {
     case ETokenType::MINUS: {
@@ -482,7 +518,7 @@ Object Interpreter::operator()(const Unary& unary) {
 }
 
 Object Interpreter::operator()(const Logical& logical) {
-    const Object& left = evaluate(logical.left);
+    const Object left = evaluate(logical.left);
 
     if (logical.op.eTokenType == ETokenType::OR) {
         if (isTruthy(left)) {
@@ -515,6 +551,7 @@ Object Interpreter::operator()(const Call& call) {
     auto argumentsIt =
         argumentsStack2.retrieve([](auto& colonyIt) { colonyIt.clear(); });
     auto& arguments = *argumentsIt;
+    //auto arguments = std::vector<Object>{};
     arguments.reserve(call.arguments.size());
     // const auto& objHelper = getNewArgumentVector();
     // auto& argumentsIndex = argumentsStack[objHelper.index];//
@@ -582,7 +619,11 @@ Object Interpreter::operator()(const Call& call) {
     }();
     // clang-format on
     // std::cout << "clearing arg stack" << objHelper.index << "\n";
+
+
     argumentsStack2.eraseAt(argumentsIt);
+
+
     // clearArgumentVector(objHelper.index);
     return ret;
 }
@@ -657,7 +698,7 @@ Object Interpreter::operator()(const Set& set) {
 
 bool Interpreter::isTruthy(const Object& object) {
     if (object.is<bool>()) {
-        return *object.get_if<bool>();
+        return object.get<bool>();
     }
     if (object == nullptr) {
         return false;
@@ -673,7 +714,7 @@ bool Interpreter::isEqual(const Object& a, const Object& b) {
     //            std::numeric_limits<double>::epsilon();
     // }
     if (a.is<double>() && b.is<double>()) {
-        return *a.get_if<double>() == *b.get_if<double>();
+        return a.get<double>() == b.get<double>();
     }
     if (a.isString() && b.isString()) {
         return static_cast<std::string>(a.get<cpplox::wrapper<std::string>>())
