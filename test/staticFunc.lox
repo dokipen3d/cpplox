@@ -2,7 +2,14 @@ int32 doit(x, y){
     return A;
 }
 
-class Bagel{}
+class Bagel{
+    int test;
+    void Bagel(){
+
+    }
+    vec2 that = vec2(2);
+
+}
 Bagel bagel;
 bagel.test;
 bagel.test = 5;

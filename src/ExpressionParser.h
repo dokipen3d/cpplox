@@ -35,7 +35,9 @@ class Parser {
     auto declaration() -> /*------------------------------------------------->*/Statement;
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
     auto varHelper(Token name, Token typeName = {}) -> /*-------------------->*/Statement;
-    auto staticDeclaration() -> /*------------------------------------------->*/Statement;
+    auto staticDeclaration( const std::vector<Statement>* functionStatements = nullptr, 
+                            const std::vector<Statement>* functionProperties = nullptr
+                            ) ->Statement;
     auto classDeclaration() -> /*-------------------------------------------->*/Statement;
 
 

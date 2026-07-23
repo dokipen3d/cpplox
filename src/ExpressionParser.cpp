@@ -290,13 +290,18 @@ auto Parser::declaration() -> Statement {
         return nullptr;
     }
 }
-
-auto Parser::staticDeclaration() -> Statement {
+//pass in vector to add to class decls
+auto Parser::staticDeclaration( const std::vector<Statement>* functionStatements, 
+                                const std::vector<Statement>* functionProperties) -> Statement {
     Token typeName = previous();
     //check here if there is an assignement or dot access. if so, this wil fail and get picked up in primary()
     if (!check({ETokenType::EQUAL, ETokenType::DOT})){
         Token name = consume(ETokenType::IDENTIFIER, "Expect function or variable name.");
         if(match({ETokenType::LEFT_PARENTHESIS})){
+            // if(functionStatements){
+            //     functionStatements.push_back(functionHelper(name, typeName));
+            //     //return {};
+            // }
             return functionHelper(name, typeName);
         } else {
             typeName.eTokenType = ETokenType::TYPE;
@@ -324,7 +329,17 @@ auto Parser::classDeclaration() -> Statement {
             functionStatements.push_back(function("method"));
         } else if(match({ETokenType::VAR})){
             functionProperties.push_back(varDeclaration());
-        } else{
+        } else if(match({ETokenType::IDENTIFIER})) { // this is the same that we added to declaration to add static variables and functions
+            auto staticdecl  = staticDeclaration();
+            if(std::holds_alternative<recursive_wrapper<FunctionStatement>>(staticdecl)){
+                functionStatements.push_back(staticdecl);
+            } else if (std::holds_alternative<VariableStatement>(staticdecl)){
+                functionProperties.push_back(staticdecl);
+            } else {
+                // shouldnt get here
+            }
+        }
+        else{
             throw Parser::error(peek(), "In class and there was no func or variable here");
         }
     }

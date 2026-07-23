@@ -121,9 +121,15 @@ void ExpressionPrinterVisitor::operator()(const Literal& literal) {
 }
 
 void ExpressionPrinterVisitor::operator()(const Call& call){
-    indent("call");
+    indent("call: ");
+    std::visit(*this, static_cast<ExprVariant>(call.callee));
+    
     //ast << "(call)\n";
-    unindent("");
+    //std::visit(*this, static_cast<ExprVariant>(call.paren.lexeme));
+    for (const auto& expr : call.arguments) {
+        std::visit(*this, static_cast<ExprVariant>(expr));
+    }
+    unindent();
 }
 
 
