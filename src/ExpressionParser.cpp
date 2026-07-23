@@ -63,6 +63,12 @@ auto Parser::peek() -> Token {
     return tokens[current];
 };
 
+auto Parser::next() -> Token {
+    if (!isAtEnd()) {
+        return tokens[current+1];
+    }
+};
+
 auto Parser::previous() -> Token {
     return tokens[current - 1];
 };
@@ -77,6 +83,12 @@ auto Parser::advance() -> Token {
     }
     return previous();
 };
+
+auto Parser::backTrack() -> Token {
+    current--;
+    return peek();
+}
+
 
 auto Parser::check(ETokenType type) -> bool {
     if (isAtEnd()) {
@@ -281,7 +293,7 @@ auto Parser::declaration() -> Statement {
         if (match({ETokenType::VAR})) {
             return varDeclaration();
         }
-        if (match({ETokenType::IDENTIFIER})) {
+        if (match({ETokenType::IDENTIFIER})){
             return staticDeclaration();
         }
         return statement();
@@ -294,8 +306,9 @@ auto Parser::declaration() -> Statement {
 auto Parser::staticDeclaration( const std::vector<Statement>* functionStatements, 
                                 const std::vector<Statement>* functionProperties) -> Statement {
     Token typeName = previous();
+    //Token typeName = consume(ETokenType::IDENTIFIER, "typename");
     //check here if there is an assignement or dot access. if so, this wil fail and get picked up in primary()
-    if (!check({ETokenType::EQUAL, ETokenType::DOT})){
+    if (check({ETokenType::IDENTIFIER})){
         Token name = consume(ETokenType::IDENTIFIER, "Expect function or variable name.");
         if(match({ETokenType::LEFT_PARENTHESIS})){
             // if(functionStatements){
@@ -306,10 +319,10 @@ auto Parser::staticDeclaration( const std::vector<Statement>* functionStatements
         } else {
             typeName.eTokenType = ETokenType::TYPE;
             return varHelper(name, typeName);
-        }
-    } 
-
-
+        } 
+    }
+    backTrack();
+    std::cout << "st decl " << typeName.lexeme << "\n";
     return statement();
 }
 
@@ -418,12 +431,15 @@ auto Parser::returnStatement() -> Statement {
 }
 
 auto Parser::expressionStatement() -> Statement {
+    //    std::cout << "expr ST\n";
+
     Expr expr = expression();
     consume(ETokenType::SEMICOLON, "Expect ';' after expression.");
     return ExpressionStatement(expr);
 }
 
 auto Parser::primary() -> Expr {
+    //std::cout << "primary\n";
     if (match({ETokenType::FALSE}))
         return Literal(false);
     if (match({ETokenType::TRUE}))
@@ -437,6 +453,8 @@ auto Parser::primary() -> Expr {
     }
 
     if (match({ETokenType::IDENTIFIER})) {
+        //    std::cout << "primary ID\n";
+
         return Variable(previous());
     }
 
@@ -448,13 +466,13 @@ auto Parser::primary() -> Expr {
 
     }
 
-    // this is a hack to be able to do static types. original lox didn't have this. it might be wrong
-    if (match({ETokenType::EQUAL, ETokenType::DOT})) {
-        Expr expr = expression();
-        return expr;
+    //this is a hack to be able to do static types. original lox didn't have this. it might be wrong
+    // if (match({ETokenType::EQUAL, ETokenType::DOT, ETokenType::SEMICOLON, ETokenType::RIGHT_BRACE})) {
+    //     Expr expr = expression();
+    //     return expr;
 
-        throw Parser::error(peek(), "We got here from static dec.");
-    }
+    //     throw Parser::error(peek(), "We got here from static dec.");
+    // }
 
     throw Parser::error(peek(), "Expect expression.");
 };
@@ -563,6 +581,8 @@ auto Parser::equality() -> Expr {
 };
 
 auto Parser::expression() -> Expr {
+     //   std::cout << "exprexpr\n";
+
     return assignment();
 };
 
@@ -591,6 +611,8 @@ auto Parser::logicalOr() -> Expr {
 }
 
 auto Parser::assignment() -> Expr {
+    //std::cout << "assign\n";
+
     Expr expr = logicalOr();
 
     if (match({ETokenType::EQUAL})) {

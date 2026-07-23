@@ -151,8 +151,8 @@ void ExpressionPrinterVisitor::operator()(const Grouping& grouping) {
     parenthesize("group", grouping.expr);
 }
 
-void ExpressionPrinterVisitor::operator()(const Variable&) {
-    indent("variable");
+void ExpressionPrinterVisitor::operator()(const Variable& variable) {
+    indent("variable lookup:" + variable.name.lexeme);
     
     unindent();
     // stub
@@ -223,6 +223,8 @@ void ExpressionPrinterVisitor::operator()(const ClassStatement& classtatement){
 }
 void ExpressionPrinterVisitor::operator()(const PrintStatement& printstatement){
         indent("print: ");
+        std::visit(*this, static_cast<ExprVariant>(printstatement.expression));
+
         unindent();
     }
 void ExpressionPrinterVisitor::operator()(const VariableStatement& variableStatement){

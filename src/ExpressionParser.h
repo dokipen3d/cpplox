@@ -25,6 +25,8 @@ class Parser {
     auto parse() -> /*------------------------------------------------------->*/std::vector<Statement>;
 
     auto peek() -> /*-------------------------------------------------------->*/Token;
+    auto next() -> /*-------------------------------------------------------->*/Token;
+    auto backTrack() -> Token;
     auto previous() -> /*---------------------------------------------------->*/Token;
     auto advance() -> /*----------------------------------------------------->*/Token;
     auto consume(ETokenType type, const std::string& message) -> /*--------->*/ Token;
