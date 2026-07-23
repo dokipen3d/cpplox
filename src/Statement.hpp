@@ -28,11 +28,13 @@ struct PrintStatement {
 };
 
 struct VariableStatement {
-    VariableStatement(const Token& name, const Expr& initializer)
-        : name(name), initializer(initializer) {
+    VariableStatement(const Token& name, const Expr& initializer, const Token& typeName)
+        : name(name), initializer(initializer), typeName(typeName) {
     }
     Token name;
     Expr initializer;
+    Token typeName;
+
 };
 
 struct ReturnStatement {
@@ -40,6 +42,7 @@ struct ReturnStatement {
         : name(name), value(value) {
     }
     Token name;
+
     // an expression that resolves to the value that we want to return
     Expr value;
 };
@@ -119,11 +122,12 @@ struct BlockStatement {
 
 struct FunctionStatement {
     FunctionStatement(const Token& p_name, const std::vector<Token>& params,
-                      const std::vector<Statement>& body)
-        : name(p_name), params(params), body(body) {
+                      const std::vector<Statement>& body, const Token& returnType)
+        : name(p_name), params(params), body(body), returnType(returnType) {
     }
 
     Token name;
+    Token returnType;
     std::vector<Token> params;
     std::vector<Statement> body;
 };

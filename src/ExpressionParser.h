@@ -17,6 +17,8 @@ class Parser {
 
     bool isAtEnd();
     bool check(ETokenType type);
+    bool check(std::initializer_list<ETokenType> types);
+
     bool match(std::initializer_list<ETokenType> types);
 
     // clang-format off
@@ -28,9 +30,12 @@ class Parser {
     auto consume(ETokenType type, const std::string& message) -> /*--------->*/ Token;
 
     auto function(std::string kind) -> /*------------------------------------>*/Statement;
+    auto functionHelper(Token name, Token returnTypeName = {}) -> /*-->*/Statement;
 
     auto declaration() -> /*------------------------------------------------->*/Statement;
     auto varDeclaration() -> /*---------------------------------------------->*/Statement;
+    auto varHelper(Token name, Token typeName = {}) -> /*-------------------->*/Statement;
+    auto staticDeclaration() -> /*------------------------------------------->*/Statement;
     auto classDeclaration() -> /*-------------------------------------------->*/Statement;
 
 

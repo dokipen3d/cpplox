@@ -66,6 +66,7 @@ enum class ETokenType : uint8_t {
     TRUE,
     VAR,
     WHILE,
+    TYPE,
     END_OF_FILE
 };
 
@@ -111,6 +112,7 @@ inline const std::map<ETokenType, std::string> tokenMap{
     {ETokenType::TRUE, "True"},
     {ETokenType::VAR, "Var"},
     {ETokenType::WHILE, "While"},
+    {ETokenType::TYPE, "Type"},
     {ETokenType::END_OF_FILE, "End_of_file"}};
 
 inline const std::map<std::string, ETokenType> keywordMap{

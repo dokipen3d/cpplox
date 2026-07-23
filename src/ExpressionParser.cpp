@@ -31,7 +31,8 @@ auto Parser::parseExpression() -> Expr {
         if (tokens[current].eTokenType != ETokenType::END_OF_FILE) {
             Error::error(peek(), "Expect expression. got " +
                                      tokens[current].toString());
-            throw cpplox::ParseError("Expect expression.");
+            throw cpplox::ParseError("Expect expression. got " +
+                                     tokens[current].toString());
         }
         return expr;
     } catch (const cpplox::ParseError& error) {
@@ -84,6 +85,16 @@ auto Parser::check(ETokenType type) -> bool {
     return peek().eTokenType == type;
 };
 
+auto Parser::check(std::initializer_list<ETokenType> types) -> bool {
+    for (const ETokenType& type : types) {
+        if (check(type)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 auto Parser::match(std::initializer_list<ETokenType> types) -> bool {
     for (const ETokenType& type : types) {
         if (check(type)) {
@@ -94,6 +105,8 @@ auto Parser::match(std::initializer_list<ETokenType> types) -> bool {
 
     return false;
 };
+
+
 
 auto Parser::synchronize() -> void {
     advance();
@@ -218,6 +231,26 @@ auto Parser::function(std::string kind) -> Statement {
     Token name = consume(ETokenType::IDENTIFIER, "Expect " + kind + " name.");
     consume(ETokenType::LEFT_PARENTHESIS,
             "Expect '(' after " + kind + " name.");
+    // std::vector<Token> parameters;
+    // if (!check(ETokenType::RIGHT_PARENTHESIS)) {
+    //     do {
+    //         if (parameters.size() >= 255) {
+    //             error(peek(), "Cannot have more than 255 parameters.");
+    //         }
+
+    //         parameters.push_back(
+    //             consume(ETokenType::IDENTIFIER, "Expect parameter name."));
+    //     } while (match({ETokenType::COMMA}));
+    // }
+    // consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after parameters.");
+
+    // consume(ETokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
+    // std::vector<Statement> body = block();
+
+    return functionHelper(name);
+}
+
+auto Parser::functionHelper(Token name, Token returnTypeName) -> Statement{
     std::vector<Token> parameters;
     if (!check(ETokenType::RIGHT_PARENTHESIS)) {
         do {
@@ -231,10 +264,11 @@ auto Parser::function(std::string kind) -> Statement {
     }
     consume(ETokenType::RIGHT_PARENTHESIS, "Expect ')' after parameters.");
 
-    consume(ETokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
+    consume(ETokenType::LEFT_BRACE, "Expect '{' before " + name.lexeme + " body.");
     std::vector<Statement> body = block();
-    return FunctionStatement(name, parameters, body);
+    return FunctionStatement(name, parameters, body, returnTypeName);
 }
+
 
 auto Parser::declaration() -> Statement {
     try {
@@ -247,11 +281,31 @@ auto Parser::declaration() -> Statement {
         if (match({ETokenType::VAR})) {
             return varDeclaration();
         }
+        if (match({ETokenType::IDENTIFIER})) {
+            return staticDeclaration();
+        }
         return statement();
     } catch (const ParseError&) {
         synchronize();
         return nullptr;
     }
+}
+
+auto Parser::staticDeclaration() -> Statement {
+    Token typeName = previous();
+    //check here if there is an assignement or dot access. if so, this wil fail and get picked up in primary()
+    if (!check({ETokenType::EQUAL, ETokenType::DOT})){
+        Token name = consume(ETokenType::IDENTIFIER, "Expect function or variable name.");
+        if(match({ETokenType::LEFT_PARENTHESIS})){
+            return functionHelper(name, typeName);
+        } else {
+            typeName.eTokenType = ETokenType::TYPE;
+            return varHelper(name, typeName);
+        }
+    } 
+
+
+    return statement();
 }
 
 auto Parser::classDeclaration() -> Statement {
@@ -280,11 +334,7 @@ auto Parser::classDeclaration() -> Statement {
     return ClassStatement{name, functionStatements, functionProperties};
 }
 
-
-
-
-auto Parser::varDeclaration() -> Statement {
-    Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
+auto Parser::varHelper(Token name, Token typeName) -> Statement{
 
     Expr initializer = Uninitialized{};
     if (match({ETokenType ::EQUAL})) {
@@ -292,7 +342,24 @@ auto Parser::varDeclaration() -> Statement {
     }
 
     consume(ETokenType::SEMICOLON, "Expect ';' after variable declaration");
-    return VariableStatement(name, initializer);
+    return VariableStatement(name, initializer, typeName);
+
+}
+
+
+
+auto Parser::varDeclaration() -> Statement {
+    Token name = consume(ETokenType::IDENTIFIER, "Expect variable name");
+    Token typeName = name;
+    typeName.lexeme = "Built-in Dynamic";
+    // Expr initializer = Uninitialized{};
+    // if (match({ETokenType ::EQUAL})) {
+    //     initializer = expression();
+    // }
+
+    // consume(ETokenType::SEMICOLON, "Expect ';' after variable declaration");
+    // return VariableStatement(name, initializer);
+    return varHelper(name, typeName);
 }
 
 auto Parser::ifStatement() -> Statement {
@@ -365,6 +432,15 @@ auto Parser::primary() -> Expr {
         return expr;
 
     }
+
+    // this is a hack to be able to do static types. original lox didn't have this. it might be wrong
+    if (match({ETokenType::EQUAL, ETokenType::DOT})) {
+        Expr expr = expression();
+        return expr;
+
+        throw Parser::error(peek(), "We got here from static dec.");
+    }
+
     throw Parser::error(peek(), "Expect expression.");
 };
 

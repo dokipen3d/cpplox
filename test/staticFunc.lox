@@ -1,0 +1,15 @@
+int32 doit(x, y){
+    return A;
+}
+
+class Bagel{}
+Bagel bagel;
+bagel.test;
+bagel.test = 5;
+
+
+Bagel bagel = foo();
+var bagel = foo();
+
+var test = 5;
+test = 2;
